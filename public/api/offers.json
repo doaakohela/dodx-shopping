@@ -164,6 +164,81 @@
       "dodxPageUrl": "https://www.dodx.shop/products?dept=tech"
     },
     {
+      "id": "prod-amazon-bf-lenovo-chromebook-2in1",
+      "storeId": "amazon",
+      "storeName": "Amazon",
+      "title": "Lenovo Chromebook 2-in-1 14\" WUXGA Touch (Intel N150, 128GB, Gemini) — $329.99 (Was $509.99)",
+      "category": "Laptops & Computers",
+      "badge": "35% OFF · $329.99",
+      "badgeColor": "#CC0C39",
+      "price": "$329.99 USD",
+      "imageUrl": "https://www.dodx.shop/assets/banners/amazon-bf-lenovo-chromebook-2in1.jpg",
+      "fallbackImage": "images/laptops-deals.jpg",
+      "keywords": "lenovo chromebook 2 in 1 laptop touchscreen gemini intel n150 black friday amazon لينوفو كروم بوك لابتوب لمس خصم",
+      "affiliateUrl": "https://link.amazon/B05atly2N",
+      "dodxPageUrl": "https://www.dodx.shop/products?dept=tech"
+    },
+    {
+      "id": "prod-amazon-bf-acer-spin-314",
+      "storeId": "amazon",
+      "storeName": "Amazon",
+      "title": "Acer Chromebook Spin 314 Convertible 14\" Gorilla Glass Touch (8GB) — $339.99 (Was $499.99)",
+      "category": "Laptops & Computers",
+      "badge": "32% OFF · $339.99",
+      "badgeColor": "#CC0C39",
+      "price": "$339.99 USD",
+      "imageUrl": "https://www.dodx.shop/assets/banners/amazon-bf-acer-chromebook-spin-314.jpg",
+      "fallbackImage": "images/laptops-deals.jpg",
+      "keywords": "acer chromebook spin 314 convertible laptop touchscreen core i3 black friday amazon ايسر كروم بوك سبين لابتوب",
+      "affiliateUrl": "https://link.amazon/B05atly2N",
+      "dodxPageUrl": "https://www.dodx.shop/products?dept=tech"
+    },
+    {
+      "id": "prod-amazon-bf-samsung-book4-edge",
+      "storeId": "amazon",
+      "storeName": "Amazon",
+      "title": "Samsung Galaxy Book4 Edge 16\" 3K AMOLED Touch (Snapdragon X Elite) — ~$1,139.43 (43% Off)",
+      "category": "Laptops & Computers",
+      "badge": "43% OFF · ~$1,139",
+      "badgeColor": "#CC0C39",
+      "price": "~$1,139.43 USD",
+      "imageUrl": "https://www.dodx.shop/assets/banners/amazon-bf-samsung-galaxy-book4-edge.jpg",
+      "fallbackImage": "images/laptops-deals.jpg",
+      "keywords": "samsung galaxy book4 edge 16 3k touch snapdragon x elite black friday amazon سامسونج جالكسي بوك ايدج لابتوب",
+      "affiliateUrl": "https://link.amazon/B05atly2N",
+      "dodxPageUrl": "https://www.dodx.shop/products?dept=tech"
+    },
+    {
+      "id": "prod-amazon-bf-acer-aspire-14",
+      "storeId": "amazon",
+      "storeName": "Amazon",
+      "title": "Acer Aspire Lite 14 AI Copilot+ PC (Snapdragon X, 16GB/512GB) — $629.99 (Was $749.99)",
+      "category": "Laptops & Computers",
+      "badge": "16% OFF · $629.99",
+      "badgeColor": "#CC0C39",
+      "price": "$629.99 USD",
+      "imageUrl": "https://www.dodx.shop/assets/banners/amazon-bf-acer-aspire-lite-14-ai.jpg",
+      "fallbackImage": "images/laptops-deals.jpg",
+      "keywords": "acer aspire lite 14 ai copilot pc snapdragon x 16gb 512gb black friday amazon ايسر اسباير لايت لابتوب ذكاء اصطناعي",
+      "affiliateUrl": "https://link.amazon/B05atly2N",
+      "dodxPageUrl": "https://www.dodx.shop/products?dept=tech"
+    },
+    {
+      "id": "prod-amazon-bf-hp-omnibook-2tb",
+      "storeId": "amazon",
+      "storeName": "Amazon",
+      "title": "HP OmniBook X Flip 2-in-1 16\" OLED Touch (Ryzen AI 5, 16GB/2TB SSD w/ Stylus) — Amazon US",
+      "category": "Laptops & Computers",
+      "badge": "BLACK FRIDAY · ~$899",
+      "badgeColor": "#FF9900",
+      "price": "~$899.99 USD",
+      "imageUrl": "https://www.dodx.shop/assets/banners/amazon-bf-hp-omnibook-x-flip-16-2tb.jpg",
+      "fallbackImage": "images/laptops-deals.jpg",
+      "keywords": "hp omnibook x flip 2 in 1 16 oled touch ryzen ai 5 2tb ssd stylus amazon اتش بي اومني بوك لابتوب 2 في 1",
+      "affiliateUrl": "https://link.amazon/B05atly2N",
+      "dodxPageUrl": "https://www.dodx.shop/products?dept=tech"
+    },
+    {
       "id": "prod-amazon-bf-samsung-xcover7",
       "storeId": "amazon",
       "storeName": "Amazon",
@@ -1285,6 +1360,96 @@
           "imageUrl": "https://www.dodx.shop/assets/banners/amazon-bf-tcl-nxtpaper-70-pro.jpg",
           "fallbackImage": "images/smartphones-audio.jpg",
           "affiliateUrl": "https://link.amazon/B0exwvhyr",
+          "featured": true
+        },
+        {
+          "id": "amz-bf-laptops",
+          "title": "Amazon US Black Friday 2-in-1 Laptops & Copilot+ AI PCs — Up to 43% Off",
+          "discountLabel": "UP TO 43% OFF",
+          "price": "From $329.99 USD",
+          "imageUrl": "https://www.dodx.shop/assets/banners/amazon-bf-lenovo-chromebook-2in1.jpg",
+          "fallbackImage": "images/laptops-deals.jpg",
+          "affiliateUrl": "https://link.amazon/B05atly2N",
+          "featured": true
+        },
+        {
+          "id": "amz-bf-lenovo-chromebook",
+          "title": "Lenovo Chromebook 2-in-1 14\" WUXGA Touch (Intel N150, 128GB, Gemini) — $329.99 (List $509.99)",
+          "discountLabel": "35% OFF · $329.99",
+          "price": "$329.99 USD",
+          "imageUrl": "https://www.dodx.shop/assets/banners/amazon-bf-lenovo-chromebook-2in1.jpg",
+          "fallbackImage": "images/laptops-deals.jpg",
+          "affiliateUrl": "https://link.amazon/B05atly2N",
+          "featured": true
+        },
+        {
+          "id": "amz-bf-acer-spin-314",
+          "title": "Acer Chromebook Spin 314 Convertible 14\" Gorilla Glass Touch — $339.99 (List $499.99)",
+          "discountLabel": "32% OFF · $339.99",
+          "price": "$339.99 USD",
+          "imageUrl": "https://www.dodx.shop/assets/banners/amazon-bf-acer-chromebook-spin-314.jpg",
+          "fallbackImage": "images/laptops-deals.jpg",
+          "affiliateUrl": "https://link.amazon/B05atly2N",
+          "featured": true
+        },
+        {
+          "id": "amz-bf-book4-edge",
+          "title": "Samsung Galaxy Book4 Edge 16\" 3K AMOLED Touch (Snapdragon X Elite) — ~$1,139.43 (List $1,999)",
+          "discountLabel": "43% OFF · ~$1,139.43",
+          "price": "~$1,139.43 USD",
+          "imageUrl": "https://www.dodx.shop/assets/banners/amazon-bf-samsung-galaxy-book4-edge.jpg",
+          "fallbackImage": "images/laptops-deals.jpg",
+          "affiliateUrl": "https://link.amazon/B05atly2N",
+          "featured": true
+        },
+        {
+          "id": "amz-bf-acer-aspire-14",
+          "title": "Acer Aspire Lite 14 AI Copilot+ PC (Snapdragon X, 16GB/512GB) — $629.99 (List $749.99)",
+          "discountLabel": "16% OFF · $629.99",
+          "price": "$629.99 USD",
+          "imageUrl": "https://www.dodx.shop/assets/banners/amazon-bf-acer-aspire-lite-14-ai.jpg",
+          "fallbackImage": "images/laptops-deals.jpg",
+          "affiliateUrl": "https://link.amazon/B05atly2N",
+          "featured": true
+        },
+        {
+          "id": "amz-bf-book5-pro-360",
+          "title": "Samsung 16\" Galaxy Book5 Pro 360 AI Laptop (Ultra 7 256V) — ~$1,399.99 (List $1,749.99)",
+          "discountLabel": "20% OFF · ~$1,399.99",
+          "price": "~$1,399.99 USD",
+          "imageUrl": "https://www.dodx.shop/assets/banners/amazon-bf-samsung-galaxy-book5-pro-360.jpg",
+          "fallbackImage": "images/laptops-deals.jpg",
+          "affiliateUrl": "https://link.amazon/B05atly2N",
+          "featured": true
+        },
+        {
+          "id": "amz-bf-hp-omnibook-2tb",
+          "title": "HP OmniBook X Flip 2-in-1 16\" OLED Touch (Ryzen AI 5, 2TB SSD w/ Stylus) — ~$899.99",
+          "discountLabel": "BLACK FRIDAY · ~$899.99",
+          "price": "~$899.99 USD",
+          "imageUrl": "https://www.dodx.shop/assets/banners/amazon-bf-hp-omnibook-x-flip-16-2tb.jpg",
+          "fallbackImage": "images/laptops-deals.jpg",
+          "affiliateUrl": "https://link.amazon/B05atly2N",
+          "featured": true
+        },
+        {
+          "id": "amz-bf-yoga-7i-14",
+          "title": "Lenovo Yoga 7i 2-in-1 14\" WUXGA OLED Touch (Ultra 7 355, 24GB/512GB) — ~$949.99",
+          "discountLabel": "BLACK FRIDAY · ~$949.99",
+          "price": "~$949.99 USD",
+          "imageUrl": "https://www.dodx.shop/assets/banners/amazon-bf-lenovo-yoga-7i-14-oled.jpg",
+          "fallbackImage": "images/laptops-deals.jpg",
+          "affiliateUrl": "https://link.amazon/B05atly2N",
+          "featured": true
+        },
+        {
+          "id": "amz-bf-nimo-173",
+          "title": "NIMO 17.3\" AI Copilot+ Laptop (12-Core AI 9 HX 370, 64GB DDR5, 4TB SSD) — ~$1,299.99",
+          "discountLabel": "BLACK FRIDAY · ~$1,299.99",
+          "price": "~$1,299.99 USD",
+          "imageUrl": "https://www.dodx.shop/assets/banners/amazon-bf-nimo-173-ai-copilot.jpg",
+          "fallbackImage": "images/laptops-deals.jpg",
+          "affiliateUrl": "https://link.amazon/B05atly2N",
           "featured": true
         }
       ]

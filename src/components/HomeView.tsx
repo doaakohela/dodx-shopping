@@ -69,6 +69,19 @@ const DEAL_THUMBNAILS: Record<string, string> = {
   'amz-bf-blackview-w10': '/assets/banners/amazon-bf-blackview-wave-10.jpg',
   'amz-bf-ulefone-x16p': '/assets/banners/amazon-bf-ulefone-armor-x16-pro.jpg',
   'amz-bf-nothing-4ap': '/assets/banners/amazon-bf-nothing-phone-4a-pro.jpg',
+  'amz-bf-laptops': '/assets/banners/amazon-bf-lenovo-chromebook-2in1.jpg',
+  'amz-bf-lenovo-chromebook': '/assets/banners/amazon-bf-lenovo-chromebook-2in1.jpg',
+  'amz-bf-acer-spin-314': '/assets/banners/amazon-bf-acer-chromebook-spin-314.jpg',
+  'amz-bf-acer-aspire-14': '/assets/banners/amazon-bf-acer-aspire-lite-14-ai.jpg',
+  'amz-bf-book4-edge': '/assets/banners/amazon-bf-samsung-galaxy-book4-edge.jpg',
+  'amz-bf-book5-pro-360': '/assets/banners/amazon-bf-samsung-galaxy-book5-pro-360.jpg',
+  'amz-bf-hp-omnibook-2tb': '/assets/banners/amazon-bf-hp-omnibook-x-flip-16-2tb.jpg',
+  'amz-bf-hp-omnibook-14': '/assets/banners/amazon-bf-hp-omnibook-x-flip-14-oled.jpg',
+  'amz-bf-hp-omnibook-ai9': '/assets/banners/amazon-bf-hp-omnibook-x-flip-16-ai9.jpg',
+  'amz-bf-yoga-7i-14': '/assets/banners/amazon-bf-lenovo-yoga-7i-14-oled.jpg',
+  'amz-bf-yoga-7i-16': '/assets/banners/amazon-bf-lenovo-yoga-7i-16-ultra5.jpg',
+  'amz-bf-yoga-7a-16': '/assets/banners/amazon-bf-lenovo-yoga-7a-16-oled.jpg',
+  'amz-bf-nimo-173': '/assets/banners/amazon-bf-nimo-173-ai-copilot.jpg',
   'amz-ae-store': '/assets/images/hero_smart_shopping_1794810594006.jpg',
   'amz-ae-1': '/assets/banners/amazon-ae-iphone-duo.jpg',
   'amz-ae-2': '/assets/banners/amazon-ae-galaxy-s26-ultra.jpg',
@@ -264,6 +277,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
   const [marqueePaused, setMarqueePaused] = useState(false);
   const [bfPhoneBrand, setBfPhoneBrand] = useState<string>('all');
   const [showAllBfPhones, setShowAllBfPhones] = useState<boolean>(false);
+  const [bfLaptopBrand, setBfLaptopBrand] = useState<string>('all');
+  const [showAllBfLaptops, setShowAllBfLaptops] = useState<boolean>(false);
   const [egPhoneBrand, setEgPhoneBrand] = useState<string>('all');
   const [showAllEgPhones, setShowAllEgPhones] = useState<boolean>(false);
 
@@ -955,6 +970,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 {[
                   { id: 'bf-us-samsung', label: isAr ? '📱 عروض سامسونج بلاك فرايدي أمريكا' : '📱 Samsung Black Friday US Deals', url: 'https://link.amazon/B032r8aKv' },
                   { id: 'bf-us-phones', label: isAr ? '🔥 خصومات بلاك فرايدي الهواتف (حتى 50%)' : '🔥 Amazon US Phone Deals (Up to 50% Off)', url: 'https://link.amazon/B0exwvhyr' },
+                  { id: 'bf-us-laptops', label: isAr ? '💻 عروض لابتوبات 2-in-1 بلاك فرايدي أمريكا (حتى 43%)' : '💻 Amazon US 2-in-1 Laptop Deals (Up to 43% Off)', url: 'https://link.amazon/B05atly2N' },
                   { id: 'bf-nothing-phone', label: isAr ? '🔥 Nothing Phone (3) — $599 بدلاً من $799' : '🔥 Nothing Phone (3) — $599 (25% Off)', url: 'https://link.amazon/B00QLHLCZ' },
                   { id: 'amazon', label: 'Amazon US · Daily Deals', url: 'https://link.amazon/A0iDndN9l' },
                   { id: 'amazon-uae', label: isAr ? 'Amazon UAE · أمازون الإمارات' : 'Amazon UAE · Official Store', url: 'https://link.amazon/A0bb8XnUS' },
@@ -1427,6 +1443,373 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   : isAr
                     ? 'عرض جميع الـ 17 عرضاً (Samsung · Google · TCL · Fairphone · Blackview · Ulefone)'
                     : 'Show All 17 Brand Deals (Samsung · Google · TCL · Fairphone · Blackview · Ulefone)'}
+              </button>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Top Amazon US Black Friday 2-in-1 Laptops & Copilot+ AI PCs Discounts */}
+      <section aria-label="Amazon US Black Friday 2-in-1 Laptops Discounts" className="px-3 sm:px-4 mt-3">
+        <div className="bg-white border border-zinc-200/90 rounded-sm p-4 sm:p-5 shadow-xs">
+          <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-zinc-200">
+            <div className="space-y-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="px-2.5 py-0.5 text-[11px] font-extrabold bg-[#FF9900] text-zinc-950 rounded whitespace-nowrap">
+                  AMAZON US · 2-IN-1 LAPTOPS
+                </span>
+                <span className="px-2 py-0.5 text-[11px] font-extrabold bg-[#CC0C39] text-white rounded whitespace-nowrap">
+                  {isAr ? 'خصومات حتى 43% في البلاك فرايدي' : 'BLACK FRIDAY · UP TO 43% OFF'}
+                </span>
+              </div>
+              <h2 className="font-display text-lg sm:text-xl font-extrabold text-zinc-950">
+                {isAr
+                  ? 'عروض البلاك فرايدي على أجهزة اللابتوب 2-in-1 والذكاء الاصطناعي (أمازون أمريكا)'
+                  : 'Amazon US Black Friday — 2-in-1 Laptops & Copilot+ AI PCs'}
+              </h2>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <a
+                href="https://link.amazon/B05atly2N"
+                target="_blank"
+                rel="nofollow noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#FFD814] hover:bg-[#F7CA00] text-zinc-950 border border-[#FCD200] text-xs font-extrabold rounded-full transition-colors whitespace-nowrap"
+              >
+                <span>
+                  {isAr
+                    ? 'تصفح كل عروض اللابتوب على أمازون أمريكا'
+                    : 'Shop All 2-in-1 Laptops on Amazon US'}
+                </span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+              <ShareButton
+                url="https://link.amazon/B05atly2N"
+                shareId="amz-bf-laptops"
+                title={
+                  isAr
+                    ? 'عروض البلاك فرايدي على أجهزة اللابتوب 2-in-1 في أمازون أمريكا (حتى 43% خصم)'
+                    : 'Amazon US Black Friday 2-in-1 Laptops & Copilot+ AI PCs (Up to 43% Off)'
+                }
+                price={isAr ? 'تبدأ من $329.99 USD' : 'From $329.99 USD'}
+                discount={isAr ? 'خصومات حتى 43%' : 'UP TO 43% OFF'}
+                isAr={isAr}
+                dropDirection="down"
+              />
+            </div>
+          </div>
+
+          {/* Laptop Brand Selector Tabs */}
+          <div className="mt-3 flex flex-wrap items-center gap-1.5">
+            {[
+              { id: 'all', labelEn: 'All Brands (12)', labelAr: 'كل الماركات (12)' },
+              { id: 'lenovo', labelEn: 'Lenovo (4)', labelAr: 'لينوفو Lenovo (4)' },
+              { id: 'hp', labelEn: 'HP OmniBook (3)', labelAr: 'إتش بي HP (3)' },
+              { id: 'acer', labelEn: 'Acer (2)', labelAr: 'أيسر Acer (2)' },
+              { id: 'samsung', labelEn: 'Samsung (2)', labelAr: 'سامسونج Samsung (2)' },
+              { id: 'nimo', labelEn: 'NIMO (1)', labelAr: 'NIMO (1)' },
+            ].map((tab) => {
+              const active = bfLaptopBrand === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setBfLaptopBrand(tab.id)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-colors cursor-pointer whitespace-nowrap ${
+                    active
+                      ? 'bg-[#131921] text-white border-[#131921]'
+                      : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-800 border-zinc-200'
+                  }`}
+                >
+                  {isAr ? tab.labelAr : tab.labelEn}
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="mt-4 grid grid-cols-1 @lg/main:grid-cols-2 @4xl/main:grid-cols-3 gap-3.5">
+            {[
+              {
+                id: 'bf-laptop-lenovo-chromebook-2in1',
+                brandGroup: 'lenovo',
+                brandLabel: 'Lenovo',
+                discount: '35% OFF',
+                savingsAr: 'وفّر $180',
+                savingsEn: 'Save $180',
+                dealPrice: '$329.99',
+                listPrice: '$509.99',
+                titleEn: 'Lenovo Chromebook 2-in-1 14" WUXGA IPS Touch · Intel N150 · Google Gemini · 128GB',
+                titleAr: 'لينوفو Chromebook 2-in-1 بشاشة لمس 14 بوصة WUXGA — معالج Intel N150 و128GB وGoogle Gemini',
+                specs: '14" WUXGA IPS Touch · Intel N150 · 4GB RAM · 128GB UFS · Luna Grey',
+                image: '/assets/banners/amazon-bf-lenovo-chromebook-2in1.jpg',
+                url: 'https://link.amazon/B05atly2N',
+              },
+              {
+                id: 'bf-laptop-acer-chromebook-spin-314',
+                brandGroup: 'acer',
+                brandLabel: 'Acer',
+                discount: '32% OFF',
+                savingsAr: 'وفّر $160',
+                savingsEn: 'Save $160',
+                dealPrice: '$339.99',
+                listPrice: '$499.99',
+                titleEn: 'Acer Chromebook Spin 314 Convertible 14" WUXGA Gorilla Glass Touch · Intel Core i3-N305',
+                titleAr: 'أيسر Chromebook Spin 314 المتحول بشاشة لمس 14 بوصة — معالج Intel Core i3-N305 و8GB رام',
+                specs: '14" WUXGA Touch · Corning Gorilla Glass · 8GB LPDDR5 · 128GB · Wi-Fi 6E',
+                image: '/assets/banners/amazon-bf-acer-chromebook-spin-314.jpg',
+                url: 'https://link.amazon/B05atly2N',
+              },
+              {
+                id: 'bf-laptop-samsung-book4-edge',
+                brandGroup: 'samsung',
+                brandLabel: 'Samsung',
+                discount: '43% OFF',
+                savingsAr: 'وفّر ~$860',
+                savingsEn: 'Save ~$860',
+                dealPrice: '~$1,139.43',
+                listPrice: '$1,999.00',
+                titleEn: 'Samsung Galaxy Book4 Edge 16" 3K AMOLED Touch · Snapdragon X Elite · 16GB RAM',
+                titleAr: 'سامسونج Galaxy Book4 Edge شاشة لمس 16 بوصة 3K AMOLED — معالج Snapdragon X Elite و16GB رام',
+                specs: '16" 3K Touch Display · Snapdragon X Elite X1E-80-100 · 16GB RAM · Win 11 Pro',
+                image: '/assets/banners/amazon-bf-samsung-galaxy-book4-edge.jpg',
+                url: 'https://link.amazon/B05atly2N',
+              },
+              {
+                id: 'bf-laptop-acer-aspire-lite-14',
+                brandGroup: 'acer',
+                brandLabel: 'Acer',
+                discount: '16% OFF',
+                savingsAr: 'وفّر $120',
+                savingsEn: 'Save $120',
+                dealPrice: '$629.99',
+                listPrice: '$749.99',
+                titleEn: 'Acer Aspire Lite 14 AI Copilot+ PC · Snapdragon X · 16GB LPDDR5 · 512GB SSD',
+                titleAr: 'أيسر Aspire Lite 14 AI Copilot+ PC — معالج Snapdragon X و16GB رام و512GB SSD',
+                specs: '14" WUXGA · Snapdragon X X1-26-100 · 45 TOPS NPU · 16GB LPDDR5 · 512GB SSD',
+                image: '/assets/banners/amazon-bf-acer-aspire-lite-14-ai.jpg',
+                url: 'https://link.amazon/B05atly2N',
+              },
+              {
+                id: 'bf-laptop-samsung-book5-pro-360',
+                brandGroup: 'samsung',
+                brandLabel: 'Samsung',
+                discount: '20% OFF',
+                savingsAr: 'وفّر ~$350',
+                savingsEn: 'Save ~$350',
+                dealPrice: '~$1,399.99',
+                listPrice: '$1,749.99',
+                titleEn: 'Samsung 16" Galaxy Book5 Pro 360 AI Business Laptop · Intel Core Ultra 7 256V',
+                titleAr: 'سامسونج Galaxy Book5 Pro 360 شاشة 16 بوصة 3K AMOLED — معالج Intel Core Ultra 7 256V',
+                specs: '16" 3K AMOLED 120Hz Touch · Intel Core Ultra 7 256V · 16GB · 512GB SSD · Gray',
+                image: '/assets/banners/amazon-bf-samsung-galaxy-book5-pro-360.jpg',
+                url: 'https://link.amazon/B05atly2N',
+              },
+              {
+                id: 'bf-laptop-hp-omnibook-16-2tb',
+                brandGroup: 'hp',
+                brandLabel: 'HP',
+                discount: isAr ? 'بلاك فرايدي' : 'BLACK FRIDAY',
+                savingsAr: 'عرض أمازون أمريكا',
+                savingsEn: 'Amazon US Deal',
+                dealPrice: '~$899.99',
+                listPrice: '',
+                titleEn: 'HP OmniBook X Flip 2-in-1 16" OLED Touch · Ryzen AI 5 430 · 16GB DDR5 · 2TB SSD w/ Stylus',
+                titleAr: 'إتش بي HP OmniBook X Flip 2-in-1 شاشة 16 بوصة OLED لمس — معالج Ryzen AI 5 و2TB SSD مع قلم',
+                specs: '16" OLED Touch · Copilot+ PC · 50 TOPS NPU · 16GB DDR5 · 2TB SSD · Wi-Fi 7',
+                image: '/assets/banners/amazon-bf-hp-omnibook-x-flip-16-2tb.jpg',
+                url: 'https://link.amazon/B05atly2N',
+              },
+              {
+                id: 'bf-laptop-lenovo-yoga-7i-14-oled',
+                brandGroup: 'lenovo',
+                brandLabel: 'Lenovo',
+                discount: isAr ? 'بلاك فرايدي' : 'BLACK FRIDAY',
+                savingsAr: 'عرض أمازون أمريكا',
+                savingsEn: 'Amazon US Deal',
+                dealPrice: '~$949.99',
+                listPrice: '',
+                titleEn: 'Lenovo Yoga 7i 2-in-1 14" WUXGA OLED Touch · Intel Ultra 7 355 · 24GB RAM · 512GB SSD',
+                titleAr: 'لينوفو Yoga 7i 2-in-1 شاشة 14 بوصة WUXGA OLED لمس — معالج Ultra 7 355 و24GB رام',
+                specs: '14" WUXGA OLED · Ultra 7 355 · 24GB RAM · 512GB SSD · 49 TOPS NPU · Wi-Fi 7',
+                image: '/assets/banners/amazon-bf-lenovo-yoga-7i-14-oled.jpg',
+                url: 'https://link.amazon/B05atly2N',
+              },
+              {
+                id: 'bf-laptop-hp-omnibook-14-oled',
+                brandGroup: 'hp',
+                brandLabel: 'HP',
+                discount: isAr ? 'بلاك فرايدي' : 'BLACK FRIDAY',
+                savingsAr: 'عرض أمازون أمريكا',
+                savingsEn: 'Amazon US Deal',
+                dealPrice: '~$749.99',
+                listPrice: '',
+                titleEn: 'HP OmniBook X Flip 2-in-1 14" 2K OLED Touch · Ryzen AI 5 430 · 16GB · 1TB SSD',
+                titleAr: 'إتش بي HP OmniBook X Flip 2-in-1 شاشة 14 بوصة 2K OLED لمس — Ryzen AI 5 و1TB SSD',
+                specs: '14" 2K OLED Touch · Ryzen AI 5 430 · 50 TOPS NPU · 16GB LPDDR5X · 1TB SSD',
+                image: '/assets/banners/amazon-bf-hp-omnibook-x-flip-14-oled.jpg',
+                url: 'https://link.amazon/B05atly2N',
+              },
+              {
+                id: 'bf-laptop-lenovo-yoga-7i-16-ultra5',
+                brandGroup: 'lenovo',
+                brandLabel: 'Lenovo',
+                discount: isAr ? 'بلاك فرايدي' : 'BLACK FRIDAY',
+                savingsAr: 'عرض أمازون أمريكا',
+                savingsEn: 'Amazon US Deal',
+                dealPrice: '~$849.99',
+                listPrice: '',
+                titleEn: 'Lenovo Yoga 7i 16" 2-in-1 2K Touchscreen · Intel Core Ultra 5 226V · Win 11 Pro',
+                titleAr: 'لينوفو Yoga 7i 2-in-1 شاشة 16 بوصة 2K لمس — معالج Intel Core Ultra 5 226V وويندوز 11 برو',
+                specs: '16" 2K (1920x1200) Touch · Core Ultra 5 226V · Backlit KB · Fingerprint · Wi-Fi 7',
+                image: '/assets/banners/amazon-bf-lenovo-yoga-7i-16-ultra5.jpg',
+                url: 'https://link.amazon/B05atly2N',
+              },
+              {
+                id: 'bf-laptop-lenovo-yoga-7a-16-oled',
+                brandGroup: 'lenovo',
+                brandLabel: 'Lenovo',
+                discount: isAr ? 'بلاك فرايدي' : 'BLACK FRIDAY',
+                savingsAr: 'عرض أمازون أمريكا',
+                savingsEn: 'Amazon US Deal',
+                dealPrice: '~$999.99',
+                listPrice: '',
+                titleEn: 'Lenovo Yoga 7a 2-in-1 16" 2K OLED Touch · AMD Ryzen AI 7 445 · 24GB RAM · 512GB SSD',
+                titleAr: 'لينوفو Yoga 7a 2-in-1 شاشة 16 بوصة 2K OLED لمس — معالج AMD Ryzen AI 7 و24GB رام',
+                specs: '16" 2K OLED Touch · Ryzen AI 7 445 · 50+ TOPS NPU · 24GB RAM · 512GB SSD',
+                image: '/assets/banners/amazon-bf-lenovo-yoga-7a-16-oled.jpg',
+                url: 'https://link.amazon/B05atly2N',
+              },
+              {
+                id: 'bf-laptop-hp-omnibook-16-ai9',
+                brandGroup: 'hp',
+                brandLabel: 'HP',
+                discount: isAr ? 'بلاك فرايدي' : 'BLACK FRIDAY',
+                savingsAr: 'عرض أمازون أمريكا',
+                savingsEn: 'Amazon US Deal',
+                dealPrice: '~$1,199.99',
+                listPrice: '',
+                titleEn: 'HP OmniBook X Flip 2-in-1 16" FHD+ OLED Touch · AMD Ryzen AI 9 465 · 32GB LPDDR5X',
+                titleAr: 'إتش بي HP OmniBook X Flip 2-in-1 شاشة 16 بوصة OLED لمس — معالج Ryzen AI 9 465 و32GB رام',
+                specs: '16" FHD+ OLED Touch · AMD Ryzen AI 9 465 · 32GB LPDDR5X · Copilot+ PC',
+                image: '/assets/banners/amazon-bf-hp-omnibook-x-flip-16-ai9.jpg',
+                url: 'https://link.amazon/B05atly2N',
+              },
+              {
+                id: 'bf-laptop-nimo-173-ai-copilot',
+                brandGroup: 'nimo',
+                brandLabel: 'NIMO',
+                discount: isAr ? 'بلاك فرايدي' : 'BLACK FRIDAY',
+                savingsAr: 'عرض أمازون أمريكا',
+                savingsEn: 'Amazon US Deal',
+                dealPrice: '~$1,299.99',
+                listPrice: '',
+                titleEn: 'NIMO 17.3" AI Copilot+ Laptop · 12-Core AI 9 HX 370 · 64GB DDR5 · 4TB SSD · 144Hz FHD',
+                titleAr: 'لابتوب NIMO 17.3 بوصة AI Copilot+ — معالج 12 نواة AI 9 HX 370 و64GB رام و4TB SSD',
+                specs: '17.3" 144Hz FHD · 12-Core AI 9 HX 370 (50 TOPS) · 64GB DDR5 · 4TB SSD · Radeon 890M',
+                image: '/assets/banners/amazon-bf-nimo-173-ai-copilot.jpg',
+                url: 'https://link.amazon/B05atly2N',
+              },
+            ]
+              .filter((p) => bfLaptopBrand === 'all' || p.brandGroup === bfLaptopBrand)
+              .slice(0, bfLaptopBrand === 'all' && !showAllBfLaptops ? 6 : 20)
+              .map((laptop) => (
+                <div
+                  key={laptop.id}
+                  className="rounded-lg border border-zinc-200 bg-[#FAFAFA] hover:border-[#FF9900] hover:shadow-sm transition-all flex flex-col justify-between overflow-hidden"
+                >
+                  <div className="relative bg-white p-4 border-b border-zinc-100">
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <div className="flex items-center gap-1.5">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[11px] font-extrabold bg-[#CC0C39] text-white rounded">
+                          {laptop.discount}
+                        </span>
+                        <span className="px-2 py-0.5 text-[10px] font-bold bg-zinc-100 text-zinc-800 rounded">
+                          {laptop.brandLabel}
+                        </span>
+                      </div>
+                      <ShareButton
+                        url={laptop.url}
+                        shareId={laptop.id}
+                        title={isAr ? laptop.titleAr : laptop.titleEn}
+                        price={laptop.dealPrice}
+                        oldPrice={laptop.listPrice}
+                        discount={laptop.discount}
+                        isAr={isAr}
+                        compact
+                        dropDirection="down"
+                      />
+                    </div>
+                    <a
+                      href={laptop.url}
+                      target="_blank"
+                      rel="nofollow noopener noreferrer"
+                      className="block w-full h-44 flex items-center justify-center"
+                    >
+                      <img
+                        src={laptop.image}
+                        alt={laptop.titleEn}
+                        referrerPolicy="no-referrer"
+                        className="max-h-full max-w-full object-contain"
+                      />
+                    </a>
+                  </div>
+
+                  <div className="p-3.5 flex-1 flex flex-col justify-between gap-2.5">
+                    <div>
+                      <div className="flex flex-wrap items-baseline gap-2">
+                        <span className="font-display font-extrabold text-xl text-zinc-950">
+                          {laptop.dealPrice}
+                        </span>
+                        {laptop.listPrice && (
+                          <span className="text-xs text-zinc-500 line-through">
+                            {laptop.listPrice}
+                          </span>
+                        )}
+                        <span className="px-1.5 py-0.5 text-[10px] font-extrabold bg-emerald-100 text-emerald-900 rounded">
+                          {isAr ? laptop.savingsAr : laptop.savingsEn}
+                        </span>
+                      </div>
+
+                      <h3 className="mt-1.5 font-display text-sm font-bold text-zinc-950 leading-snug line-clamp-2">
+                        {isAr ? laptop.titleAr : laptop.titleEn}
+                      </h3>
+                      <p className="mt-1 text-[11px] text-zinc-600 line-clamp-1">
+                        {laptop.specs}
+                      </p>
+                    </div>
+
+                    <a
+                      href={laptop.url}
+                      target="_blank"
+                      rel="nofollow noopener noreferrer"
+                      className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-[#FFD814] hover:bg-[#F7CA00] text-zinc-950 border border-[#FCD200] text-xs font-extrabold rounded-full transition-colors"
+                    >
+                      <span>
+                        {isAr
+                          ? 'احصل على العرض في أمازون أمريكا'
+                          : 'Shop Laptop Deal on Amazon US'}
+                      </span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </div>
+              ))}
+          </div>
+
+          {bfLaptopBrand === 'all' && (
+            <div className="mt-4 flex justify-center">
+              <button
+                type="button"
+                onClick={() => setShowAllBfLaptops((prev) => !prev)}
+                className="px-5 py-2 rounded-full bg-zinc-100 hover:bg-zinc-200 border border-zinc-300 text-xs font-extrabold text-zinc-900 transition-colors cursor-pointer"
+              >
+                {showAllBfLaptops
+                  ? isAr
+                    ? 'عرض أهم 6 لابتوبات فقط'
+                    : 'Show Top 6 Laptop Deals'
+                  : isAr
+                    ? 'عرض جميع الـ 12 عرض لابتوب 2-in-1 (Lenovo · HP · Acer · Samsung · NIMO)'
+                    : 'Show All 12 2-in-1 Laptop Deals (Lenovo · HP · Acer · Samsung · NIMO)'}
               </button>
             </div>
           )}
