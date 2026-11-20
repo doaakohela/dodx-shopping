@@ -1,0 +1,6 @@
+{
+  "name": "Dodx — Verified Coupons & Deals",
+  "description": "Save money automatically with verified coupons, promo codes, and smart shopping deals for top global stores on dodx.shop.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

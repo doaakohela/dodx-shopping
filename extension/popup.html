@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dodx – Official Shopping Partners</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="popup-shell">
+      <!-- Primary Deep Forest Green Header matching dodx.shop -->
+      <header class="dodx-header">
+        <a
+          href="https://www.dodx.shop"
+          data-external-url="https://www.dodx.shop"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="dodx-logo"
+          aria-label="Open https://www.dodx.shop"
+        >
+          <img
+            src="icons/icon48.png"
+            alt=""
+            width="28"
+            height="28"
+            class="dodx-brand-icon"
+          />
+          <span class="dodx-wordmark">
+            <span class="dodx-letters">dodx</span>
+            <svg
+              viewBox="0 0 64 12"
+              class="dodx-smile"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M5 2.5C15 8.5 29 8.5 39 2.5"
+                stroke="#FF9900"
+                stroke-width="2.6"
+                stroke-linecap="round"
+              />
+              <path
+                d="M35.2 1.2L40.4 2.3L37.8 7.1"
+                stroke="#FF9900"
+                stroke-width="2.3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <span class="dodx-tld">.shop</span>
+        </a>
+
+        <div class="header-actions">
+          <span id="active-domain" class="active-domain" title="Current active tab">dodx.shop</span>
+          <button
+            id="popout-btn"
+            type="button"
+            class="icon-btn"
+            title="Open in standalone window"
+            aria-label="Open extension in standalone popup window"
+          >
+            <svg viewBox="0 0 24 24" class="popout-icon" fill="none" stroke="currentColor" stroke-width="2.1" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14 5h5v5m0-5L10 14" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 13v5a1 1 0 01-1 1H6a1 1 0 01-1-1V6a1 1 0 011-1h5" />
+            </svg>
+          </button>
+          <button
+            id="refresh-btn"
+            type="button"
+            class="icon-btn"
+            title="Sync latest partner links"
+            aria-label="Sync latest partner links"
+          >
+            <svg viewBox="0 0 24 24" class="refresh-icon" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Official Website Link Bar (Top) -->
+      <div class="official-top-bar">
+        <a
+          href="https://www.dodx.shop"
+          data-external-url="https://www.dodx.shop"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="official-site-link"
+        >
+          <span class="official-site-dot" aria-hidden="true"></span>
+          <span>Official Site: <strong>https://www.dodx.shop</strong></span>
+          <span aria-hidden="true">↗</span>
+        </a>
+        <a
+          href="https://www.dodx.shop/products"
+          data-external-url="https://www.dodx.shop/products"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="official-top-products"
+        >
+          Products
+        </a>
+      </div>
+
+      <!-- Secondary Sub-Navbar with Multilingual Search & Partner Filter Tabs -->
+      <div class="dodx-subbar">
+        <div class="search-wrap">
+          <input
+            id="offer-search"
+            type="search"
+            placeholder="Search products, Amazon, HONOR, AliExpress, Alibaba..."
+            aria-label="Search products and official partner stores"
+            class="search-input"
+          />
+          <span class="search-badge" aria-hidden="true">
+            <svg viewBox="0 0 24 24" class="search-icon" fill="none" stroke="currentColor" stroke-width="2.4">
+              <circle cx="11" cy="11" r="7" />
+              <path stroke-linecap="round" d="M20 20l-3.5-3.5" />
+            </svg>
+          </span>
+        </div>
+
+        <nav id="store-tabs" class="store-tabs" aria-label="Featured partner stores"></nav>
+      </div>
+
+      <!-- Status / Sync Notice -->
+      <div id="status-bar" class="status-bar" hidden></div>
+
+      <!-- Dynamic Partner Stores & Directory Body -->
+      <main id="popup-content" class="popup-content">
+        <div class="loading-card">Loading official partners from dodx.shop...</div>
+      </main>
+
+      <!-- Transparent Affiliate Disclosure & Official Website Footer (Bottom) -->
+      <footer class="popup-footer">
+        <p id="affiliate-disclosure" class="disclosure-text">
+          Affiliate Disclosure: As an affiliate, dodx.shop may earn a commission from qualifying purchases at no extra cost to you.
+        </p>
+        <div class="footer-links">
+          <a
+            href="https://www.dodx.shop"
+            data-external-url="https://www.dodx.shop"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="footer-link footer-link-primary"
+          >
+            https://www.dodx.shop ↗
+          </a>
+          <span class="dot" aria-hidden="true">·</span>
+          <a
+            href="https://www.dodx.shop/products"
+            data-external-url="https://www.dodx.shop/products"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="footer-link"
+          >
+            Products
+          </a>
+          <span class="dot" aria-hidden="true">·</span>
+          <a
+            href="https://www.dodx.shop/disclosure"
+            data-external-url="https://www.dodx.shop/disclosure"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="footer-link"
+          >
+            Disclosure
+          </a>
+        </div>
+      </footer>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,950 @@
+export type LanguageCode =
+  | 'en'
+  | 'ar'
+  | 'es'
+  | 'fr'
+  | 'de'
+  | 'pt'
+  | 'zh'
+  | 'ja'
+  | 'ko'
+  | 'hi'
+  | 'tr'
+  | 'ru'
+  | 'it'
+  | 'id'
+  | 'nl'
+  | 'pl';
+
+export interface LanguageMeta {
+  code: LanguageCode;
+  shortLabel: string;
+  nativeName: string;
+  englishName: string;
+  flag: string;
+  dir: 'ltr' | 'rtl';
+}
+
+export const SUPPORTED_LANGUAGES: LanguageMeta[] = [
+  { code: 'en', shortLabel: 'EN', nativeName: 'English', englishName: 'English', flag: '🇺🇸', dir: 'ltr' },
+  { code: 'ar', shortLabel: 'AR', nativeName: 'العربية', englishName: 'Arabic', flag: '🇸🇦', dir: 'rtl' },
+  { code: 'es', shortLabel: 'ES', nativeName: 'Español', englishName: 'Spanish', flag: '🇪🇸', dir: 'ltr' },
+  { code: 'fr', shortLabel: 'FR', nativeName: 'Français', englishName: 'French', flag: '🇫🇷', dir: 'ltr' },
+  { code: 'de', shortLabel: 'DE', nativeName: 'Deutsch', englishName: 'German', flag: '🇩🇪', dir: 'ltr' },
+  { code: 'pt', shortLabel: 'PT', nativeName: 'Português', englishName: 'Portuguese', flag: '🇧🇷', dir: 'ltr' },
+  { code: 'zh', shortLabel: 'ZH', nativeName: '简体中文', englishName: 'Chinese', flag: '🇨🇳', dir: 'ltr' },
+  { code: 'ja', shortLabel: 'JA', nativeName: '日本語', englishName: 'Japanese', flag: '🇯🇵', dir: 'ltr' },
+  { code: 'ko', shortLabel: 'KO', nativeName: '한국어', englishName: 'Korean', flag: '🇰🇷', dir: 'ltr' },
+  { code: 'hi', shortLabel: 'HI', nativeName: 'हिन्दी', englishName: 'Hindi', flag: '🇮🇳', dir: 'ltr' },
+  { code: 'tr', shortLabel: 'TR', nativeName: 'Türkçe', englishName: 'Turkish', flag: '🇹🇷', dir: 'ltr' },
+  { code: 'ru', shortLabel: 'RU', nativeName: 'Русский', englishName: 'Russian', flag: '🇷🇺', dir: 'ltr' },
+  { code: 'it', shortLabel: 'IT', nativeName: 'Italiano', englishName: 'Italian', flag: '🇮🇹', dir: 'ltr' },
+  { code: 'id', shortLabel: 'ID', nativeName: 'Bahasa Indonesia', englishName: 'Indonesian', flag: '🇮🇩', dir: 'ltr' },
+  { code: 'nl', shortLabel: 'NL', nativeName: 'Nederlands', englishName: 'Dutch', flag: '🇳🇱', dir: 'ltr' },
+  { code: 'pl', shortLabel: 'PL', nativeName: 'Polski', englishName: 'Polish', flag: '🇵🇱', dir: 'ltr' },
+];
+
+export interface TranslationDict {
+  dealsActiveIn: string;
+  searchPlaceholder: string;
+  allOption: string;
+  chromeExtension: string;
+  addDodxFree: string;
+  addChromeShort: string;
+  affiliate: string;
+  disclosure: string;
+  claimed: string;
+  navAll: string;
+  todaysDeals: string;
+  productsNav: string;
+  productsPageTitle: string;
+  productsPageSubtitle: string;
+  searchBrandsPlaceholder: string;
+  allDepartmentsLabel: string;
+  subcategoriesLabel: string;
+  brandsLabel: string;
+  officialPartnerBanner: string;
+  matchingProductsHeading: string;
+  exploreAllProducts: string;
+  affiliateDisclosure: string;
+  helloShopper: string;
+  verifiedDealsSub: string;
+  topStores: string;
+  shopByDepartment: string;
+  allVerifiedDeals: string;
+  globalMarketplaces: string;
+  electronicsHome: string;
+  fashionApparel: string;
+  dealsUnder25: string;
+  dealsUnder50: string;
+  helpInformation: string;
+  dodxBrowserExtension: string;
+  privacyPolicy: string;
+  languageTitle: string;
+  showingPrefix: string;
+  verifiedProductDeals: string;
+  clearAllFilters: string;
+  liveFeedTitle: string;
+  liveFeedHint: string;
+  pause: string;
+  play: string;
+  limitedTimeDeal: string;
+  autoDeal: string;
+  copyAndShop: string;
+  claimDeal: string;
+  verifiedCouponsHeading: string;
+  verifiedOffersReady: string;
+  promoCodeLabel: string;
+  activationLabel: string;
+  noCodeNeeded: string;
+  copyCodeAndGo: string;
+  activateDeal: string;
+  noCouponsMatch: string;
+  resetSearch: string;
+  saveAutoHeading: string;
+  saveAutoSub: string;
+  addDodxToChromeCta: string;
+  affiliateStatement: string;
+  readFullDisclosure: string;
+  backToDodx: string;
+  switchStore: string;
+  dealUnlocked: string;
+  verifiedCouponsAndDeals: string;
+  verifiedOffersCount: string;
+  shopNow: string;
+  noCodeRequiredNote: string;
+  copyCodeAndActivate: string;
+  storeNotFound: string;
+  storeNotFoundSub: string;
+  backToTop: string;
+  getToKnowDodx: string;
+  liveCouponFeed: string;
+  hotVerifiedDeals: string;
+  browserCompanion: string;
+  partnerNetworks: string;
+  legalCompliance: string;
+  close: string;
+  browseTodaysDeals: string;
+  modalSub: string;
+  modalDesc: string;
+  modalBullet1: string;
+  modalBullet2: string;
+  modalBullet3: string;
+  modalNote: string;
+  installFromChromeStore: string;
+  copiedToastPrefix: string;
+  useCodeToastPrefix: string;
+  dealActivatedToast: string;
+  openingStoreToast: string;
+  openManually: string;
+  heroCards: Array<{ eyebrow: string; title: string; ctaLabel: string }>;
+  quickStrip: Array<{ title: string; subtitle: string }>;
+  bentoHeadings: string[];
+  bentoLinks: string[];
+  catAll: string;
+  catMarketplaces: string;
+  catFashion: string;
+  catElectronics: string;
+  bfKicker: string;
+  bfTitle: string;
+  bfSubtitle: string;
+  bfPrimaryCta: string;
+  bfSecondaryCta: string;
+}
+
+const EN: TranslationDict = {
+  dealsActiveIn: 'Deals active in',
+  searchPlaceholder: 'Search products, brands & coupons in any language (phones, HONOR, Alibaba, Amazon)...',
+  allOption: 'All',
+  chromeExtension: 'Chrome Extension',
+  addDodxFree: 'Add Dodx – Free',
+  addChromeShort: 'Add Chrome',
+  affiliate: 'Verified',
+  disclosure: 'Savings Guide',
+  claimed: 'Claimed',
+  navAll: 'All',
+  todaysDeals: "Today's Deals",
+  affiliateDisclosure: 'Verified Savings Guide',
+  helloShopper: 'Hello, Shopper',
+  verifiedDealsSub: 'dodx.shop Verified Deals',
+  topStores: 'Top Stores',
+  shopByDepartment: 'Shop by Department',
+  allVerifiedDeals: 'All Verified Deals',
+  globalMarketplaces: 'Global Marketplaces',
+  electronicsHome: 'Electronics & Home',
+  fashionApparel: 'Fashion & Apparel',
+  dealsUnder25: 'Deals Under $25',
+  dealsUnder50: 'Deals Under $50',
+  helpInformation: 'Help & Information',
+  dodxBrowserExtension: 'Dodx Browser Extension',
+  privacyPolicy: 'Privacy Policy',
+  languageTitle: 'Choose Language',
+  showingPrefix: 'Showing',
+  verifiedProductDeals: 'verified product deals',
+  clearAllFilters: 'Clear all filters',
+  liveFeedTitle: "Today's Live Coupon & Product Feed",
+  liveFeedHint: 'Hover any product to pause · Click to unlock discount & deal',
+  pause: 'Pause',
+  play: 'Play',
+  limitedTimeDeal: 'Limited time deal',
+  autoDeal: 'Direct Discount',
+  copyAndShop: 'Copy & Shop',
+  claimDeal: 'Claim Offer',
+  verifiedCouponsHeading: 'Verified Coupons, Promo Codes & Hot Deals',
+  verifiedOffersReady: 'verified deals & coupons ready',
+  promoCodeLabel: 'Promo Code:',
+  activationLabel: 'Activation:',
+  noCodeNeeded: 'Direct Discount · Instant Savings',
+  copyCodeAndGo: 'Copy Code & Go to Store',
+  activateDeal: 'Get Deal & Save',
+  noCouponsMatch: 'No offers match your search.',
+  resetSearch: 'Reset search',
+  saveAutoHeading: 'Save automatically at global stores with Dodx',
+  saveAutoSub: 'Instant access to verified coupons and deals for Amazon US, UAE, Egypt & Japan, AliExpress, Alibaba, HONOR, Huawei, Lenovo, and Canon.',
+  addDodxToChromeCta: "Add Dodx to Chrome – It's Free",
+  affiliateStatement:
+    'Dodx curates verified promo codes, clip coupons, bank discounts, and direct store offers across top global retailers so shoppers get instant savings at checkout.',
+  readFullDisclosure: 'Read Savings Guide',
+  backToDodx: 'Back to Dodx Home',
+  switchStore: 'Switch store:',
+  dealUnlocked: 'Store Discounts & Verified Coupons Ready',
+  verifiedCouponsAndDeals: 'Verified Coupons & Deals',
+  verifiedOffersCount: 'verified offers',
+  shopNow: 'Shop Now',
+  noCodeRequiredNote: 'Instant offer — discount applies directly on store checkout',
+  copyCodeAndActivate: 'Copy Code & Activate Deal',
+  storeNotFound: 'Store not found',
+  storeNotFoundSub: 'Choose one of our verified stores below to unlock active coupons and deals.',
+  backToTop: 'Back to top',
+  getToKnowDodx: 'Get to Know Dodx',
+  liveCouponFeed: 'Live Coupon Feed',
+  hotVerifiedDeals: 'Hot Verified Deals',
+  browserCompanion: 'Browser Companion',
+  partnerNetworks: 'Featured Stores',
+  legalCompliance: 'Guides & Privacy',
+  close: 'Close',
+  browseTodaysDeals: "Browse Today's Deals",
+  modalSub: 'Free Chrome Browser Companion',
+  modalDesc: 'Our Chrome extension alerts you automatically whenever verified promo codes, clip coupons, and instant discounts are available at supported stores.',
+  modalBullet1: 'Instant coupon and discount alerts when visiting supported stores',
+  modalBullet2: 'One-click access to verified promo codes & storewide markdowns',
+  modalBullet3: 'Privacy-first — no browsing history tracking',
+  modalNote: 'Available now on the official Chrome Web Store. Free, lightweight, and privacy-first.',
+  installFromChromeStore: 'Install from Chrome Web Store',
+  copiedToastPrefix: 'Code copied to clipboard:',
+  useCodeToastPrefix: 'Use promo code at checkout:',
+  dealActivatedToast: 'discount offer opened',
+  openingStoreToast: 'Opening store in a new tab...',
+  openManually: 'Open store offer manually',
+  heroCards: [
+    { eyebrow: 'Shop featured deals now', title: "Amazon US Today's Deals & Daily Offers", ctaLabel: 'Shop Amazon Deals' },
+    { eyebrow: 'Computers & Electronics', title: 'Laptops, Audio & Smart Tech on Amazon', ctaLabel: 'Explore Tech Deals' },
+    { eyebrow: 'Global Direct Savings', title: 'AliExpress Choice Tech & Everyday Finds', ctaLabel: 'Shop AliExpress' },
+    { eyebrow: 'Official UAE Store', title: 'HONOR UAE Smartphones, Tablets & Books', ctaLabel: 'Shop HONOR UAE' },
+    { eyebrow: 'Wholesale Direct', title: 'Alibaba Direct Manufacturer Sourcing', ctaLabel: 'Shop Alibaba' },
+  ],
+  quickStrip: [
+    { title: 'Keep shopping for tech', subtitle: 'Amazon US · Daily Deals' },
+    { title: 'Global tech & gadgets', subtitle: 'AliExpress · Choice Store' },
+    { title: 'Factory direct wholesale', subtitle: 'Alibaba · Trade Assurance' },
+    { title: 'HONOR Smartphones', subtitle: 'HONOR UAE · Official Store' },
+    { title: 'Huawei Devices & Watch', subtitle: 'Huawei AE · Official Store' },
+    { title: 'ThinkPad & Legion PCs', subtitle: 'Lenovo India · Official Store' },
+    { title: 'Cameras & PIXMA Printers', subtitle: 'Canon UAE · Official Store' },
+  ],
+  bentoHeadings: [
+    'Amazon US & Tech Picks',
+    'Official Brand Stores (HONOR, Huawei, Canon, Lenovo)',
+    'AliExpress & Alibaba Global Picks',
+    'Software, Audio & Exclusive Offers',
+  ],
+  bentoLinks: [
+    'See all Amazon US deals',
+    'Visit HONOR UAE Official Store',
+    'Explore AliExpress deals',
+    'Get Parallels WW & Software',
+  ],
+  catAll: 'All',
+  catMarketplaces: 'Marketplaces',
+  catFashion: 'Fashion',
+  catElectronics: 'Electronics & Home',
+  bfKicker: 'Verified Coupons & Direct Savings · Live Worldwide',
+  bfTitle: 'Verified Store Deals & Coupons — Amazon, AliExpress, Alibaba, HONOR, Huawei & More',
+  bfSubtitle:
+    'Unlock active promo codes, clip coupons, and instant storewide markdowns on Amazon US, UAE, Egypt & Japan, AliExpress, Alibaba, HONOR UAE, Huawei AE, Lenovo India, Canon UAE, Parallels WW, AdGuard, and Admitad Shop.',
+  bfPrimaryCta: 'Shop Amazon Deals',
+  bfSecondaryCta: 'Browse All Store Deals',
+  productsNav: 'Products',
+  productsPageTitle: 'Product Departments & Global Brands',
+  productsPageSubtitle:
+    'Browse shopping departments, visual categories, and top global brands.',
+  searchBrandsPlaceholder: 'Search any product or brand in any language (e.g. HONOR, phones, laptop)...',
+  allDepartmentsLabel: 'Shop by Department',
+  subcategoriesLabel: 'Subcategories',
+  brandsLabel: 'Global Brands',
+  officialPartnerBanner: 'Featured Coupons & Store Offers',
+  matchingProductsHeading: 'Matching Products & Global Brands',
+  exploreAllProducts: 'Browse All Products',
+};
+
+const AR: TranslationDict = {
+  dealsActiveIn: 'العروض متاحة في',
+  searchPlaceholder: 'ابحث عن أي منتج أو كوبون أو شركة بكل اللغات (هواتف، هونر، علي بابا، أمازون)...',
+  allOption: 'الكل',
+  chromeExtension: 'إضافة كروم',
+  addDodxFree: 'أضف Dodx – مجاناً',
+  addChromeShort: 'أضف لكروم',
+  affiliate: 'تخفيضات',
+  disclosure: 'موثّقة',
+  claimed: 'المفعّلة',
+  navAll: 'الكل',
+  todaysDeals: 'عروض اليوم',
+  affiliateDisclosure: 'دليل العروض والتوفير الموثّق',
+  helloShopper: 'مرحباً بك في Dodx',
+  verifiedDealsSub: 'كوبونات dodx.shop الموثقة',
+  topStores: 'أهم المتاجر',
+  shopByDepartment: 'تصفح حسب القسم',
+  allVerifiedDeals: 'جميع العروض الموثقة',
+  globalMarketplaces: 'المتاجر العالمية',
+  electronicsHome: 'الإلكترونيات والمنزل',
+  fashionApparel: 'الأزياء والملابس',
+  dealsUnder25: 'عروض أقل من 25$',
+  dealsUnder50: 'عروض أقل من 50$',
+  helpInformation: 'المساعدة والمعلومات',
+  dodxBrowserExtension: 'إضافة Dodx للمتصفح',
+  privacyPolicy: 'سياسة الخصوصية',
+  languageTitle: 'اختر اللغة',
+  showingPrefix: 'عرض',
+  verifiedProductDeals: 'عرض منتجات وكوبونات موثقة',
+  clearAllFilters: 'مسح جميع الفلاتر',
+  liveFeedTitle: 'معرض الكوبونات والمنتجات المباشر لليوم',
+  liveFeedHint: 'مرر الفأرة على أي منتج للإيقاف · اضغط للاستفادة من الخصم والعرض',
+  pause: 'إيقاف',
+  play: 'تشغيل',
+  limitedTimeDeal: 'عرض خصم محدود',
+  autoDeal: 'خصم مباشر',
+  copyAndShop: 'انسخ وتسوق',
+  claimDeal: 'احصل على العرض',
+  verifiedCouponsHeading: 'أقوى الكوبونات وأكواد الخصم وعروض المتاجر',
+  verifiedOffersReady: 'عروض وكوبونات جاهزة للتوفير',
+  promoCodeLabel: 'كود الخصم:',
+  activationLabel: 'التفعيل:',
+  noCodeNeeded: 'عرض مباشر · خصم فوري',
+  copyCodeAndGo: 'نسخ الكود والذهاب للمتجر',
+  activateDeal: 'احصل على العرض الآن',
+  noCouponsMatch: 'لا توجد عروض مطابقة لبحثك.',
+  resetSearch: 'إعادة ضبط البحث',
+  saveAutoHeading: 'وفّر تلقائياً مع كوبونات وعروض Dodx',
+  saveAutoSub: 'أكواد خصم وكوبونات موثوقة وتخفيضات مباشرة على أمازون أمريكا والإمارات ومصر واليابان وعلي إكسبريس وعلي بابا وهونر وهواوي ولينوفو وكانون.',
+  addDodxToChromeCta: 'أضف Dodx إلى Chrome – مجاناً',
+  affiliateStatement:
+    'يجمع موقع Dodx أحدث أكواد الخصم الموثّقة والكوبونات الحصرية وأقوى التخفيضات المباشرة من المتاجر العالمية لمساعدتك على التوفير الفوري عند الشراء.',
+  readFullDisclosure: 'عرض دليل التوفير',
+  backToDodx: 'العودة إلى الرئيسية',
+  switchStore: 'تبديل المتجر:',
+  dealUnlocked: 'المتجر المعتمد / الكوبونات والتخفيضات المتاحة',
+  verifiedCouponsAndDeals: 'الكوبونات والعروض الموثّقة',
+  verifiedOffersCount: 'عروض موثّقة',
+  shopNow: 'تسوق الآن',
+  noCodeRequiredNote: 'عرض مباشر — يسري الخصم والتوفير فور انتقالك للمتجر',
+  copyCodeAndActivate: 'نسخ الكود وتفعيل الخصم',
+  storeNotFound: 'المتجر غير موجود',
+  storeNotFoundSub: 'اختر أحد المتاجر المعتمدة أدناه لتصفح الكوبونات والعروض المتاحة.',
+  backToTop: 'العودة للأعلى',
+  getToKnowDodx: 'تعرف على Dodx',
+  liveCouponFeed: 'شريط الكوبونات المباشر',
+  hotVerifiedDeals: 'أقوى العروض الموثقة',
+  browserCompanion: 'مساعد المتصفح',
+  partnerNetworks: 'المتاجر المعتمدة',
+  legalCompliance: 'الإرشادات والخصوصية',
+  close: 'إغلاق',
+  browseTodaysDeals: 'تصفح عروض اليوم',
+  modalSub: 'مساعد المتصفح المجاني للتسوق الذكي',
+  modalDesc: 'تنبهك إضافة Chrome تلقائياً عند توفر كوبونات خصم وعروض وتخفيضات في المتاجر المدعومة بموقعنا.',
+  modalBullet1: 'تنبيهات فورية بالكوبونات والخصومات عند زيارة المتاجر المدعومة',
+  modalBullet2: 'وصول سريع لأحدث أكواد الخصم وعروض التوفير المباشرة',
+  modalBullet3: 'حماية كاملة للخصوصية دون تتبع سجل التصفح',
+  modalNote: 'متوفرة الآن رسمياً على سوق Chrome الإلكتروني. مجانية وخفيفة وتحفظ خصوصيتك.',
+  installFromChromeStore: 'تثبيت من سوق Chrome الآن',
+  copiedToastPrefix: 'تم نسخ الكود:',
+  useCodeToastPrefix: 'استخدم الكود عند الدفع:',
+  dealActivatedToast: 'تم فتح عرض التوفير',
+  openingStoreToast: 'جاري فتح المتجر في تبويب جديد...',
+  openManually: 'افتح رابط المتجر يدوياً',
+  heroCards: [
+    { eyebrow: 'تصفح أقوى العروض الآن', title: 'أبرز عروض أمازون اليومية والموسمية', ctaLabel: 'افتح عروض أمازون' },
+    { eyebrow: 'الإلكترونيات واللابتوب', title: 'عروض أجهزة التقنية والسماعات على أمازون', ctaLabel: 'استكشف عروض التقنية' },
+    { eyebrow: 'توفير عالمي مباشر', title: 'عروض علي إكسبريس Choice على الأجهزة والإكسسوارات', ctaLabel: 'تسوق AliExpress' },
+    { eyebrow: 'المتجر الرسمي بالإمارات', title: 'هواتف وتابلت ولابتوب HONOR الإمارات الرسمي', ctaLabel: 'تسوق هونر الإمارات' },
+    { eyebrow: 'الاستيراد والجملة من المصانع', title: 'منصة Alibaba الرسمية للتسوق المباشر والجملة', ctaLabel: 'تسوق Alibaba' },
+  ],
+  quickStrip: [
+    { title: 'تصفح عروض التقنية', subtitle: 'أمازون أمريكا · عروض اليوم' },
+    { title: 'إلكترونيات وإكسسوارات', subtitle: 'AliExpress · متجر Choice' },
+    { title: 'عروض المصانع والجملة', subtitle: 'Alibaba · ضمان التجارة' },
+    { title: 'هواتف HONOR', subtitle: 'HONOR الإمارات · الرسمي' },
+    { title: 'أجهزة Huawei', subtitle: 'Huawei الإمارات · الرسمي' },
+    { title: 'لابتوبات Lenovo', subtitle: 'Lenovo الهند · الرسمي' },
+    { title: 'كاميرات وطابعات Canon', subtitle: 'Canon الإمارات · الرسمي' },
+  ],
+  bentoHeadings: [
+    'عروض أمازون والتقنية',
+    'المتاجر الرسمية (HONOR و Huawei و Canon و Lenovo)',
+    'عروض AliExpress و Alibaba العالمية',
+    'البرامج والصوتيات والعروض الحصرية',
+  ],
+  bentoLinks: [
+    'عرض كل عروض أمازون',
+    'زيارة متجر HONOR الإمارات الرسمي',
+    'استكشف عروض AliExpress',
+    'احصل على Parallels WW الرسمي',
+  ],
+  catAll: 'الكل',
+  catMarketplaces: 'المتاجر الشاملة',
+  catFashion: 'الأزياء',
+  catElectronics: 'الإلكترونيات والمنزل',
+  bfKicker: 'كوبونات موثّقة وتخفيضات مباشرة · عروض يومية',
+  bfTitle: 'أقوى العروض والكوبونات — Amazon و AliExpress و Alibaba و HONOR و Huawei وغيرها',
+  bfSubtitle:
+    'احصل على أحدث أكواد الخصم وكوبونات التوفير والعروض اليومية عبر Amazon US وأمازون الإمارات ومصر واليابان وAliExpress وAlibaba وHONOR UAE وHuawei AE وLenovo India وCanon UAE وParallels WW وAdGuard وAdmitad Shop.',
+  bfPrimaryCta: 'تسوق عروض أمازون الآن',
+  bfSecondaryCta: 'تصفح كل العروض والكوبونات',
+  productsNav: 'المنتجات',
+  productsPageTitle: 'أقسام المنتجات والماركات العالمية',
+  productsPageSubtitle:
+    'تصفح أقسام المنتجات والفئات الفرعية وأشهر الشركات العالمية عبر بطاقات مرئية منظمة.',
+  searchBrandsPlaceholder: 'ابحث عن أي منتج أو شركة بأي لغة (مثل: هونر، هواتف، لابتوب، عطور، دايسون)...',
+  allDepartmentsLabel: 'تصفح حسب القسم',
+  subcategoriesLabel: 'الأقسام الفرعية',
+  brandsLabel: 'الشركات العالمية',
+  officialPartnerBanner: 'أبرز الكوبونات والعروض الحصرية',
+  matchingProductsHeading: 'المنتجات والماركات المطابقة لبحثك',
+  exploreAllProducts: 'تصفح كل الأقسام والمنتجات',
+};
+
+const ES: TranslationDict = {
+  ...EN,
+  dealsActiveIn: 'Ofertas activas en',
+  searchPlaceholder: 'Buscar productos y marcas en Dodx (Amazon, AliExpress, HONOR, Alibaba)...',
+  allOption: 'Todo',
+  chromeExtension: 'Extensión Chrome',
+  addDodxFree: 'Añadir Dodx – Gratis',
+  addChromeShort: 'Añadir Chrome',
+  affiliate: 'Ahorro',
+  disclosure: 'Verificado',
+  claimed: 'Usados',
+  navAll: 'Todo',
+  todaysDeals: 'Ofertas de Hoy',
+  productsNav: 'Productos',
+  affiliateDisclosure: 'Guía de Ahorro Verificado',
+  helloShopper: 'Hola, Comprador',
+  topStores: 'Tiendas Principales',
+  shopByDepartment: 'Comprar por Departamento',
+  allVerifiedDeals: 'Todas las Ofertas',
+  globalMarketplaces: 'Tiendas Globales',
+  electronicsHome: 'Electrónica y Hogar',
+  fashionApparel: 'Moda y Ropa',
+  dealsUnder25: 'Ofertas menos de $25',
+  dealsUnder50: 'Ofertas menos de $50',
+  helpInformation: 'Ayuda e Información',
+  dodxBrowserExtension: 'Extensión Dodx',
+  privacyPolicy: 'Política de Privacidad',
+  languageTitle: 'Elegir idioma',
+  liveFeedTitle: 'Galería en Vivo de Ofertas y Productos',
+  liveFeedHint: 'Pasa el cursor para pausar · Haz clic para ver la oferta',
+  pause: 'Pausar',
+  play: 'Reproducir',
+  limitedTimeDeal: 'Oferta por tiempo limitado',
+  autoDeal: 'Descuento Directo',
+  copyAndShop: 'Copiar y Comprar',
+  claimDeal: 'Ver Oferta',
+  verifiedCouponsHeading: 'Cupones Verificados y Ofertas Destacadas',
+  copyCodeAndGo: 'Copiar Código e Ir a la Tienda',
+  activateDeal: 'Ir a la Oferta',
+  saveAutoHeading: 'Ahorra en tiendas globales verificadas con Dodx',
+  addDodxToChromeCta: 'Añadir Dodx a Chrome – Es Gratis',
+  backToDodx: 'Volver al inicio de Dodx',
+  dealUnlocked: 'Cupones y Ofertas Verificadas',
+  copyCodeAndActivate: 'Copiar Código y Activar Oferta',
+  backToTop: 'Volver arriba',
+  catAll: 'Todo',
+  catMarketplaces: 'Tiendas',
+  catFashion: 'Moda',
+  catElectronics: 'Electrónica y Hogar',
+  bfKicker: 'Cupones Verificados y Ahorro Directo · En Vivo',
+  bfTitle: 'Cupones y Ofertas Oficiales — Amazon, AliExpress, Alibaba, HONOR, Huawei y Más',
+  bfSubtitle: 'Descuentos verificados en Amazon US, UAE, Egipto y Japón, AliExpress, Alibaba, HONOR UAE, Huawei AE, Lenovo India y Canon UAE.',
+  bfPrimaryCta: 'Ver Ofertas Amazon',
+  bfSecondaryCta: 'Explorar Todas las Ofertas',
+};
+
+const FR: TranslationDict = {
+  ...EN,
+  dealsActiveIn: 'Offres actives en',
+  searchPlaceholder: 'Rechercher sur Dodx (Amazon, AliExpress, HONOR, Alibaba)...',
+  allOption: 'Tout',
+  chromeExtension: 'Extension Chrome',
+  addDodxFree: 'Ajouter Dodx – Gratuit',
+  addChromeShort: 'Ajouter Chrome',
+  affiliate: 'Promos',
+  disclosure: 'Vérifiées',
+  claimed: 'Activés',
+  navAll: 'Tout',
+  todaysDeals: 'Offres du Jour',
+  productsNav: 'Produits',
+  affiliateDisclosure: 'Guide des Offres Vérifiées',
+  helloShopper: 'Bonjour, Client',
+  topStores: 'Meilleures Boutiques',
+  shopByDepartment: 'Parcourir par Rayon',
+  allVerifiedDeals: 'Toutes les Offres',
+  globalMarketplaces: 'Boutiques Mondiales',
+  electronicsHome: 'Électronique & Maison',
+  fashionApparel: 'Mode & Vêtements',
+  dealsUnder25: 'Offres moins de 25 $',
+  dealsUnder50: 'Offres moins de 50 $',
+  helpInformation: 'Aide et Informations',
+  dodxBrowserExtension: 'Extension Dodx',
+  privacyPolicy: 'Confidentialité',
+  languageTitle: 'Choisir la langue',
+  liveFeedTitle: 'Galerie en Direct des Offres et Produits',
+  liveFeedHint: "Survolez pour mettre en pause · Cliquez pour profiter de l'offre",
+  pause: 'Pause',
+  play: 'Lire',
+  limitedTimeDeal: 'Offre limitée',
+  autoDeal: 'Remise Directe',
+  copyAndShop: 'Copier & Acheter',
+  claimDeal: "Voir l'Offre",
+  verifiedCouponsHeading: 'Coupons Vérifiés & Bons Plans Produits',
+  copyCodeAndGo: 'Copier le Code et Aller sur le Site',
+  activateDeal: "Profiter de l'Offre",
+  saveAutoHeading: 'Économisez sur vos boutiques préférées avec Dodx',
+  addDodxToChromeCta: "Ajouter Dodx à Chrome – C'est Gratuit",
+  backToDodx: "Retour à l'accueil Dodx",
+  dealUnlocked: 'Coupons & Offres Vérifiées',
+  copyCodeAndActivate: "Copier le Code et Activer l'Offre",
+  backToTop: 'Retour en haut',
+  catAll: 'Tout',
+  catMarketplaces: 'Boutiques',
+  catFashion: 'Mode',
+  catElectronics: 'Électronique & Maison',
+  bfKicker: 'Coupons Vérifiés & Économies Directes · En Direct',
+  bfTitle: 'Coupons & Offres Officielles — Amazon, AliExpress, Alibaba, HONOR, Huawei & Plus',
+  bfSubtitle: 'Codes promo et remises vérifiés sur Amazon US, EAU, Égypte & Japon, AliExpress, Alibaba, HONOR UAE, Huawei AE, Lenovo India et Canon UAE.',
+  bfPrimaryCta: 'Voir les Offres Amazon',
+  bfSecondaryCta: 'Toutes les Offres',
+};
+
+const DE: TranslationDict = {
+  ...EN,
+  dealsActiveIn: 'Angebote aktiv in',
+  searchPlaceholder: 'Dodx-Angebote suchen (Amazon, AliExpress, HONOR, Alibaba)...',
+  allOption: 'Alle',
+  chromeExtension: 'Chrome-Erweiterung',
+  addDodxFree: 'Dodx hinzufügen – Gratis',
+  addChromeShort: 'Für Chrome',
+  affiliate: 'Geprüfte',
+  disclosure: 'Rabatte',
+  claimed: 'Aktiviert',
+  navAll: 'Alle',
+  todaysDeals: 'Heutige Angebote',
+  productsNav: 'Produkte',
+  affiliateDisclosure: 'Geprüfte Spar-Hinweise',
+  helloShopper: 'Hallo, Käufer',
+  topStores: 'Top-Shops',
+  shopByDepartment: 'Nach Kategorie',
+  allVerifiedDeals: 'Alle Geprüften Deals',
+  globalMarketplaces: 'Globale Marktplätze',
+  electronicsHome: 'Elektronik & Haushalt',
+  fashionApparel: 'Mode & Kleidung',
+  dealsUnder25: 'Deals unter 25 $',
+  dealsUnder50: 'Deals unter 50 $',
+  helpInformation: 'Hilfe & Infos',
+  dodxBrowserExtension: 'Dodx Browser-Erweiterung',
+  privacyPolicy: 'Datenschutz',
+  languageTitle: 'Sprache wählen',
+  liveFeedTitle: 'Live-Angebote- & Produktgalerie',
+  liveFeedHint: 'Zum Pausieren Maus drüberfahren · Klicken für das Angebot',
+  pause: 'Pause',
+  play: 'Start',
+  limitedTimeDeal: 'Zeitlich begrenztes Angebot',
+  autoDeal: 'Direktrabatt',
+  copyAndShop: 'Kopieren & Shoppen',
+  claimDeal: 'Zum Angebot',
+  verifiedCouponsHeading: 'Geprüfte Gutscheine & Top-Produktdeals',
+  copyCodeAndGo: 'Code kopieren & zum Shop',
+  activateDeal: 'Angebot sichern',
+  saveAutoHeading: 'Spare bei globalen Top-Shops mit Dodx',
+  addDodxToChromeCta: 'Dodx zu Chrome hinzufügen – Kostenlos',
+  backToDodx: 'Zurück zu Dodx',
+  dealUnlocked: 'Geprüfte Gutscheine & Angebote',
+  copyCodeAndActivate: 'Code kopieren & Deal aktivieren',
+  backToTop: 'Nach oben',
+  catAll: 'Alle',
+  catMarketplaces: 'Marktplätze',
+  catFashion: 'Mode',
+  catElectronics: 'Elektronik & Haushalt',
+  bfKicker: 'Geprüfte Gutscheine & Direktrabatte · Weltweit Live',
+  bfTitle: 'Gutscheine & Top-Deals — Amazon, AliExpress, Alibaba, HONOR, Huawei & Mehr',
+  bfSubtitle: 'Aktive Gutscheine und Direktangebote für Amazon US, VAE, Ägypten & Japan, AliExpress, Alibaba, HONOR UAE, Huawei AE, Lenovo India und Canon UAE.',
+  bfPrimaryCta: 'Amazon Deals ansehen',
+  bfSecondaryCta: 'Alle Angebote ansehen',
+};
+
+const PT: TranslationDict = {
+  ...EN,
+  dealsActiveIn: 'Ofertas ativas em',
+  searchPlaceholder: 'Buscar ofertas e marcas no Dodx (Amazon, AliExpress, HONOR, Alibaba)...',
+  allOption: 'Todos',
+  chromeExtension: 'Extensão Chrome',
+  addDodxFree: 'Adicionar Dodx – Grátis',
+  claimed: 'Usados',
+  navAll: 'Todos',
+  todaysDeals: 'Ofertas de Hoje',
+  productsNav: 'Produtos',
+  affiliateDisclosure: 'Guia de Ofertas Verificadas',
+  topStores: 'Principais Lojas',
+  shopByDepartment: 'Comprar por Categoria',
+  privacyPolicy: 'Política de Privacidade',
+  languageTitle: 'Escolher Idioma',
+  liveFeedTitle: 'Vitrine Ao Vivo de Cupons e Produtos',
+  pause: 'Pausar',
+  play: 'Reproduzir',
+  copyAndShop: 'Copiar e Comprar',
+  claimDeal: 'Ativar Oferta',
+  copyCodeAndGo: 'Copiar Código e Ir para a Loja',
+  activateDeal: 'Ativar Oferta',
+  backToTop: 'Voltar ao topo',
+};
+
+const ZH: TranslationDict = {
+  ...EN,
+  dealsActiveIn: '优惠适用地区',
+  searchPlaceholder: '搜索 Dodx 商品与官方品牌 (Amazon, AliExpress, HONOR, Alibaba)...',
+  allOption: '全部',
+  chromeExtension: 'Chrome 扩展',
+  addDodxFree: '免费添加 Dodx',
+  addChromeShort: '添加到 Chrome',
+  affiliate: '官方',
+  disclosure: '省钱指南',
+  claimed: '已领取',
+  navAll: '全部',
+  todaysDeals: '今日优惠',
+  productsNav: '全部商品',
+  affiliateDisclosure: '已验证优惠指南',
+  helloShopper: '您好，欢迎购物',
+  topStores: '热门商店',
+  shopByDepartment: '按分类浏览',
+  allVerifiedDeals: '全部已验证优惠',
+  globalMarketplaces: '全球商城',
+  electronicsHome: '数码与家居',
+  fashionApparel: '时尚服饰',
+  dealsUnder25: '$25 以下优惠',
+  dealsUnder50: '$50 以下优惠',
+  helpInformation: '帮助与信息',
+  dodxBrowserExtension: 'Dodx 浏览器扩展',
+  privacyPolicy: '隐私政策',
+  languageTitle: '选择语言',
+  liveFeedTitle: '今日实时优惠券与商品精选',
+  liveFeedHint: '悬停暂停 · 点击直达折扣优惠',
+  pause: '暂停',
+  play: '播放',
+  limitedTimeDeal: '限时特惠',
+  autoDeal: '直降优惠',
+  copyAndShop: '复制并购买',
+  claimDeal: '查看优惠',
+  verifiedCouponsHeading: '已验证优惠券与热门商品',
+  copyCodeAndGo: '复制优惠码并前往商店',
+  activateDeal: '领取限时优惠',
+  saveAutoHeading: '使用 Dodx 获取全球商城直降优惠',
+  addDodxToChromeCta: '免费添加 Dodx 到 Chrome',
+  backToDodx: '返回 Dodx 首页',
+  dealUnlocked: '官方商店 / 已验证优惠券',
+  copyCodeAndActivate: '复制优惠码并激活优惠',
+  backToTop: '返回顶部',
+  catAll: '全部',
+  catMarketplaces: '综合商城',
+  catFashion: '时尚',
+  catElectronics: '数码与家居',
+  bfKicker: '已验证优惠券与直接立减 · 全球同步',
+  bfTitle: '精选优惠与折扣券 — Amazon、AliExpress、Alibaba、HONOR、Huawei 等',
+  bfSubtitle: '立即获取 Amazon 美国/阿联酋/埃及/日本、AliExpress、Alibaba、HONOR UAE、Huawei AE、Lenovo India 和 Canon UAE 最新优惠券。',
+  bfPrimaryCta: '浏览 Amazon 优惠',
+  bfSecondaryCta: '浏览全部精选优惠',
+};
+
+const JA: TranslationDict = {
+  ...EN,
+  dealsActiveIn: '対象地域',
+  searchPlaceholder: 'Dodx で商品・ブランドを検索 (Amazon, AliExpress, HONOR, Alibaba)...',
+  allOption: 'すべて',
+  chromeExtension: 'Chrome拡張機能',
+  addDodxFree: 'Dodxを追加 – 無料',
+  claimed: '獲得済み',
+  navAll: 'すべて',
+  todaysDeals: '本日のセール',
+  productsNav: '製品一覧',
+  affiliateDisclosure: 'クーポン＆お得情報ガイド',
+  topStores: '人気ストア',
+  shopByDepartment: 'カテゴリーから探す',
+  privacyPolicy: 'プライバシーポリシー',
+  languageTitle: '言語を選択',
+  liveFeedTitle: '本日のライブクーポン＆商品フィード',
+  pause: '一時停止',
+  play: '再生',
+  copyAndShop: 'コピーして購入',
+  claimDeal: '割引を有効化',
+  copyCodeAndGo: 'コードをコピーしてストアへ',
+  activateDeal: 'セールを有効化',
+  backToTop: 'トップへ戻る',
+};
+
+const KO: TranslationDict = {
+  ...EN,
+  dealsActiveIn: '할인 지역',
+  searchPlaceholder: 'Dodx 상품 및 브랜드 검색 (Amazon, AliExpress, HONOR, Alibaba)...',
+  allOption: '전체',
+  chromeExtension: 'Chrome 확장 프로그램',
+  addDodxFree: 'Dodx 추가 – 무료',
+  claimed: '적용됨',
+  navAll: '전체',
+  todaysDeals: '오늘의 특가',
+  productsNav: '제품',
+  affiliateDisclosure: '검증된 할인 가이드',
+  topStores: '인기 스토어',
+  shopByDepartment: '카테고리별 보기',
+  privacyPolicy: '개인정보처리방침',
+  languageTitle: '언어 선택',
+  liveFeedTitle: '실시간 쿠폰 및 상품 특가 피드',
+  pause: '일시정지',
+  play: '재생',
+  copyAndShop: '복사 후 쇼핑',
+  claimDeal: '할인 받기',
+  copyCodeAndGo: '코드 복사 및 스토어 이동',
+  activateDeal: '할인 활성화',
+  backToTop: '맨 위로',
+};
+
+const HI: TranslationDict = {
+  ...EN,
+  dealsActiveIn: 'डील क्षेत्र',
+  searchPlaceholder: 'Dodx डील्स खोजें (Amazon, AliExpress, HONOR, Alibaba)...',
+  allOption: 'सभी',
+  chromeExtension: 'Chrome एक्सटेंशन',
+  addDodxFree: 'Dodx जोड़ें – मुफ़्त',
+  claimed: 'लागू',
+  navAll: 'सभी',
+  todaysDeals: 'आज की डील्स',
+  productsNav: 'उत्पाद',
+  affiliateDisclosure: 'सत्यापित बचत गाइड',
+  topStores: 'प्रमुख स्टोर्स',
+  shopByDepartment: 'श्रेणी के अनुसार',
+  privacyPolicy: 'गोपनीयता नीति',
+  languageTitle: 'भाषा चुनें',
+  liveFeedTitle: 'लाइव कूपन और प्रोडक्ट गैलरी',
+  pause: 'रोकें',
+  play: 'चलाएं',
+  copyAndShop: 'कॉपी करें और खरीदें',
+  claimDeal: 'डील पाएं',
+  copyCodeAndGo: 'कोड कॉपी करें और स्टोर पर जाएं',
+  activateDeal: 'डील सक्रिय करें',
+  backToTop: 'ऊपर जाएं',
+};
+
+const TR: TranslationDict = {
+  ...EN,
+  dealsActiveIn: 'Fırsat bölgesi',
+  searchPlaceholder: 'Dodx fırsatlarını ara (Amazon, AliExpress, HONOR, Alibaba)...',
+  allOption: 'Tümü',
+  chromeExtension: 'Chrome Uzantısı',
+  addDodxFree: 'Dodx Ekle – Ücretsiz',
+  claimed: 'Alındı',
+  navAll: 'Tümü',
+  todaysDeals: 'Günün Fırsatları',
+  productsNav: 'Ürünler',
+  affiliateDisclosure: 'Doğrulanmış İndirim Rehberi',
+  topStores: 'Popüler Mağazalar',
+  shopByDepartment: 'Kategoriye Göre',
+  privacyPolicy: 'Gizlilik Politikası',
+  languageTitle: 'Dil Seçin',
+  liveFeedTitle: 'Canlı Kupon ve Ürün Vitrini',
+  pause: 'Duraklat',
+  play: 'Oynat',
+  copyAndShop: 'Kopyala ve Alışveriş Yap',
+  claimDeal: 'Fırsatı Al',
+  copyCodeAndGo: 'Kodu Kopyala ve Mağazaya Git',
+  activateDeal: 'Fırsatı Etkinleştir',
+  backToTop: 'Başa dön',
+};
+
+const RU: TranslationDict = {
+  ...EN,
+  dealsActiveIn: 'Скидки для региона',
+  searchPlaceholder: 'Поиск товаров и брендов Dodx (Amazon, AliExpress, HONOR, Alibaba)...',
+  allOption: 'Все',
+  chromeExtension: 'Расширение Chrome',
+  addDodxFree: 'Добавить Dodx – Бесплатно',
+  claimed: 'Выбрано',
+  navAll: 'Все',
+  todaysDeals: 'Предложения дня',
+  productsNav: 'Товары',
+  affiliateDisclosure: 'Гид по скидкам и купонам',
+  topStores: 'Популярные магазины',
+  shopByDepartment: 'Категории',
+  privacyPolicy: 'Политика конфиденциальности',
+  languageTitle: 'Выберите язык',
+  liveFeedTitle: 'Живая лента купонов и товаров',
+  pause: 'Пауза',
+  play: 'Старт',
+  copyAndShop: 'Копировать и купить',
+  claimDeal: 'Активировать',
+  copyCodeAndGo: 'Копировать код и перейти',
+  activateDeal: 'Активировать скидку',
+  backToTop: 'Наверх',
+};
+
+const IT: TranslationDict = {
+  ...EN,
+  dealsActiveIn: 'Offerte attive in',
+  searchPlaceholder: 'Cerca offerte e brand Dodx (Amazon, AliExpress, HONOR, Alibaba)...',
+  allOption: 'Tutte',
+  chromeExtension: 'Estensione Chrome',
+  addDodxFree: 'Aggiungi Dodx – Gratis',
+  claimed: 'Attivati',
+  navAll: 'Tutte',
+  todaysDeals: 'Offerte di Oggi',
+  productsNav: 'Prodotti',
+  affiliateDisclosure: 'Guida alle Offerte Verificate',
+  topStores: 'Negozi Principali',
+  shopByDepartment: 'Categorie',
+  privacyPolicy: 'Privacy Policy',
+  languageTitle: 'Scegli Lingua',
+  liveFeedTitle: 'Galleria Live di Coupon e Prodotti',
+  pause: 'Pausa',
+  play: 'Avvia',
+  copyAndShop: 'Copia e Acquista',
+  claimDeal: 'Attiva Offerta',
+  copyCodeAndGo: 'Copia Codice e Vai al Negozio',
+  activateDeal: 'Attiva Offerta',
+  backToTop: 'Torna su',
+};
+
+const ID: TranslationDict = {
+  ...EN,
+  dealsActiveIn: 'Promo aktif di',
+  searchPlaceholder: 'Cari promo & merek Dodx (Amazon, AliExpress, HONOR, Alibaba)...',
+  allOption: 'Semua',
+  chromeExtension: 'Ekstensi Chrome',
+  addDodxFree: 'Tambah Dodx – Gratis',
+  claimed: 'Diklaim',
+  navAll: 'Semua',
+  todaysDeals: 'Promo Hari Ini',
+  productsNav: 'Produk',
+  affiliateDisclosure: 'Panduan Promo Terverifikasi',
+  topStores: 'Toko Populer',
+  shopByDepartment: 'Belanja per Kategori',
+  privacyPolicy: 'Kebijakan Privasi',
+  languageTitle: 'Pilih Bahasa',
+  liveFeedTitle: 'Galeri Kupon & Produk Langsung',
+  pause: 'Jeda',
+  play: 'Putar',
+  copyAndShop: 'Salin & Belanja',
+  claimDeal: 'Klaim Promo',
+  copyCodeAndGo: 'Salin Kode & Ke Toko',
+  activateDeal: 'Aktifkan Promo',
+  backToTop: 'Kembali ke atas',
+};
+
+const NL: TranslationDict = {
+  ...EN,
+  dealsActiveIn: 'Deals actief in',
+  searchPlaceholder: 'Zoek Dodx aanbiedingen (Amazon, AliExpress, HONOR, Alibaba)...',
+  allOption: 'Alle',
+  chromeExtension: 'Chrome-extensie',
+  addDodxFree: 'Dodx toevoegen – Gratis',
+  claimed: 'Geclaimd',
+  navAll: 'Alle',
+  todaysDeals: 'Deals van vandaag',
+  productsNav: 'Producten',
+  affiliateDisclosure: 'Gecontroleerde Besparingen',
+  topStores: 'Topwinkels',
+  shopByDepartment: 'Categorieën',
+  privacyPolicy: 'Privacybeleid',
+  languageTitle: 'Kies taal',
+  liveFeedTitle: 'Live Kortingscodes & Productgalerij',
+  pause: 'Pauzeren',
+  play: 'Afspelen',
+  copyAndShop: 'Kopieer & Shop',
+  claimDeal: 'Claim Deal',
+  copyCodeAndGo: 'Kopieer code & ga naar winkel',
+  activateDeal: 'Deal activeren',
+  backToTop: 'Terug naar boven',
+};
+
+const PL: TranslationDict = {
+  ...EN,
+  dealsActiveIn: 'Oferty w',
+  searchPlaceholder: 'Szukaj ofert i marek Dodx (Amazon, AliExpress, HONOR, Alibaba)...',
+  allOption: 'Wszystkie',
+  chromeExtension: 'Rozszerzenie Chrome',
+  addDodxFree: 'Dodaj Dodx – Za darmo',
+  claimed: 'Użyte',
+  navAll: 'Wszystkie',
+  todaysDeals: 'Okazje dnia',
+  productsNav: 'Produkty',
+  affiliateDisclosure: 'Przewodnik Oszczędności',
+  topStores: 'Najlepsze sklepy',
+  shopByDepartment: 'Kategorie',
+  privacyPolicy: 'Polityka prywatności',
+  languageTitle: 'Wybierz język',
+  liveFeedTitle: 'Galeria Kuponów i Produktów na Żywo',
+  pause: 'Pauza',
+  play: 'Start',
+  copyAndShop: 'Kopiuj i kupuj',
+  claimDeal: 'Odbierz okazję',
+  copyCodeAndGo: 'Kopiuj kod i przejdź do sklepu',
+  activateDeal: 'Aktywuj okazję',
+  backToTop: 'Powrót na górę',
+};
+
+const DICTIONARIES: Record<LanguageCode, TranslationDict> = {
+  en: EN,
+  ar: AR,
+  es: ES,
+  fr: FR,
+  de: DE,
+  pt: PT,
+  zh: ZH,
+  ja: JA,
+  ko: KO,
+  hi: HI,
+  tr: TR,
+  ru: RU,
+  it: IT,
+  id: ID,
+  nl: NL,
+  pl: PL,
+};
+
+export function getTranslation(code: LanguageCode): TranslationDict {
+  return DICTIONARIES[code] || EN;
+}
+
+export function getLanguageMeta(code: LanguageCode): LanguageMeta {
+  return SUPPORTED_LANGUAGES.find((l) => l.code === code) || SUPPORTED_LANGUAGES[0];
+}
+
+export function detectInitialLanguage(): LanguageCode {
+  try {
+    const saved = localStorage.getItem('dodx_lang') as LanguageCode | null;
+    if (saved && DICTIONARIES[saved]) return saved;
+  } catch {
+    // Ignore storage access errors
+  }
+
+  if (typeof navigator !== 'undefined' && navigator.language) {
+    const base = navigator.language.split('-')[0].toLowerCase() as LanguageCode;
+    if (DICTIONARIES[base]) return base;
+  }
+
+  return 'en';
+}

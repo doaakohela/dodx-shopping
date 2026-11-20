@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    overflow-x: clip;
+  }
+
+  h1, h2, h3, h4, .font-display {
+    font-family: var(--font-display);
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.dodx-hscroll {
+  touch-action: pan-x pan-y;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #a1a1aa #e4e4e7;
+}
+.dodx-hscroll::-webkit-scrollbar {
+  height: 7px;
+}
+.dodx-hscroll::-webkit-scrollbar-track {
+  background: #e4e4e7;
+  border-radius: 9999px;
+}
+.dodx-hscroll::-webkit-scrollbar-thumb {
+  background: #71717a;
+  border-radius: 9999px;
+}
+.dodx-hscroll::-webkit-scrollbar-thumb:hover {
+  background: #00453E;
+}
+
+@keyframes dodx-marquee-scroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.dodx-marquee-wrap {
+  touch-action: pan-y;
+}
+
+.dodx-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: dodx-marquee-scroll 42s linear infinite;
+  will-change: transform;
+}
+
+.dodx-marquee-wrap:hover .dodx-marquee-track,
+.dodx-marquee-wrap:focus-within .dodx-marquee-track,
+.dodx-marquee-track.is-paused {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dodx-marquee-track {
+    animation: none;
+  }
+}

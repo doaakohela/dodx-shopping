@@ -1,0 +1,18 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "functions": {
+    "api/share.ts": {
+      "includeFiles": "public/api/share-catalog.json"
+    }
+  },
+  "rewrites": [
+    { "source": "/privacy", "destination": "/privacy/index.html" },
+    { "source": "/privacy/", "destination": "/privacy/index.html" },
+    { "source": "/privacy-policy", "destination": "/privacy/index.html" },
+    { "source": "/disclosure", "destination": "/disclosure/index.html" },
+    { "source": "/disclosure/", "destination": "/disclosure/index.html" },
+    { "source": "/affiliate-disclosure", "destination": "/disclosure/index.html" },
+    { "source": "/((?!api/|assets/|privacy/|disclosure/|p/|coupons\\.json).*)", "destination": "/index.html" }
+  ]
+}
