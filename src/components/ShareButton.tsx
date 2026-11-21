@@ -144,20 +144,10 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
     }
   };
 
-  // Resolve the share link strictly to our website's product/deal page so
-  // Facebook / WhatsApp / X crawlers fetch product image, price after discount,
-  // discount amount, and send visitors directly to the product page on dodx.shop.
-  const rawOrigin =
-    typeof window !== 'undefined' && window.location?.origin
-      ? window.location.origin
-      : 'https://www.dodx.shop';
-  const hostname =
-    typeof window !== 'undefined' && window.location?.hostname
-      ? window.location.hostname
-      : '';
-  const isPrivatePreview =
-    /^(localhost|127\.0\.0\.1)$/i.test(hostname) || hostname.endsWith('.run.app');
-  const publicOrigin = isPrivatePreview ? 'https://www.dodx.shop' : rawOrigin;
+  // Always canonicalize to https://www.dodx.shop so Facebook / WhatsApp / X
+  // crawlers fetch real OpenGraph product image, price after discount, and discount %
+  // and open the product page directly on www.dodx.shop.
+  const publicOrigin = 'https://www.dodx.shop';
 
   const resolvedShareUrl = shareId
     ? `${publicOrigin}/p/${encodeURIComponent(shareId)}`
@@ -167,8 +157,8 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
 
   const summaryParts = [
     title,
-    price ? (isAr ? `السعر بعد الخصم: ${price}` : `Deal Price: ${price}`) : '',
-    oldPrice ? (isAr ? `(بدلاً من ${oldPrice})` : `(Was ${oldPrice})`) : '',
+    price ? (isAr ? `السعر بعد الخصم: ${price}` : `Price After Discount: ${price}`) : '',
+    oldPrice ? (isAr ? `بدلاً من ${oldPrice}` : `Was ${oldPrice}`) : '',
     discount ? (isAr ? `الخصم: ${discount}` : `Discount: ${discount}`) : '',
   ]
     .filter(Boolean)

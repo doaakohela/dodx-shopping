@@ -49,4 +49,4 @@ export interface ShareProductItem {
   affiliateUrl: string;
 }
 
-export type AppRoute = 'home' | 'deals' | 'products' | 'product' | 'disclosure' | 'privacy';
+export type AppRoute = 'home' | 'deals' | 'products' | 'coupons' | 'product' | 'disclosure' | 'privacy';

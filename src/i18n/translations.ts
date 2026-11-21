@@ -150,6 +150,17 @@ export interface TranslationDict {
   bfSubtitle: string;
   bfPrimaryCta: string;
   bfSecondaryCta: string;
+  couponsNav: string;
+  buyNow: string;
+  endsIn: string;
+  flashHeroTitle: string;
+  flashHeroSub: string;
+  whiteFridayHeader: string;
+  comingSoonTitle: string;
+  comingSoonSub: string;
+  categoriesHeading: string;
+  storesHeading: string;
+  allPricesLabel: string;
 }
 
 const EN: TranslationDict = {
@@ -285,6 +296,17 @@ const EN: TranslationDict = {
   officialPartnerBanner: 'Featured Coupons & Store Offers',
   matchingProductsHeading: 'Matching Products & Global Brands',
   exploreAllProducts: 'Browse All Products',
+  couponsNav: 'Coupons',
+  buyNow: 'Buy Now',
+  endsIn: 'Ends in',
+  flashHeroTitle: 'Biggest Discounts — Ending in Hours',
+  flashHeroSub: 'Limited-time White & Black Friday price drops on top electronics and phones.',
+  whiteFridayHeader: 'Best Deals — Massive White Friday Discounts',
+  comingSoonTitle: 'Biggest Discounts Coming Very Soon',
+  comingSoonSub: 'We are preparing verified direct product links and exclusive discounts for this store.',
+  categoriesHeading: 'Categories',
+  storesHeading: 'Global Stores',
+  allPricesLabel: 'All Prices',
 };
 
 const AR: TranslationDict = {
@@ -420,6 +442,17 @@ const AR: TranslationDict = {
   officialPartnerBanner: 'أبرز الكوبونات والعروض الحصرية',
   matchingProductsHeading: 'المنتجات والماركات المطابقة لبحثك',
   exploreAllProducts: 'تصفح كل الأقسام والمنتجات',
+  couponsNav: 'كوبونات',
+  buyNow: 'اشترِ الآن',
+  endsIn: 'ينتهي خلال',
+  flashHeroTitle: 'أقوى الخصومات — تنتهي خلال ساعات',
+  flashHeroSub: 'عروض الجمعة البيضاء والسوداء لفترة محدودة على أحدث الهواتف واللابتوبات والإلكترونيات.',
+  whiteFridayHeader: 'أفضل الصفقات — خصومات كبيرة جداً بمناسبة الجمعة البيضاء',
+  comingSoonTitle: 'انتظر أقوى الخصومات قريباً جداً',
+  comingSoonSub: 'نقوم حالياً بتجهيز روابط الشراء المباشرة وأقوى الخصومات الحصرية لهذا المتجر.',
+  categoriesHeading: 'الأقسام والفئات',
+  storesHeading: 'المتاجر العالمية',
+  allPricesLabel: 'كل الأسعار',
 };
 
 const ES: TranslationDict = {

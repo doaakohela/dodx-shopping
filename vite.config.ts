@@ -25,6 +25,45 @@ function escapeAttr(value: string): string {
     .replace(/>/g, '&gt;');
 }
 
+function getLocalImageDimensions(imageRelPath: string): {width: number; height: number} | null {
+  try {
+    const cleanRel = imageRelPath.replace(/^https?:\/\/[^/]+/, '').replace(/^\/+/, '');
+    const fullPath = path.resolve(__dirname, 'public', cleanRel);
+    if (!fs.existsSync(fullPath)) return null;
+    const buf = fs.readFileSync(fullPath);
+
+    // PNG header
+    if (buf.length >= 24 && buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4e && buf[3] === 0x47) {
+      return {width: buf.readUInt32BE(16), height: buf.readUInt32BE(20)};
+    }
+    // JPEG SOF marker
+    if (buf.length >= 4 && buf[0] === 0xff && buf[1] === 0xd8) {
+      let i = 2;
+      while (i + 9 < buf.length) {
+        if (buf[i] === 0xff) {
+          const marker = buf[i + 1];
+          if (
+            marker >= 0xc0 &&
+            marker <= 0xcf &&
+            marker !== 0xc4 &&
+            marker !== 0xc8 &&
+            marker !== 0xcc
+          ) {
+            return {height: buf.readUInt16BE(i + 5), width: buf.readUInt16BE(i + 7)};
+          }
+          const len = buf.readUInt16BE(i + 2);
+          i += 2 + Math.max(2, len);
+        } else {
+          i++;
+        }
+      }
+    }
+  } catch {
+    // Ignore image header parse failure
+  }
+  return null;
+}
+
 function parsePriceAmount(price?: string): {amount?: string; currency?: string} {
   if (!price) return {};
   const numMatch = price.replace(/,/g, '').match(/(\d+(?:\.\d+)?)/);
@@ -53,7 +92,7 @@ function buildStaticProductHtml(
 
   const descParts = [
     item.price ? `Price After Discount: ${item.price}` : '',
-    item.oldPrice ? `Original Price: ${item.oldPrice}` : '',
+    item.oldPrice ? `Was: ${item.oldPrice}` : '',
     item.discount ? `Discount: ${item.discount}` : '',
     item.code ? `Code: ${item.code}` : '',
     item.description,
@@ -64,26 +103,27 @@ function buildStaticProductHtml(
     ? item.image
     : `${siteOrigin}${item.image.startsWith('/') ? '' : '/'}${item.image}`;
   const imgType = absImage.toLowerCase().endsWith('.png') ? 'image/png' : 'image/jpeg';
+  const dims = getLocalImageDimensions(item.image);
   const shareUrl = `${siteOrigin}/p/${encodeURIComponent(item.id)}`;
   const {amount, currency} = parsePriceAmount(item.price);
   const {amount: oldAmount} = parsePriceAmount(item.oldPrice);
 
   const metaTags = [
+    `<title>${escapeAttr(fullTitle)}</title>`,
+    `<meta name="description" content="${escapeAttr(fullDesc)}" />`,
     `<meta property="og:site_name" content="Dodx" />`,
+    `<meta property="og:type" content="website" />`,
+    `<meta property="og:url" content="${escapeAttr(shareUrl)}" />`,
     `<meta property="og:title" content="${escapeAttr(ogTitle)}" />`,
     `<meta property="og:description" content="${escapeAttr(fullDesc)}" />`,
     `<meta property="og:image" content="${escapeAttr(absImage)}" />`,
     `<meta property="og:image:secure_url" content="${escapeAttr(absImage)}" />`,
     `<meta property="og:image:type" content="${imgType}" />`,
-    `<meta property="og:image:width" content="1200" />`,
-    `<meta property="og:image:height" content="630" />`,
+    dims ? `<meta property="og:image:width" content="${dims.width}" />` : '',
+    dims ? `<meta property="og:image:height" content="${dims.height}" />` : '',
     `<meta property="og:image:alt" content="${escapeAttr(ogTitle)}" />`,
-    `<meta property="og:url" content="${escapeAttr(shareUrl)}" />`,
-    `<meta property="og:type" content="product" />`,
     amount ? `<meta property="product:price:amount" content="${escapeAttr(amount)}" />` : '',
     amount && currency ? `<meta property="product:price:currency" content="${escapeAttr(currency)}" />` : '',
-    amount ? `<meta property="product:sale_price:amount" content="${escapeAttr(amount)}" />` : '',
-    amount && currency ? `<meta property="product:sale_price:currency" content="${escapeAttr(currency)}" />` : '',
     oldAmount ? `<meta property="product:original_price:amount" content="${escapeAttr(oldAmount)}" />` : '',
     oldAmount && currency ? `<meta property="product:original_price:currency" content="${escapeAttr(currency)}" />` : '',
     `<meta name="twitter:card" content="summary_large_image" />`,
@@ -95,18 +135,16 @@ function buildStaticProductHtml(
     .filter(Boolean)
     .join('\n    ');
 
+  // Strip old title/description/OG/twitter tags and insert fresh ones right at the TOP of <head>
   const cleaned = templateHtml
-    .replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeAttr(fullTitle)}</title>`)
-    .replace(
-      /<meta\s+name="description"[^>]*>/gi,
-      `<meta name="description" content="${escapeAttr(fullDesc)}" />`
-    )
+    .replace(/<title>[\s\S]*?<\/title>/gi, '')
+    .replace(/<meta\s+name="description"[^>]*>/gi, '')
     .replace(/<meta\s+property="og:[^"]*"[^>]*>/gi, '')
     .replace(/<meta\s+property="product:[^"]*"[^>]*>/gi, '')
     .replace(/<meta\s+name="twitter:[^"]*"[^>]*>/gi, '')
     .replace(/<link\s+rel="canonical"[^>]*>/gi, '');
 
-  return cleaned.replace('</head>', `    ${metaTags}\n  </head>`);
+  return cleaned.replace(/<head>/i, `<head>\n    ${metaTags}`);
 }
 
 export default defineConfig(() => {
@@ -114,12 +152,8 @@ export default defineConfig(() => {
     plugins: [
       react(),
       tailwindcss(),
-      // Copies src/assets into dist/ and generates static OpenGraph product pages
-      // at dist/p/<id>.html + dist/p/<id>/index.html so Facebook, WhatsApp, and X
-      // crawlers always receive product image, discounted price, and discount amount
-      // even on purely static CDN deployments (e.g. Vercel static output).
       {
-        name: 'copy-unbundled-src-assets-and-prerender-share-pages',
+        name: 'copy-unbundled-src-assets-and-prerender-routes',
         apply: 'build',
         closeBundle(error?: Error): void {
           if (error) {
@@ -133,9 +167,28 @@ export default defineConfig(() => {
           }
 
           const distIndexPath = path.resolve(distDir, 'index.html');
+          if (!fs.existsSync(distIndexPath)) return;
+          const templateHtml = fs.readFileSync(distIndexPath, 'utf8');
+
+          // 1. Pre-render clean SPA entry files for top-level routes so static CDNs never 404
+          const spaRoutes = ['products', 'deals', 'coupons'];
+          for (const routeName of spaRoutes) {
+            const routeDir = path.resolve(distDir, routeName);
+            fs.mkdirSync(routeDir, {recursive: true});
+            fs.writeFileSync(path.resolve(routeDir, 'index.html'), templateHtml, 'utf8');
+            fs.writeFileSync(path.resolve(distDir, `${routeName}.html`), templateHtml, 'utf8');
+          }
+
+          for (const staticLegal of ['privacy', 'disclosure']) {
+            const legalIdx = path.resolve(distDir, staticLegal, 'index.html');
+            if (fs.existsSync(legalIdx)) {
+              fs.copyFileSync(legalIdx, path.resolve(distDir, `${staticLegal}.html`));
+            }
+          }
+
+          // 2. Pre-render OpenGraph HTML for every product/deal in share-catalog.json
           const catalogPath = path.resolve(__dirname, 'public/api/share-catalog.json');
-          if (fs.existsSync(distIndexPath) && fs.existsSync(catalogPath)) {
-            const templateHtml = fs.readFileSync(distIndexPath, 'utf8');
+          if (fs.existsSync(catalogPath)) {
             const parsed = JSON.parse(fs.readFileSync(catalogPath, 'utf8')) as {
               items?: Record<string, ShareCatalogEntry>;
             };

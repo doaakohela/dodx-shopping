@@ -6,204 +6,168 @@ const OFFERS_API_ENDPOINTS = [
 ];
 const SITE_HOME_URL = 'https://www.dodx.shop';
 const SITE_PRODUCTS_URL = 'https://www.dodx.shop/products';
-const CACHE_STORAGE_KEY = 'dodx_offers_cache_v5';
+const SITE_COUPONS_URL = 'https://www.dodx.shop/coupons';
+const CACHE_STORAGE_KEY = 'dodx_offers_cache_v6';
 const REFRESH_ALARM_NAME = 'dodx_refresh_offers';
-const CACHE_TTL_MS = 2 * 60 * 60 * 1000; // Auto-sync every 2 hours
-const REFRESH_PERIOD_MINUTES = 120; // 2 hours
+const CACHE_TTL_MS = 2 * 60 * 60 * 1000;
+const REFRESH_PERIOD_MINUTES = 120;
 
 const OFFLINE_DIRECTORY_FALLBACK = {
-  version: 'offline',
+  version: 'offline-3.1',
   updatedAt: null,
   siteUrl: SITE_HOME_URL,
   productsUrl: SITE_PRODUCTS_URL,
+  couponsUrl: SITE_COUPONS_URL,
   disclosure:
     'As an affiliate, dodx.shop may earn a commission from qualifying purchases at no extra cost to you.',
   isOfflineFallback: true,
+  storeGroups: [
+    { id: 'amazon', nameEn: 'Amazon', nameAr: 'أمازون', defaultStoreId: 'amazon' },
+    { id: 'aliexpress', nameEn: 'AliExpress', nameAr: 'علي إكسبريس', defaultStoreId: 'aliexpress' },
+    { id: 'alibaba', nameEn: 'Alibaba', nameAr: 'علي بابا', defaultStoreId: 'alibaba' },
+    { id: 'ebay', nameEn: 'eBay', nameAr: 'إيباي eBay', defaultStoreId: 'ebay', comingSoon: true },
+    { id: 'noon', nameEn: 'Noon', nameAr: 'نون Noon', defaultStoreId: 'noon', comingSoon: true },
+    { id: 'honor', nameEn: 'HONOR', nameAr: 'هونر', defaultStoreId: 'honor-uae' },
+    { id: 'huawei', nameEn: 'Huawei', nameAr: 'هواوي', defaultStoreId: 'huawei-ae' },
+    { id: 'lenovo', nameEn: 'Lenovo', nameAr: 'لينوفو', defaultStoreId: 'lenovo-india' },
+    { id: 'canon', nameEn: 'Canon', nameAr: 'كانون', defaultStoreId: 'canon-uae' },
+    { id: 'parallels', nameEn: 'Parallels', nameAr: 'باراليلز', defaultStoreId: 'parallels-ww' },
+    { id: 'adguard', nameEn: 'AdGuard', nameAr: 'أدجارد', defaultStoreId: 'adguard-many-geos' }
+  ],
+  categories: [
+    { id: 'all', nameEn: 'All Categories', nameAr: 'كل الأقسام' },
+    { id: 'smartphones', nameEn: 'Smartphones & Mobiles', nameAr: 'الموبايلات' },
+    { id: 'laptops', nameEn: 'Laptops & Computers', nameAr: 'اللابتوب والكمبيوتر' },
+    { id: 'tablets-wearables', nameEn: 'Tablets & Wearables', nameAr: 'التابلت والساعات' },
+    { id: 'audio', nameEn: 'Audio & Headphones', nameAr: 'السماعات والصوتيات' },
+    { id: 'tv-monitors', nameEn: 'TVs & Monitors', nameAr: 'الشاشات والتلفزيونات' },
+    { id: 'men-fashion', nameEn: "Men's Fashion", nameAr: 'أزياء رجالي' },
+    { id: 'women-fashion', nameEn: "Women's Fashion", nameAr: 'أزياء نسائي' },
+    { id: 'accessories', nameEn: 'Accessories & Gear', nameAr: 'الإكسسوارات' },
+    { id: 'watches-jewelry', nameEn: 'Watches & Jewelry', nameAr: 'الساعات والمجوهرات' },
+    { id: 'beauty-health', nameEn: 'Health & Beauty', nameAr: 'الصحة والجمال' },
+    { id: 'home-furniture', nameEn: 'Home & Furniture', nameAr: 'المنزل والأثاث' },
+    { id: 'food-grocery', nameEn: 'Food & Grocery', nameAr: 'الأغذية والمشروبات' },
+    { id: 'cars', nameEn: 'Cars & Auto', nameAr: 'السيارات' },
+    { id: 'motorcycles', nameEn: 'Motorcycles', nameAr: 'الموتوسيكلات' },
+    { id: 'software', nameEn: 'Software', nameAr: 'البرامج والحماية' }
+  ],
   featuredProducts: [
     {
-      id: 'offline-prod-amazon-eg',
+      id: 'amz-8',
+      storeId: 'amazon',
+      storeName: 'Amazon US',
+      categoryId: 'audio',
+      category: 'audio',
+      title: 'TAGRY Hybrid ANC Bluetooth Headphones (100H Playtime)',
+      badge: '50% COUPON',
+      badgeColor: '#CC0C39',
+      price: '~$24.50 USD',
+      oldPrice: '$149.99',
+      numericPrice: 24.5,
+      imageUrl: 'images/smartphones-audio.jpg',
+      fallbackImage: 'images/smartphones-audio.jpg',
+      keywords: 'tagry headphones audio amazon سماعات',
+      affiliateUrl: 'https://link.amazon/B0aAG3AU7',
+      dodxPageUrl: 'https://www.dodx.shop/p/amz-8'
+    },
+    {
+      id: 'amz-eg-3',
       storeId: 'amazon-eg',
       storeName: 'Amazon Egypt',
-      title: 'Sokany SK-100A Single Electric Burner Hot Plate (1000W) — 639.00 EGP (22% Off)',
-      category: 'Amazon Egypt Deals',
-      badge: '22% OFF · 639 EGP',
+      categoryId: 'home-furniture',
+      category: 'home-furniture',
+      title: 'Sokany SK-100A Single Electric Burner Hot Plate (1000W)',
+      badge: '22% OFF',
       badgeColor: '#CC0C39',
       price: '639.00 EGP',
       oldPrice: '819.00 EGP',
+      numericPrice: 639,
       imageUrl: 'images/home-kitchen.jpg',
       fallbackImage: 'images/home-kitchen.jpg',
-      keywords: 'amazon egypt sokany امازون مصر الكترونيات شاشات موبايل لابتوب',
+      keywords: 'amazon egypt sokany امازون مصر',
       affiliateUrl: 'https://link.amazon/B09i8b797',
-      dodxPageUrl: 'https://www.dodx.shop/deals?store=amazon-eg'
-    },
+      dodxPageUrl: 'https://www.dodx.shop/p/amz-eg-3'
+    }
+  ],
+  coupons: [
     {
-      id: 'offline-prod-honor',
-      storeId: 'honor-uae',
-      storeName: 'HONOR UAE',
-      title: 'HONOR Magic & X-Series 5G Smartphones',
-      category: 'Smartphones',
-      badge: 'Official UAE',
-      badgeColor: '#00453E',
-      imageUrl: 'images/smartphones-audio.jpg',
-      fallbackImage: 'images/smartphones-audio.jpg',
-      keywords: 'honor هونر هواتف موبايل',
-      affiliateUrl: 'https://www.dodx.shop/products?dept=tech',
-      dodxPageUrl: 'https://www.dodx.shop/products?dept=tech'
-    },
-    {
-      id: 'offline-prod-laptops',
-      storeId: 'amazon',
-      storeName: 'Amazon',
-      title: 'Laptops, MacBook & Pro Electronics',
-      category: 'Computers & Tech',
-      badge: 'Electronics',
-      badgeColor: '#FF9900',
-      imageUrl: 'images/electronics-tech.jpg',
-      fallbackImage: 'images/electronics-tech.jpg',
-      keywords: 'amazon laptop macbook لابتوب امازون',
-      affiliateUrl: 'https://www.dodx.shop/deals?store=amazon',
-      dodxPageUrl: 'https://www.dodx.shop/products?dept=tech'
-    },
-    {
-      id: 'offline-prod-ali',
-      storeId: 'aliexpress',
-      storeName: 'AliExpress',
-      title: 'Wireless Earbuds & Tech Accessories',
-      category: 'Audio & Gadgets',
-      badge: 'Global Store',
-      badgeColor: '#E62E04',
-      imageUrl: 'images/accessories-bags.jpg',
-      fallbackImage: 'images/accessories-bags.jpg',
-      keywords: 'aliexpress سماعات اكسسوارات علي اكسبريس',
-      affiliateUrl: 'https://www.dodx.shop/deals?store=aliexpress',
-      dodxPageUrl: 'https://www.dodx.shop/deals?store=aliexpress'
-    },
-    {
-      id: 'offline-prod-alib',
-      storeId: 'alibaba',
-      storeName: 'Alibaba',
-      title: 'Direct Factory Wholesale & Business Tech',
-      category: 'Wholesale Direct',
-      badge: 'Wholesale',
-      badgeColor: '#FF6A00',
-      imageUrl: 'images/laptops-deals.jpg',
-      fallbackImage: 'images/laptops-deals.jpg',
-      keywords: 'alibaba جملة مصانع علي بابا',
-      affiliateUrl: 'https://www.dodx.shop/deals?store=alibaba',
-      dodxPageUrl: 'https://www.dodx.shop/deals?store=alibaba'
+      id: 'amz-eg-swype',
+      storeId: 'amazon-eg',
+      storeName: 'Amazon Egypt · CIB Swype',
+      type: 'bank',
+      title: '25% Instant Bank Discount up to 250 EGP (CIB Swype)',
+      description: 'Min order 1,000 EGP on Amazon.eg',
+      code: 'SWYPE25',
+      badge: '25% OFF',
+      imageUrl: 'images/featured-deals.jpg',
+      fallbackImage: 'images/featured-deals.jpg',
+      affiliateUrl: 'https://link.amazon/B02evOzAd',
+      dodxPageUrl: 'https://www.dodx.shop/p/amz-eg-swype'
     }
   ],
   stores: [
     {
-      id: 'amazon-eg',
-      name: 'Amazon Egypt',
-      domain: 'amazon.eg',
-      matchDomains: ['amazon.eg', 'www.amazon.eg'],
-      category: 'Egypt Marketplace',
-      keywords: 'amazon egypt amazon.eg امازون مصر أمازون مصر شاشات موبايل لابتوب تابلت',
-      badgeColor: '#FF9900',
-      dodxPageUrl: 'https://www.dodx.shop/deals?store=amazon-eg',
-      affiliateUrl: 'https://link.amazon/B09i8b797',
-      offers: [
-        {
-          id: 'offline-amz-eg-wf',
-          title: 'Amazon Egypt White Friday Electronics — TVs, Mobiles, Laptops & Tablets (Up to 26% Off)',
-          discountLabel: 'Up to 26% OFF',
-          price: '8,299 – 69,900 EGP',
-          imageUrl: 'images/electronics-tech.jpg',
-          fallbackImage: 'images/electronics-tech.jpg',
-          affiliateUrl: 'https://link.amazon/B09i8b797',
-          featured: true
-        }
-      ]
-    },
-    {
       id: 'amazon',
-      name: 'Amazon',
+      groupId: 'amazon',
+      groupName: 'Amazon',
+      name: 'Amazon US ($)',
+      flag: '🇺🇸',
+      currencySymbol: '$',
+      currencyCode: 'USD',
       domain: 'amazon.com',
-      matchDomains: ['amazon.com', 'amazon.ae', 'amazon.sa', 'amazon.co.uk'],
-      category: 'Global Marketplace',
-      keywords: 'amazon امازون أمازون electronics tech deals',
+      matchDomains: ['amazon.com', 'www.amazon.com'],
       badgeColor: '#FF9900',
       dodxPageUrl: 'https://www.dodx.shop/deals?store=amazon',
-      affiliateUrl: 'https://www.dodx.shop/deals?store=amazon',
-      offers: [
-        {
-          id: 'offline-amz',
-          title: 'Open Amazon Deals & Partner Storefront on dodx.shop',
-          discountLabel: 'Amazon Partner',
-          imageUrl: 'images/featured-deals.jpg',
-          fallbackImage: 'images/featured-deals.jpg',
-          affiliateUrl: 'https://www.dodx.shop/deals?store=amazon',
-          featured: true
-        }
-      ]
+      affiliateUrl: 'https://link.amazon/B08F6a0wD',
+      offers: []
     },
     {
-      id: 'honor-uae',
-      name: 'HONOR UAE',
-      domain: 'honor.com',
-      matchDomains: ['honor.com', 'hihonor.com'],
-      category: 'Smartphones & Tech',
-      keywords: 'honor هونر هواتف موبايل magicbook',
-      badgeColor: '#00453E',
-      dodxPageUrl: 'https://www.dodx.shop/products?dept=tech',
-      affiliateUrl: 'https://www.dodx.shop/products?dept=tech',
-      offers: [
-        {
-          id: 'offline-honor',
-          title: 'Open Official HONOR UAE Smartphones & Tech on dodx.shop',
-          discountLabel: 'Official Store',
-          imageUrl: 'images/smartphones-audio.jpg',
-          fallbackImage: 'images/smartphones-audio.jpg',
-          affiliateUrl: 'https://www.dodx.shop/products?dept=tech',
-          featured: true
-        }
-      ]
+      id: 'amazon-eg',
+      groupId: 'amazon',
+      groupName: 'Amazon',
+      name: 'Amazon Egypt (EGP)',
+      flag: '🇪🇬',
+      currencySymbol: 'EGP',
+      currencyCode: 'EGP',
+      domain: 'amazon.eg',
+      matchDomains: ['amazon.eg', 'www.amazon.eg'],
+      badgeColor: '#FF9900',
+      dodxPageUrl: 'https://www.dodx.shop/deals?store=amazon-eg',
+      affiliateUrl: 'https://link.amazon/B02evOzAd',
+      offers: []
     },
     {
-      id: 'aliexpress',
-      name: 'AliExpress',
-      domain: 'aliexpress.com',
-      matchDomains: ['aliexpress.com', 'm.aliexpress.com'],
-      category: 'Global Shopping',
-      keywords: 'aliexpress علي اكسبريس على اكسبريس',
-      badgeColor: '#E62E04',
-      dodxPageUrl: 'https://www.dodx.shop/deals?store=aliexpress',
-      affiliateUrl: 'https://www.dodx.shop/deals?store=aliexpress',
-      offers: [
-        {
-          id: 'offline-ali',
-          title: 'Open AliExpress Global Shopping Links on dodx.shop',
-          discountLabel: 'Global Store',
-          imageUrl: 'images/accessories-bags.jpg',
-          fallbackImage: 'images/accessories-bags.jpg',
-          affiliateUrl: 'https://www.dodx.shop/deals?store=aliexpress',
-          featured: true
-        }
-      ]
+      id: 'ebay',
+      groupId: 'ebay',
+      groupName: 'eBay',
+      name: 'eBay Global ($)',
+      flag: '🌐',
+      currencySymbol: '$',
+      currencyCode: 'USD',
+      domain: 'ebay.com',
+      comingSoon: true,
+      matchDomains: ['ebay.com', 'www.ebay.com'],
+      badgeColor: '#E53238',
+      dodxPageUrl: 'https://www.dodx.shop/deals?store=ebay',
+      affiliateUrl: 'https://www.dodx.shop/deals?store=ebay',
+      offers: []
     },
     {
-      id: 'alibaba',
-      name: 'Alibaba',
-      domain: 'alibaba.com',
-      matchDomains: ['alibaba.com', 'm.alibaba.com'],
-      category: 'Wholesale & Direct Suppliers',
-      keywords: 'alibaba علي بابا على بابا جملة',
-      badgeColor: '#FF6A00',
-      dodxPageUrl: 'https://www.dodx.shop/deals?store=alibaba',
-      affiliateUrl: 'https://www.dodx.shop/deals?store=alibaba',
-      offers: [
-        {
-          id: 'offline-alib',
-          title: 'Open Alibaba Wholesale & Suppliers on dodx.shop',
-          discountLabel: 'Wholesale',
-          imageUrl: 'images/laptops-deals.jpg',
-          fallbackImage: 'images/laptops-deals.jpg',
-          affiliateUrl: 'https://www.dodx.shop/deals?store=alibaba',
-          featured: true
-        }
-      ]
+      id: 'noon',
+      groupId: 'noon',
+      groupName: 'Noon',
+      name: 'Noon Regional',
+      flag: '🟡',
+      currencySymbol: 'AED',
+      currencyCode: 'AED',
+      domain: 'noon.com',
+      comingSoon: true,
+      matchDomains: ['noon.com', 'www.noon.com'],
+      badgeColor: '#FEEE00',
+      dodxPageUrl: 'https://www.dodx.shop/deals?store=noon',
+      affiliateUrl: 'https://www.dodx.shop/deals?store=noon',
+      offers: []
     }
   ]
 };
@@ -237,7 +201,7 @@ function sanitizeImageSource(rawImageUrl, fallbackLocal = 'images/featured-deals
         return parsed.toString();
       }
     } catch {
-      // Check if local bundled asset
+      // Check if local asset
     }
     if (/^images\/[a-zA-Z0-9._-]+\.(jpg|jpeg|png|webp)$/.test(trimmed)) {
       return trimmed;
@@ -261,26 +225,31 @@ function sanitizePayload(rawPayload) {
   const stores = rawPayload.stores
     .filter((s) => s && typeof s === 'object' && typeof s.id === 'string' && typeof s.name === 'string')
     .map((store) => {
-      const storeUrl = sanitizeHttpsUrl(store.affiliateUrl, SITE_HOME_URL);
       const dodxFallback = `${SITE_HOME_URL}/deals?store=${encodeURIComponent(store.id)}`;
       const dodxPageUrl = sanitizeHttpsUrl(store.dodxPageUrl, dodxFallback);
+      const storeUrl = sanitizeHttpsUrl(store.affiliateUrl, dodxPageUrl);
       const offers = Array.isArray(store.offers)
         ? store.offers
             .filter((o) => o && typeof o === 'object' && typeof o.title === 'string')
+            .slice(0, 60)
             .map((offer) => {
               const fallbackImage = sanitizeLocalImage(offer.fallbackImage, 'images/featured-deals.jpg');
               return {
-                id: typeof offer.id === 'string' ? offer.id.slice(0, 60) : `${store.id}-offer`,
-                title: offer.title.slice(0, 160),
+                id: typeof offer.id === 'string' ? offer.id.slice(0, 80) : `${store.id}-offer`,
+                title: offer.title.slice(0, 180),
+                titleAr: typeof offer.titleAr === 'string' ? offer.titleAr.slice(0, 180) : '',
+                categoryId: typeof offer.categoryId === 'string' ? offer.categoryId.slice(0, 40) : 'all',
                 discountLabel:
                   typeof offer.discountLabel === 'string'
                     ? offer.discountLabel.slice(0, 40)
                     : 'Official Partner',
                 price: typeof offer.price === 'string' ? offer.price.slice(0, 60) : '',
                 oldPrice: typeof offer.oldPrice === 'string' ? offer.oldPrice.slice(0, 40) : '',
+                numericPrice: typeof offer.numericPrice === 'number' ? offer.numericPrice : 0,
                 imageUrl: sanitizeImageSource(offer.imageUrl, fallbackImage),
                 fallbackImage,
                 affiliateUrl: sanitizeHttpsUrl(offer.affiliateUrl, storeUrl),
+                dodxPageUrl: sanitizeHttpsUrl(offer.dodxPageUrl, dodxPageUrl),
                 featured: Boolean(offer.featured)
               };
             })
@@ -288,12 +257,20 @@ function sanitizePayload(rawPayload) {
 
       return {
         id: store.id.slice(0, 60),
+        groupId: typeof store.groupId === 'string' ? store.groupId.slice(0, 40) : store.id,
+        groupName: typeof store.groupName === 'string' ? store.groupName.slice(0, 60) : store.name,
+        groupNameAr: typeof store.groupNameAr === 'string' ? store.groupNameAr.slice(0, 60) : store.name,
         name: store.name.slice(0, 80),
+        nameAr: typeof store.nameAr === 'string' ? store.nameAr.slice(0, 80) : store.name,
+        flag: typeof store.flag === 'string' ? store.flag.slice(0, 12) : '',
+        currencySymbol: typeof store.currencySymbol === 'string' ? store.currencySymbol.slice(0, 10) : '$',
+        currencyCode: typeof store.currencyCode === 'string' ? store.currencyCode.slice(0, 10) : 'USD',
         domain: typeof store.domain === 'string' ? store.domain.slice(0, 100) : '',
         matchDomains: Array.isArray(store.matchDomains)
           ? store.matchDomains.filter((d) => typeof d === 'string').slice(0, 20)
           : [],
-        category: typeof store.category === 'string' ? store.category.slice(0, 60) : 'Partner Store',
+        category: typeof store.category === 'string' ? store.category.slice(0, 80) : 'Partner Store',
+        comingSoon: Boolean(store.comingSoon),
         keywords: typeof store.keywords === 'string' ? store.keywords.slice(0, 240) : '',
         badgeColor: sanitizeColor(store.badgeColor),
         dodxPageUrl,
@@ -307,39 +284,81 @@ function sanitizePayload(rawPayload) {
   const featuredProducts = Array.isArray(rawPayload.featuredProducts)
     ? rawPayload.featuredProducts
         .filter((p) => p && typeof p === 'object' && typeof p.title === 'string')
-        .slice(0, 50)
+        .slice(0, 150)
         .map((product, index) => {
           const fallbackImage = sanitizeLocalImage(product.fallbackImage, 'images/featured-deals.jpg');
           return {
-            id: typeof product.id === 'string' ? product.id.slice(0, 60) : `prod-${index}`,
+            id: typeof product.id === 'string' ? product.id.slice(0, 80) : `prod-${index}`,
             storeId: typeof product.storeId === 'string' ? product.storeId.slice(0, 60) : 'amazon',
             storeName: typeof product.storeName === 'string' ? product.storeName.slice(0, 60) : 'Partner',
-            title: product.title.slice(0, 120),
+            storeNameAr: typeof product.storeNameAr === 'string' ? product.storeNameAr.slice(0, 60) : '',
+            categoryId: typeof product.categoryId === 'string' ? product.categoryId.slice(0, 40) : 'all',
             category: typeof product.category === 'string' ? product.category.slice(0, 50) : 'Featured',
+            title: product.title.slice(0, 140),
+            titleAr: typeof product.titleAr === 'string' ? product.titleAr.slice(0, 140) : '',
+            brand: typeof product.brand === 'string' ? product.brand.slice(0, 50) : '',
             badge: typeof product.badge === 'string' ? product.badge.slice(0, 30) : 'Featured',
+            badgeAr: typeof product.badgeAr === 'string' ? product.badgeAr.slice(0, 30) : '',
             badgeColor: sanitizeColor(product.badgeColor),
             price: typeof product.price === 'string' ? product.price.slice(0, 60) : '',
             oldPrice: typeof product.oldPrice === 'string' ? product.oldPrice.slice(0, 40) : '',
+            numericPrice: typeof product.numericPrice === 'number' ? product.numericPrice : 0,
+            discountPercent: typeof product.discountPercent === 'number' ? product.discountPercent : 0,
             imageUrl: sanitizeImageSource(product.imageUrl, fallbackImage),
             fallbackImage,
-            keywords: typeof product.keywords === 'string' ? product.keywords.slice(0, 240) : '',
+            keywords: typeof product.keywords === 'string' ? product.keywords.slice(0, 280) : '',
             affiliateUrl: sanitizeHttpsUrl(product.affiliateUrl, SITE_HOME_URL),
-            dodxPageUrl: sanitizeHttpsUrl(product.dodxPageUrl, SITE_PRODUCTS_URL)
+            dodxPageUrl: sanitizeHttpsUrl(product.dodxPageUrl, SITE_PRODUCTS_URL),
+            isFlashDeal: Boolean(product.isFlashDeal)
           };
         })
     : [];
 
+  const coupons = Array.isArray(rawPayload.coupons)
+    ? rawPayload.coupons
+        .filter((c) => c && typeof c === 'object' && typeof c.title === 'string')
+        .slice(0, 60)
+        .map((coupon, index) => {
+          const fallbackImage = sanitizeLocalImage(coupon.fallbackImage, 'images/featured-deals.jpg');
+          return {
+            id: typeof coupon.id === 'string' ? coupon.id.slice(0, 80) : `cpn-${index}`,
+            storeId: typeof coupon.storeId === 'string' ? coupon.storeId.slice(0, 60) : 'amazon',
+            storeName: typeof coupon.storeName === 'string' ? coupon.storeName.slice(0, 80) : 'Dodx Partner',
+            storeNameAr: typeof coupon.storeNameAr === 'string' ? coupon.storeNameAr.slice(0, 80) : '',
+            type: typeof coupon.type === 'string' ? coupon.type.slice(0, 20) : 'portal',
+            title: coupon.title.slice(0, 160),
+            titleAr: typeof coupon.titleAr === 'string' ? coupon.titleAr.slice(0, 160) : '',
+            description: typeof coupon.description === 'string' ? coupon.description.slice(0, 220) : '',
+            descriptionAr: typeof coupon.descriptionAr === 'string' ? coupon.descriptionAr.slice(0, 220) : '',
+            code: typeof coupon.code === 'string' ? coupon.code.slice(0, 40) : null,
+            badge: typeof coupon.badge === 'string' ? coupon.badge.slice(0, 40) : 'DEAL',
+            badgeAr: typeof coupon.badgeAr === 'string' ? coupon.badgeAr.slice(0, 40) : '',
+            imageUrl: sanitizeImageSource(coupon.imageUrl, fallbackImage),
+            fallbackImage,
+            affiliateUrl: sanitizeHttpsUrl(coupon.affiliateUrl, SITE_COUPONS_URL),
+            dodxPageUrl: sanitizeHttpsUrl(coupon.dodxPageUrl, SITE_COUPONS_URL)
+          };
+        })
+    : [];
+
+  const storeGroups = Array.isArray(rawPayload.storeGroups) ? rawPayload.storeGroups : OFFLINE_DIRECTORY_FALLBACK.storeGroups;
+  const categories = Array.isArray(rawPayload.categories) ? rawPayload.categories : OFFLINE_DIRECTORY_FALLBACK.categories;
+
   return {
-    version: typeof rawPayload.version === 'string' ? rawPayload.version : '2.4.0',
+    version: typeof rawPayload.version === 'string' ? rawPayload.version : '3.1.0',
     updatedAt: typeof rawPayload.updatedAt === 'string' ? rawPayload.updatedAt : null,
     siteUrl: sanitizeHttpsUrl(rawPayload.siteUrl, SITE_HOME_URL),
     productsUrl: sanitizeHttpsUrl(rawPayload.productsUrl, SITE_PRODUCTS_URL),
+    couponsUrl: sanitizeHttpsUrl(rawPayload.couponsUrl, SITE_COUPONS_URL),
     disclosure:
       typeof rawPayload.disclosure === 'string'
         ? rawPayload.disclosure.slice(0, 220)
         : 'As an affiliate, dodx.shop may earn a commission from qualifying purchases at no extra cost to you.',
     isOfflineFallback: false,
+    storeGroups,
+    categories,
     featuredProducts,
+    coupons,
     stores
   };
 }

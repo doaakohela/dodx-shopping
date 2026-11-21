@@ -72,6 +72,42 @@ function parsePriceAmount(price?: string): { amount?: string; currency?: string 
   return { amount, currency };
 }
 
+function getLocalImageDimensions(imageRelPath: string): { width: number; height: number } | null {
+  try {
+    const cleanRel = imageRelPath.replace(/^https?:\/\/[^/]+/, '').replace(/^\/+/, '');
+    const fullPath = path.resolve(__dirname, 'public', cleanRel);
+    if (!fs.existsSync(fullPath)) return null;
+    const buf = fs.readFileSync(fullPath);
+    if (buf.length >= 24 && buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4e && buf[3] === 0x47) {
+      return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20) };
+    }
+    if (buf.length >= 4 && buf[0] === 0xff && buf[1] === 0xd8) {
+      let i = 2;
+      while (i + 9 < buf.length) {
+        if (buf[i] === 0xff) {
+          const marker = buf[i + 1];
+          if (
+            marker >= 0xc0 &&
+            marker <= 0xcf &&
+            marker !== 0xc4 &&
+            marker !== 0xc8 &&
+            marker !== 0xcc
+          ) {
+            return { height: buf.readUInt16BE(i + 5), width: buf.readUInt16BE(i + 7) };
+          }
+          const len = buf.readUInt16BE(i + 2);
+          i += 2 + Math.max(2, len);
+        } else {
+          i++;
+        }
+      }
+    }
+  } catch {
+    // Ignore parse error
+  }
+  return null;
+}
+
 function injectOpenGraphHtml(
   html: string,
   productId: string | undefined,
@@ -92,7 +128,7 @@ function injectOpenGraphHtml(
 
   const descParts = [
     item.price ? `Price After Discount: ${item.price}` : '',
-    item.oldPrice ? `Was ${item.oldPrice}` : '',
+    item.oldPrice ? `Was: ${item.oldPrice}` : '',
     item.discount ? `Discount: ${item.discount}` : '',
     item.code ? `Code: ${item.code}` : '',
     item.description,
@@ -103,26 +139,27 @@ function injectOpenGraphHtml(
     ? item.image
     : `${origin}${item.image.startsWith('/') ? '' : '/'}${item.image}`;
   const imgType = absImage.toLowerCase().endsWith('.png') ? 'image/png' : 'image/jpeg';
+  const dims = getLocalImageDimensions(item.image);
   const shareUrl = `${origin}/p/${encodeURIComponent(item.id)}`;
   const { amount, currency } = parsePriceAmount(item.price);
   const { amount: oldAmount } = parsePriceAmount(item.oldPrice);
 
   const metaTags = [
+    `<title>${escapeHtmlAttr(fullTitle)}</title>`,
+    `<meta name="description" content="${escapeHtmlAttr(fullDesc)}" />`,
     `<meta property="og:site_name" content="Dodx" />`,
+    `<meta property="og:type" content="website" />`,
+    `<meta property="og:url" content="${escapeHtmlAttr(shareUrl)}" />`,
     `<meta property="og:title" content="${escapeHtmlAttr(ogTitle)}" />`,
     `<meta property="og:description" content="${escapeHtmlAttr(fullDesc)}" />`,
     `<meta property="og:image" content="${escapeHtmlAttr(absImage)}" />`,
     `<meta property="og:image:secure_url" content="${escapeHtmlAttr(absImage)}" />`,
     `<meta property="og:image:type" content="${imgType}" />`,
-    `<meta property="og:image:width" content="1200" />`,
-    `<meta property="og:image:height" content="630" />`,
+    dims ? `<meta property="og:image:width" content="${dims.width}" />` : '',
+    dims ? `<meta property="og:image:height" content="${dims.height}" />` : '',
     `<meta property="og:image:alt" content="${escapeHtmlAttr(ogTitle)}" />`,
-    `<meta property="og:url" content="${escapeHtmlAttr(shareUrl)}" />`,
-    `<meta property="og:type" content="product" />`,
     amount ? `<meta property="product:price:amount" content="${escapeHtmlAttr(amount)}" />` : '',
     amount && currency ? `<meta property="product:price:currency" content="${escapeHtmlAttr(currency)}" />` : '',
-    amount ? `<meta property="product:sale_price:amount" content="${escapeHtmlAttr(amount)}" />` : '',
-    amount && currency ? `<meta property="product:sale_price:currency" content="${escapeHtmlAttr(currency)}" />` : '',
     oldAmount ? `<meta property="product:original_price:amount" content="${escapeHtmlAttr(oldAmount)}" />` : '',
     oldAmount && currency ? `<meta property="product:original_price:currency" content="${escapeHtmlAttr(currency)}" />` : '',
     `<meta name="twitter:card" content="summary_large_image" />`,
@@ -134,19 +171,15 @@ function injectOpenGraphHtml(
     .filter(Boolean)
     .join('\n    ');
 
-  let out = html
-    .replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtmlAttr(fullTitle)}</title>`)
-    .replace(
-      /<meta\s+name="description"[^>]*>/gi,
-      `<meta name="description" content="${escapeHtmlAttr(fullDesc)}" />`
-    )
+  const out = html
+    .replace(/<title>[\s\S]*?<\/title>/gi, '')
+    .replace(/<meta\s+name="description"[^>]*>/gi, '')
     .replace(/<meta\s+property="og:[^"]*"[^>]*>/gi, '')
     .replace(/<meta\s+property="product:[^"]*"[^>]*>/gi, '')
     .replace(/<meta\s+name="twitter:[^"]*"[^>]*>/gi, '')
     .replace(/<link\s+rel="canonical"[^>]*>/gi, '');
 
-  out = out.replace('</head>', `    ${metaTags}\n  </head>`);
-  return out;
+  return out.replace(/<head>/i, `<head>\n    ${metaTags}`);
 }
 
 function getRequestOrigin(req: Request): string {

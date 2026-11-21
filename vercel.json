@@ -3,16 +3,23 @@
   "trailingSlash": false,
   "functions": {
     "api/share.ts": {
-      "includeFiles": "public/api/share-catalog.json"
+      "includeFiles": "{public/api/share-catalog.json,dist/index.html}"
     }
   },
   "rewrites": [
+    { "source": "/products", "destination": "/index.html" },
+    { "source": "/products/(.*)", "destination": "/index.html" },
+    { "source": "/deals", "destination": "/index.html" },
+    { "source": "/deals/(.*)", "destination": "/index.html" },
+    { "source": "/coupons", "destination": "/index.html" },
+    { "source": "/coupons/(.*)", "destination": "/index.html" },
+    { "source": "/p/:id", "destination": "/api/share?id=:id" },
     { "source": "/privacy", "destination": "/privacy/index.html" },
     { "source": "/privacy/", "destination": "/privacy/index.html" },
     { "source": "/privacy-policy", "destination": "/privacy/index.html" },
     { "source": "/disclosure", "destination": "/disclosure/index.html" },
     { "source": "/disclosure/", "destination": "/disclosure/index.html" },
     { "source": "/affiliate-disclosure", "destination": "/disclosure/index.html" },
-    { "source": "/((?!api/|assets/|privacy/|disclosure/|p/|coupons\\.json).*)", "destination": "/index.html" }
+    { "source": "/((?!api/|assets/|src/|privacy/|disclosure/|p/|coupons\\.json).*)", "destination": "/index.html" }
   ]
 }

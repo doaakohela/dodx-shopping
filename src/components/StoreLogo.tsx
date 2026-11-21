@@ -79,42 +79,61 @@ export const StoreLogo: React.FC<StoreLogoProps> = ({ storeId, name, size = 'md'
             AB
           </div>
         );
+      case 'ebay':
+        return (
+          <div className={`${dimensions} rounded-xl bg-[#0064D2] text-white flex items-center justify-center shrink-0 font-display font-black tracking-tight`}>
+            eB
+          </div>
+        );
+      case 'noon':
+        return (
+          <div className={`${dimensions} rounded-xl bg-[#FEEE00] text-zinc-950 flex items-center justify-center shrink-0 font-display font-black tracking-tight border border-amber-300`}>
+            noon
+          </div>
+        );
+      case 'lenovo':
       case 'lenovo-india':
         return (
           <div className={`${dimensions} rounded-xl bg-[#E2231A] text-white flex items-center justify-center shrink-0 font-display font-extrabold tracking-tight`}>
             LN
           </div>
         );
+      case 'parallels':
       case 'parallels-ww':
         return (
           <div className={`${dimensions} rounded-xl bg-[#D9272E] text-white flex items-center justify-center shrink-0 font-display font-black tracking-tight`}>
             ||
           </div>
         );
+      case 'adguard':
       case 'adguard-many-geos':
         return (
           <div className={`${dimensions} rounded-xl bg-[#006E4E] text-white flex items-center justify-center shrink-0 font-display font-extrabold tracking-tight`}>
             AG
           </div>
         );
+      case 'canon':
       case 'canon-uae':
         return (
           <div className={`${dimensions} rounded-xl bg-[#CC0000] text-white flex items-center justify-center shrink-0 font-display font-extrabold tracking-tight`}>
             CN
           </div>
         );
+      case 'huawei':
       case 'huawei-ae':
         return (
           <div className={`${dimensions} rounded-xl bg-[#CF0A2C] text-white flex items-center justify-center shrink-0 font-display font-extrabold tracking-tight`}>
             HW
           </div>
         );
+      case 'honor':
       case 'honor-uae':
         return (
           <div className={`${dimensions} rounded-xl bg-[#00453E] text-white flex items-center justify-center shrink-0 font-display font-extrabold tracking-tight`}>
             HN
           </div>
         );
+      case 'admitad':
       case 'admitad-shop':
         return (
           <div className={`${dimensions} rounded-xl bg-[#8521CE] text-white flex items-center justify-center shrink-0 font-display font-extrabold tracking-tight`}>

@@ -1,144 +1,93 @@
-import React from 'react';
-import { ArrowLeft, CheckCircle2, Copy, ExternalLink, Store as StoreIcon } from 'lucide-react';
-import { Deal, Store } from '../types/coupons';
+import React, { useEffect, useMemo, useState } from 'react';
+import {
+  ArrowLeft,
+  Clock,
+  ExternalLink,
+  Flame,
+  Landmark,
+  Sparkles,
+  Store as StoreIcon,
+  Tag,
+  Zap,
+} from 'lucide-react';
+import {
+  CATALOG_PRODUCTS,
+  CatalogProduct,
+  COUPONS_CATALOG,
+  getPriceTierForNumber,
+  getStoreBranch,
+  getStoreGroup,
+  matchesPriceTier,
+  PRICE_TIERS,
+  PriceTierId,
+  STORE_GROUPS,
+} from '../data/unifiedCatalog';
 import { TranslationDict } from '../i18n/translations';
+import { useFlashCountdown } from '../hooks/useFlashCountdown';
 import { StoreLogo } from './StoreLogo';
 import { ShareButton } from './ShareButton';
 
 interface DealsViewProps {
   storeParam: string;
-  stores: Store[];
+  isAr: boolean;
   t: TranslationDict;
   onBackHome: () => void;
   onSelectStore: (storeId: string) => void;
-  onActivateDeal: (deal: Deal, store: Store) => void;
+  onNavigateCoupons: () => void;
+  onOpenProduct: (productId: string) => void;
 }
-
-const DEAL_THUMBNAILS: Record<string, string> = {
-  'amz-1': '/assets/images/promo_blackfriday_gifts_1794811010711.jpg',
-  'amz-2': '/assets/images/promo_electronics_tech_1794811009540.jpg',
-  'amz-3': '/assets/images/deal_home_organize_1794811011993.jpg',
-  'amz-4': '/assets/images/hero_smart_shopping_1794810594006.jpg',
-  'amz-5': '/assets/banners/amazon-laptop-screen-extender.jpg',
-  'amz-6': '/assets/banners/amazon-macbook-pro-2026.jpg',
-  'amz-7': '/assets/banners/amazon-iphone-17-pro-max.jpg',
-  'amz-8': '/assets/banners/amazon-tagry-headphones.jpg',
-  'amz-9': '/assets/banners/amazon-bf-nothing-phone-3.jpg',
-  'amz-bf-phones': '/assets/banners/amazon-bf-moto-g-stylus-2025.jpg',
-  'amz-bf-moto-stylus-25': '/assets/banners/amazon-bf-moto-g-stylus-2025.jpg',
-  'amz-bf-moto-play': '/assets/banners/amazon-bf-moto-g-play.jpg',
-  'amz-bf-nuu-b40': '/assets/banners/amazon-bf-nuu-b40-5g.jpg',
-  'amz-bf-moto-stylus-26': '/assets/banners/amazon-bf-moto-g-stylus-2026.jpg',
-  'amz-bf-razr-plus': '/assets/banners/amazon-bf-moto-razr-plus-2024.jpg',
-  'amz-bf-razr-ultra-26': '/assets/banners/amazon-bf-moto-razr-ultra-2026.jpg',
-  'amz-bf-samsung': '/assets/banners/amazon-bf-samsung-xcover7-pro.jpg',
-  'amz-bf-samsung-xcover7': '/assets/banners/amazon-bf-samsung-xcover7-pro.jpg',
-  'amz-bf-samsung-zfold8': '/assets/banners/amazon-bf-samsung-z-fold8.jpg',
-  'amz-bf-samsung-s26fe': '/assets/banners/amazon-bf-samsung-s26-fe.jpg',
-  'amz-bf-samsung-a37': '/assets/banners/amazon-bf-samsung-a37.jpg',
-  'amz-bf-pixel-11-pro': '/assets/banners/amazon-bf-google-pixel-11-pro.jpg',
-  'amz-bf-fairphone-6p': '/assets/banners/amazon-bf-fairphone-6-plus.jpg',
-  'amz-bf-tcl-nxtpaper': '/assets/banners/amazon-bf-tcl-nxtpaper-70-pro.jpg',
-  'amz-bf-blackview-w10': '/assets/banners/amazon-bf-blackview-wave-10.jpg',
-  'amz-bf-ulefone-x16p': '/assets/banners/amazon-bf-ulefone-armor-x16-pro.jpg',
-  'amz-bf-nothing-4ap': '/assets/banners/amazon-bf-nothing-phone-4a-pro.jpg',
-  'amz-bf-laptops': '/assets/banners/amazon-bf-lenovo-chromebook-2in1.jpg',
-  'amz-bf-lenovo-chromebook': '/assets/banners/amazon-bf-lenovo-chromebook-2in1.jpg',
-  'amz-bf-acer-spin-314': '/assets/banners/amazon-bf-acer-chromebook-spin-314.jpg',
-  'amz-bf-acer-aspire-14': '/assets/banners/amazon-bf-acer-aspire-lite-14-ai.jpg',
-  'amz-bf-book4-edge': '/assets/banners/amazon-bf-samsung-galaxy-book4-edge.jpg',
-  'amz-bf-book5-pro-360': '/assets/banners/amazon-bf-samsung-galaxy-book5-pro-360.jpg',
-  'amz-bf-hp-omnibook-2tb': '/assets/banners/amazon-bf-hp-omnibook-x-flip-16-2tb.jpg',
-  'amz-bf-hp-omnibook-14': '/assets/banners/amazon-bf-hp-omnibook-x-flip-14-oled.jpg',
-  'amz-bf-hp-omnibook-ai9': '/assets/banners/amazon-bf-hp-omnibook-x-flip-16-ai9.jpg',
-  'amz-bf-yoga-7i-14': '/assets/banners/amazon-bf-lenovo-yoga-7i-14-oled.jpg',
-  'amz-bf-yoga-7i-16': '/assets/banners/amazon-bf-lenovo-yoga-7i-16-ultra5.jpg',
-  'amz-bf-yoga-7a-16': '/assets/banners/amazon-bf-lenovo-yoga-7a-16-oled.jpg',
-  'amz-bf-nimo-173': '/assets/banners/amazon-bf-nimo-173-ai-copilot.jpg',
-  'amz-ae-store': '/assets/images/hero_smart_shopping_1794810594006.jpg',
-  'amz-ae-1': '/assets/banners/amazon-ae-iphone-duo.jpg',
-  'amz-ae-2': '/assets/banners/amazon-ae-galaxy-s26-ultra.jpg',
-  'amz-eg-store': '/assets/images/promo_blackfriday_gifts_1794811010711.jpg',
-  'amz-eg-swype': '/assets/images/promo_blackfriday_gifts_1794811010711.jpg',
-  'amz-eg-abk': '/assets/images/hero_smart_shopping_1794810594006.jpg',
-  'amz-eg-qnb': '/assets/images/promo_electronics_tech_1794811009540.jpg',
-  'amz-eg-3': '/assets/banners/amazon-eg-sokany-sk100a.jpg',
-  'amz-eg-4': '/assets/banners/amazon-eg-iphone-17e.jpg',
-  'amz-eg-5': '/assets/banners/amazon-eg-iphone-duo-sky.jpg',
-  'amz-eg-wf-mobiles': '/assets/banners/amazon-eg-samsung-a37.jpg',
-  'amz-eg-samsung-a37': '/assets/banners/amazon-eg-samsung-a37.jpg',
-  'amz-eg-infinix-smart20': '/assets/banners/amazon-eg-infinix-smart-20.jpg',
-  'amz-eg-redmi-17': '/assets/banners/amazon-eg-redmi-17.jpg',
-  'amz-eg-honor-x9d': '/assets/banners/amazon-eg-honor-x9d.jpg',
-  'amz-eg-redmi-17-5g': '/assets/banners/amazon-eg-redmi-17-5g.jpg',
-  'amz-eg-samsung-a08': '/assets/banners/amazon-eg-samsung-a08.jpg',
-  'amz-eg-samsung-a57': '/assets/banners/amazon-eg-samsung-a57.jpg',
-  'amz-eg-oppo-reno16f': '/assets/banners/amazon-eg-oppo-reno-16f.jpg',
-  'amz-eg-samsung-a17': '/assets/banners/amazon-eg-samsung-a17.jpg',
-  'amz-eg-realme-c85pro': '/assets/banners/amazon-eg-realme-c85-pro.jpg',
-  'amz-eg-oppo-a6': '/assets/banners/amazon-eg-oppo-a6.jpg',
-  'amz-eg-samsung-s25u': '/assets/banners/amazon-eg-samsung-s25-ultra.jpg',
-  'amz-eg-xiaomi-17t': '/assets/banners/amazon-eg-xiaomi-17t.jpg',
-  'amz-eg-honor-600lite': '/assets/banners/amazon-eg-honor-600-lite.jpg',
-  'amz-eg-honor-x5c': '/assets/banners/amazon-eg-honor-x5c-plus.jpg',
-  'amz-eg-redmi-note17pro': '/assets/banners/amazon-eg-redmi-note-17-pro.jpg',
-  'amz-eg-iphone-17': '/assets/banners/amazon-eg-iphone-17.jpg',
-  'amz-eg-apple-wf': '/assets/banners/amazon-eg-iphone17-promax.jpg',
-  'amz-eg-iphone17-promax': '/assets/banners/amazon-eg-iphone17-promax.jpg',
-  'amz-eg-iphone17-pro': '/assets/banners/amazon-eg-iphone17-pro.jpg',
-  'amz-eg-iphone17e-512': '/assets/banners/amazon-eg-iphone17e-512.jpg',
-  'amz-eg-iphone-air': '/assets/banners/amazon-eg-iphone-air.jpg',
-  'amz-eg-iphone16-plus': '/assets/banners/amazon-eg-iphone16-plus.jpg',
-  'amz-eg-iphone16-pink': '/assets/banners/amazon-eg-iphone16-pink.jpg',
-  'amz-eg-apple-60w': '/assets/banners/amazon-eg-apple-60w-adapter.jpg',
-  'amz-eg-apple-20w': '/assets/banners/amazon-eg-apple-20w-adapter.jpg',
-  'amz-eg-apple-cable': '/assets/banners/amazon-eg-apple-usbc-cable.jpg',
-  'amz-jp-blackfriday-dates': '/assets/aistudio/image_b648bbfa.png',
-  'amz-jp-store': '/assets/aistudio/image_a7d4a6c8.png',
-  'amz-jp-coupons': '/assets/aistudio/image_a7d4a6c8.png',
-  'amz-jp-miracase-13': '/assets/banners/amazon-jp-miracase-iphone13.jpg',
-  'amz-jp-poco-x8': '/assets/banners/amazon-jp-xiaomi-poco-x8-pro.jpg',
-  'amz-jp-xiaomi-17t': '/assets/banners/amazon-jp-xiaomi-17t-pro.jpg',
-  'amz-jp-iphone-16': '/assets/banners/amazon-jp-iphone-16.jpg',
-  'amz-jp-galaxy-s25': '/assets/banners/amazon-jp-galaxy-s25.jpg',
-  'amz-jp-aquos-sense9': '/assets/banners/amazon-jp-aquos-sense9.jpg',
-  'amz-jp-moto-edge60': '/assets/banners/amazon-jp-moto-edge-60-pro.jpg',
-  'amz-jp-xperia-10': '/assets/banners/amazon-jp-xperia-10-vi.jpg',
-  'amz-jp-galaxy-a25': '/assets/banners/amazon-jp-galaxy-a25.jpg',
-  'ali-1': '/assets/images/deal_gadgets_audio_1794811011337.jpg',
-  'ali-2': '/assets/images/promo_electronics_tech_1794811009540.jpg',
-  'ali-3': '/assets/images/deal_accessories_bag_1794811012527.jpg',
-  'alib-1': '/assets/images/hero_smart_shopping_1794810594006.jpg',
-  'alib-2': '/assets/images/promo_blackfriday_gifts_1794811010711.jpg',
-  'alib-3': '/assets/images/promo_electronics_tech_1794811009540.jpg',
-  'lenovo-1': '/assets/images/promo_electronics_tech_1794811009540.jpg',
-  'lenovo-2': '/assets/images/hero_smart_shopping_1794810594006.jpg',
-  'parallels-1': '/assets/images/promo_electronics_tech_1794811009540.jpg',
-  'adguard-1': '/assets/images/promo_electronics_tech_1794811009540.jpg',
-  'canon-1': '/assets/images/promo_electronics_tech_1794811009540.jpg',
-  'huawei-1': '/assets/images/deal_gadgets_audio_1794811011337.jpg',
-  'honor-1': '/assets/images/deal_gadgets_audio_1794811011337.jpg',
-  'admitad-1': '/assets/images/admitad_earbuds_banner_1795014382533.jpg',
-};
 
 export const DealsView: React.FC<DealsViewProps> = ({
   storeParam,
-  stores,
+  isAr,
   t,
   onBackHome,
   onSelectStore,
-  onActivateDeal,
+  onNavigateCoupons,
+  onOpenProduct,
 }) => {
-  const isAr = t.shopNow === 'تسوق الآن';
-  const normalized = storeParam.trim().toLowerCase();
-  const matchedStore = stores.find(
-    (s) =>
-      s.id.toLowerCase() === normalized ||
-      s.domain.toLowerCase() === normalized ||
-      s.name.toLowerCase() === normalized
-  );
+  const [selectedTier, setSelectedTier] = useState<PriceTierId>('all');
+  const countdown = useFlashCountdown();
 
-  if (!matchedStore) {
+  useEffect(() => {
+    setSelectedTier('all');
+  }, [storeParam]);
+
+  const group = getStoreGroup(storeParam);
+  const directBranch = getStoreBranch(storeParam);
+  const activeBranch =
+    directBranch || (group ? group.branches[0] : undefined);
+
+  const products = useMemo(() => {
+    if (!activeBranch) return [];
+    return CATALOG_PRODUCTS.filter((p) => p.storeId === activeBranch.id);
+  }, [activeBranch]);
+
+  const filteredProducts = useMemo(() => {
+    if (selectedTier === 'all') return products;
+    return products.filter((p) => matchesPriceTier(p.numericPrice, selectedTier));
+  }, [products, selectedTier]);
+
+  const groupedByTier = useMemo(() => {
+    const groups: Array<{
+      tier: (typeof PRICE_TIERS)[number];
+      items: CatalogProduct[];
+    }> = [];
+    for (const tier of PRICE_TIERS) {
+      const items = products.filter((p) => getPriceTierForNumber(p.numericPrice) === tier.id);
+      if (items.length > 0) {
+        groups.push({ tier, items });
+      }
+    }
+    return groups;
+  }, [products]);
+
+  const storeCoupons = useMemo(() => {
+    if (!activeBranch) return [];
+    return COUPONS_CATALOG.filter((c) => c.storeId === activeBranch.id);
+  }, [activeBranch]);
+
+  if (!group || !activeBranch) {
     return (
       <section className="max-w-4xl mx-auto px-4 py-12">
         <button
@@ -157,18 +106,15 @@ export const DealsView: React.FC<DealsViewProps> = ({
           <h1 className="mt-4 font-display text-2xl font-bold text-zinc-950">
             {t.storeNotFound}: &ldquo;{storeParam}&rdquo;
           </h1>
-          <p className="mt-2 text-sm text-zinc-600 max-w-md mx-auto">
-            {t.storeNotFoundSub}
-          </p>
           <div className="mt-6 flex flex-wrap justify-center gap-2">
-            {stores.map((store) => (
+            {STORE_GROUPS.map((g) => (
               <button
-                key={store.id}
+                key={g.id}
                 type="button"
-                onClick={() => onSelectStore(store.id)}
+                onClick={() => onSelectStore(g.defaultStoreId)}
                 className="px-4 py-2 text-sm font-semibold bg-[#FFD814] hover:bg-[#F7CA00] text-zinc-950 border border-[#FCD200] rounded-full cursor-pointer whitespace-nowrap"
               >
-                {store.name}
+                {isAr ? g.nameAr : g.nameEn}
               </button>
             ))}
           </div>
@@ -177,9 +123,15 @@ export const DealsView: React.FC<DealsViewProps> = ({
     );
   }
 
+  const branchName = isAr ? activeBranch.nameAr : activeBranch.nameEn;
+  const currencyUnit = isAr ? activeBranch.currencyAr : activeBranch.currencySymbol;
+  const isComingSoonStore = Boolean(group.comingSoon || activeBranch.comingSoon);
+  const isEmptyProductStore = isComingSoonStore || products.length === 0;
+
   return (
     <section className="bg-[#EAEDED] min-h-screen px-3 sm:px-5 py-6">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-6xl mx-auto space-y-5">
+        {/* Top Breadcrumb + Parent Store Switcher */}
         <div className="flex flex-wrap items-center justify-between gap-3">
           <button
             type="button"
@@ -192,199 +144,446 @@ export const DealsView: React.FC<DealsViewProps> = ({
 
           <div className="flex flex-wrap items-center gap-1.5 text-xs">
             <span className="text-zinc-600 font-medium">{t.switchStore}</span>
-            {stores.map((s) => (
-              <button
-                key={s.id}
-                type="button"
-                onClick={() => onSelectStore(s.id)}
-                className={`px-2.5 py-1 rounded-sm text-xs font-semibold border cursor-pointer whitespace-nowrap ${
-                  s.id === matchedStore.id
-                    ? 'bg-[#00453E] text-white border-[#00453E]'
-                    : 'bg-white text-zinc-800 border-zinc-300 hover:bg-zinc-100'
-                }`}
-              >
-                {s.name}
-              </button>
-            ))}
+            {STORE_GROUPS.map((g) => {
+              const active = g.id === group.id;
+              return (
+                <button
+                  key={g.id}
+                  type="button"
+                  onClick={() => onSelectStore(g.defaultStoreId)}
+                  className={`px-2.5 py-1 rounded-sm text-xs font-semibold border cursor-pointer whitespace-nowrap ${
+                    active
+                      ? 'bg-[#00453E] text-white border-[#00453E]'
+                      : 'bg-white text-zinc-800 border-zinc-300 hover:bg-zinc-100'
+                  }`}
+                >
+                  {isAr ? g.nameAr : g.nameEn}
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* Deal Unlocked / Coupons Ready Banner */}
-        <div className="mt-4 bg-white border border-emerald-300 rounded-md overflow-hidden shadow-xs">
-          <div className="bg-[#00453E] text-white px-5 py-2.5 flex items-center gap-2 text-xs sm:text-sm font-bold">
-            <CheckCircle2 className="w-4 h-4 text-[#FFD814] shrink-0" />
-            <span>
-              {t.dealUnlocked} — {matchedStore.name}
+        {/* Country Sub-Branch Tabs when Parent Group has multiple countries (e.g., Amazon) */}
+        {group.branches.length > 1 && (
+          <div className="bg-white border border-zinc-200 rounded-lg p-3 flex flex-wrap items-center gap-2 shadow-xs">
+            <span className="text-xs font-extrabold text-zinc-600 px-1">
+              {isAr ? 'فروع الدول:' : 'Country Stores:'}
             </span>
+            {group.branches.map((branch) => {
+              const selected = branch.id === activeBranch.id;
+              const branchCount = CATALOG_PRODUCTS.filter((p) => p.storeId === branch.id).length;
+              return (
+                <button
+                  key={branch.id}
+                  type="button"
+                  onClick={() => onSelectStore(branch.id)}
+                  className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-md text-xs sm:text-sm font-bold border transition-colors cursor-pointer ${
+                    selected
+                      ? 'bg-[#00453E] text-white border-[#00453E] shadow-xs'
+                      : 'bg-zinc-50 text-zinc-800 border-zinc-300 hover:bg-zinc-100'
+                  }`}
+                >
+                  <span>{branch.flag}</span>
+                  <span>{isAr ? branch.nameAr : branch.nameEn}</span>
+                  <span
+                    className={`text-[11px] font-mono px-1.5 py-0.5 rounded ${
+                      selected ? 'bg-[#FFD814] text-zinc-950' : 'bg-zinc-200 text-zinc-700'
+                    }`}
+                  >
+                    {branchCount}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Prominent White Friday & Flash Timer Store Hero */}
+        <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-xs">
+          <div className="bg-gradient-to-r from-[#00453E] via-[#005A50] to-[#00453E] text-white px-5 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <Flame className="w-5 h-5 text-[#FFD814] shrink-0" />
+              <span className="font-display text-sm sm:text-base font-extrabold tracking-tight">
+                {t.whiteFridayHeader}
+              </span>
+            </div>
+
+            <div className="inline-flex items-center gap-2 bg-[#CC0C39] text-white px-3 py-1 rounded-sm text-xs font-extrabold shadow-xs">
+              <Clock className="w-3.5 h-3.5 animate-pulse" />
+              <span>{t.endsIn}:</span>
+              <span className="font-mono tracking-wider tabular-nums" dir="ltr">
+                {countdown.formatted}
+              </span>
+            </div>
           </div>
 
           <div className="p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-5">
             <div className="flex items-start sm:items-center gap-4">
-              <StoreLogo storeId={matchedStore.id} name={matchedStore.name} size="lg" />
+              <StoreLogo storeId={activeBranch.id} name={branchName} size="lg" />
               <div>
                 <h1 className="font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-950">
-                  {matchedStore.name} — {t.verifiedCouponsAndDeals}
+                  {branchName}
                 </h1>
                 <div className="mt-1 flex flex-wrap items-center gap-2 text-xs sm:text-sm text-zinc-600">
-                  <span className="font-medium text-zinc-800">{matchedStore.domain}</span>
+                  <span className="font-semibold text-zinc-900">{activeBranch.domain}</span>
                   <span aria-hidden="true">·</span>
-                  <span className="font-semibold text-[#007600] tabular-nums">
-                    {matchedStore.deals.length} {t.verifiedOffersCount}
+                  <span className="font-bold text-[#007600]">
+                    {products.length > 0
+                      ? `${products.length} ${isAr ? 'منتج موثق بالخصم' : 'verified discounted products'}`
+                      : isAr
+                        ? 'قريباً جداً'
+                        : 'Coming Very Soon'}
                   </span>
                   <span aria-hidden="true">·</span>
-                  <span>{matchedStore.network}</span>
+                  <span className="font-semibold text-zinc-800">
+                    {isAr ? `العملة: ${activeBranch.currencyAr}` : `Currency: ${activeBranch.currencyCode}`}
+                  </span>
                 </div>
               </div>
             </div>
 
             <div className="flex flex-wrap items-center gap-2 shrink-0">
-              <a
-                href={matchedStore.affiliateUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] bg-[#FFD814] hover:bg-[#F7CA00] text-zinc-950 border border-[#FCD200] text-sm font-bold rounded-full transition-colors whitespace-nowrap shrink-0"
-              >
-                {t.shopNow} · {matchedStore.name}
-                <ExternalLink className="w-4 h-4" />
-              </a>
-              <ShareButton
-                url={matchedStore.affiliateUrl}
-                shareId={matchedStore.id}
-                title={matchedStore.name}
-                discount={`${matchedStore.deals.length} ${t.verifiedOffersCount}`}
-                isAr={isAr}
-                dropDirection="down"
-              />
+              {!isComingSoonStore && activeBranch.affiliateUrl && (
+                <a
+                  href={activeBranch.affiliateUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] bg-[#FFD814] hover:bg-[#F7CA00] text-zinc-950 border border-[#FCD200] text-sm font-extrabold rounded-full transition-colors whitespace-nowrap"
+                >
+                  {t.buyNow} · {branchName}
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              )}
+              {storeCoupons.length > 0 && (
+                <button
+                  type="button"
+                  onClick={onNavigateCoupons}
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 min-h-[44px] bg-emerald-50 hover:bg-emerald-100 text-[#00453E] border border-emerald-300 text-xs sm:text-sm font-extrabold rounded-full cursor-pointer whitespace-nowrap"
+                >
+                  <Tag className="w-4 h-4" />
+                  {isAr ? `أكواد وكوبونات المتجر (${storeCoupons.length})` : `Store Coupons (${storeCoupons.length})`}
+                </button>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Store Coupons List */}
-        <div className="mt-5 space-y-3">
-          {matchedStore.deals.map((deal) => {
-            const thumb =
-              DEAL_THUMBNAILS[deal.id] ||
-              '/assets/images/hero_smart_shopping_1794810594006.jpg';
-            return (
-              <article
-                key={deal.id}
-                className="bg-white border border-zinc-200 rounded-md p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-5"
+        {/* Amazon Egypt Bank Promo Codes Highlight Strip */}
+        {activeBranch.id === 'amazon-eg' && (
+          <div className="bg-gradient-to-r from-amber-50 to-emerald-50 border border-amber-300 rounded-lg p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-start sm:items-center gap-3">
+              <div className="w-9 h-9 rounded-full bg-[#00453E] text-[#FFD814] flex items-center justify-center shrink-0">
+                <Landmark className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-sm font-extrabold text-zinc-950">
+                  {isAr
+                    ? 'أكواد خصم البطاقات البنكية متاحة الآن: SWYPE25 · ABK20 · QNBC200'
+                    : 'Bank Promo Codes Available: SWYPE25 · ABK20 · QNBC200'}
+                </p>
+                <p className="text-xs text-zinc-700">
+                  {isAr
+                    ? 'وفر حتى 2,000 جنيه إضافية عند الدفع ببطاقات CIB أو ABK أو QNB من قسم الكوبونات.'
+                    : 'Save up to 2,000 EGP extra at checkout using verified Egypt bank codes in Coupons.'}
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={onNavigateCoupons}
+              className="px-4 py-2 bg-[#00453E] hover:bg-[#00342E] text-white text-xs font-extrabold rounded-full cursor-pointer shrink-0 whitespace-nowrap"
+            >
+              {isAr ? 'فتح قسم الكوبونات ←' : 'Open Coupons →'}
+            </button>
+          </div>
+        )}
+
+        {/* Coming Soon Empty Store Notice OR 11-Tier Price Bracket Product View */}
+        {isEmptyProductStore ? (
+          <div className="bg-white border-2 border-dashed border-amber-300 rounded-xl p-8 sm:p-12 text-center shadow-xs">
+            <div className="w-14 h-14 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mx-auto">
+              <Sparkles className="w-7 h-7" />
+            </div>
+            <h2 className="mt-4 font-display text-2xl sm:text-3xl font-extrabold text-zinc-950">
+              {t.comingSoonTitle}
+            </h2>
+            <p className="mt-2 text-sm sm:text-base text-zinc-600 max-w-xl mx-auto leading-relaxed">
+              {isComingSoonStore
+                ? isAr
+                  ? `متجر ${branchName} قيد الإضافة حالياً. انتظر أقوى الخصومات قريباً جداً فور تفعيل روابط الشراء الموثقة.`
+                  : `${branchName} deals are being curated now. Biggest discounts coming very soon!`
+                : isAr
+                  ? `الروابط الفردية لمنتجات ${branchName} قيد التحديث حالياً (انتظر أقوى الخصومات قريباً جداً). يمكنك التسوق الآن من البوابة الرسمية للمتجر أو تصفح الكوبونات.`
+                  : `Direct individual SKU deals for ${branchName} are coming very soon. In the meantime, visit the official store portal or check active coupons.`}
+            </p>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+              {!isComingSoonStore && activeBranch.affiliateUrl && (
+                <a
+                  href={activeBranch.affiliateUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-[#FFD814] hover:bg-[#F7CA00] text-zinc-950 border border-[#FCD200] text-sm font-extrabold rounded-full"
+                >
+                  {t.buyNow} · {branchName}
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              )}
+              <button
+                type="button"
+                onClick={onNavigateCoupons}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#00453E] hover:bg-[#00342E] text-white text-sm font-extrabold rounded-full cursor-pointer"
               >
-                <div className="flex items-start gap-4 min-w-0">
-                  <a
-                    href={deal.affiliateUrl || matchedStore.affiliateUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      onActivateDeal(deal, matchedStore);
-                    }}
-                    className="relative w-24 h-24 sm:w-28 sm:h-28 shrink-0 rounded-md overflow-hidden border border-zinc-200 bg-zinc-100 block group cursor-pointer"
-                  >
-                    <img
-                      src={thumb}
-                      alt={deal.title}
-                      referrerPolicy="no-referrer"
-                      className={`w-full h-full group-hover:scale-105 transition-transform duration-200 ${
-                        (deal.id.startsWith('amz-jp-') && deal.id !== 'amz-jp-coupons' && deal.id !== 'amz-jp-store' && deal.id !== 'amz-jp-blackfriday-dates') ||
-                        (deal.id.startsWith('amz-eg-') && !['amz-eg-store', 'amz-eg-swype', 'amz-eg-abk', 'amz-eg-qnb', 'amz-eg-3'].includes(deal.id))
-                          ? 'object-contain bg-white p-1'
-                          : 'object-cover'
+                <Tag className="w-4 h-4 text-[#FFD814]" />
+                {isAr ? 'تصفح قسم الكوبونات' : 'Browse Coupons'}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* 11 Price Bracket Filter Bar */}
+            <div className="bg-white border border-zinc-200 rounded-xl p-4 shadow-xs">
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                <h2 className="font-display text-sm sm:text-base font-extrabold text-zinc-950">
+                  {isAr
+                    ? `تقسيم الأسعار والخصومات (${currencyUnit})`
+                    : `Browse by Price Bracket (${currencyUnit})`}
+                </h2>
+                <span className="text-xs text-zinc-500 font-semibold">
+                  {filteredProducts.length} {isAr ? 'منتج معروض' : 'items shown'}
+                </span>
+              </div>
+
+              <div className="flex flex-wrap gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => setSelectedTier('all')}
+                  className={`px-3 py-1.5 rounded-md text-xs font-bold border transition-colors cursor-pointer ${
+                    selectedTier === 'all'
+                      ? 'bg-[#00453E] text-white border-[#00453E]'
+                      : 'bg-zinc-50 text-zinc-800 border-zinc-300 hover:bg-zinc-100'
+                  }`}
+                >
+                  {t.allPricesLabel} ({products.length})
+                </button>
+
+                {PRICE_TIERS.map((tier) => {
+                  const count = products.filter((p) =>
+                    matchesPriceTier(p.numericPrice, tier.id)
+                  ).length;
+                  const active = selectedTier === tier.id;
+                  return (
+                    <button
+                      key={tier.id}
+                      type="button"
+                      onClick={() => setSelectedTier(tier.id)}
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-bold border transition-colors cursor-pointer ${
+                        active
+                          ? tier.isFlashTier
+                            ? 'bg-[#CC0C39] text-white border-[#CC0C39]'
+                            : 'bg-[#00453E] text-white border-[#00453E]'
+                          : tier.isFlashTier
+                            ? 'bg-red-50 text-[#CC0C39] border-red-200 hover:bg-red-100'
+                            : count > 0
+                              ? 'bg-white text-zinc-900 border-zinc-300 hover:bg-zinc-100'
+                              : 'bg-zinc-50 text-zinc-400 border-zinc-200 hover:bg-zinc-100'
                       }`}
-                    />
-                    <span className="absolute bottom-1 left-1 right-1 bg-[#CC0C39] text-white text-[11px] font-extrabold text-center py-0.5 rounded-xs tabular-nums">
-                      {deal.discountLabel}
-                    </span>
-                  </a>
+                    >
+                      {tier.isFlashTier && <Zap className="w-3.5 h-3.5 shrink-0" />}
+                      <span>{isAr ? tier.labelAr(currencyUnit) : tier.labelEn(currencyUnit)}</span>
+                      <span className="font-mono text-[10px] opacity-80">({count})</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
 
-                  <div className="min-w-0">
-                    <div className="text-xs text-zinc-500 flex items-center gap-2">
-                      <span className="font-semibold text-zinc-800">{matchedStore.name}</span>
-                      <span aria-hidden="true">·</span>
-                      <span>{deal.verifiedDate}</span>
-                    </div>
-                    <h2 className="mt-1 font-display text-base sm:text-lg font-bold text-zinc-950">
-                      <a
-                        href={deal.affiliateUrl || matchedStore.affiliateUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          onActivateDeal(deal, matchedStore);
-                        }}
-                        className="hover:text-[#C7511F] hover:underline"
-                      >
-                        {deal.title}
-                      </a>
-                    </h2>
-                    {deal.price && (
-                      <div className="mt-1.5 flex flex-wrap items-baseline gap-2">
-                        <span className="font-display text-lg font-extrabold text-[#B12704]">
-                          {deal.price}
-                        </span>
-                        {deal.oldPrice && (
-                          <span className="text-xs text-zinc-500 line-through">
-                            {deal.oldPrice}
+            {/* Product Listing Area */}
+            {selectedTier === 'all' ? (
+              <div className="space-y-6">
+                {groupedByTier.map(({ tier, items }) => (
+                  <div key={tier.id} className="space-y-3">
+                    <div
+                      className={`flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 rounded-lg border ${
+                        tier.isFlashTier
+                          ? 'bg-gradient-to-r from-[#CC0C39] to-[#99072A] text-white border-red-800'
+                          : 'bg-white text-zinc-950 border-zinc-200'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        {tier.isFlashTier && <Zap className="w-4 h-4 text-[#FFD814]" />}
+                        <h3 className="font-display text-sm sm:text-base font-extrabold">
+                          {isAr ? tier.labelAr(currencyUnit) : tier.labelEn(currencyUnit)}
+                        </h3>
+                      </div>
+
+                      {tier.isFlashTier ? (
+                        <div className="inline-flex items-center gap-1.5 bg-black/30 px-2.5 py-1 rounded text-xs font-extrabold">
+                          <Clock className="w-3.5 h-3.5 text-[#FFD814]" />
+                          <span>{t.endsIn}:</span>
+                          <span className="font-mono tabular-nums" dir="ltr">
+                            {countdown.formatted}
                           </span>
-                        )}
-                      </div>
-                    )}
-                    <p className="mt-1 text-sm text-zinc-600 leading-relaxed">
-                      {deal.description}
-                    </p>
-                    {deal.code ? (
-                      <div className="mt-2.5 inline-flex items-center gap-2 text-xs text-zinc-700">
-                        <span>{t.promoCodeLabel}</span>
-                        <code className="font-mono font-bold text-zinc-950 bg-zinc-100 border border-dashed border-zinc-400 px-2.5 py-1 rounded">
-                          {deal.code}
-                        </code>
-                      </div>
-                    ) : (
-                      <p className="mt-2 text-xs font-semibold text-[#007600]">
-                        {t.noCodeRequiredNote}
-                      </p>
-                    )}
+                        </div>
+                      ) : (
+                        <span className="text-xs font-bold text-[#007600] tabular-nums">
+                          {items.length} {isAr ? 'منتجات' : 'items'}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {items.map((product) => (
+                        <DealProductCard
+                          key={product.id}
+                          product={product}
+                          isAr={isAr}
+                          buyNowLabel={t.buyNow}
+                          onOpenProduct={onOpenProduct}
+                        />
+                      ))}
+                    </div>
                   </div>
-                </div>
-
-                <div className="shrink-0 flex flex-wrap items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => onActivateDeal(deal, matchedStore)}
-                    className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-2.5 min-h-[42px] bg-[#FFD814] hover:bg-[#F7CA00] active:bg-[#F0B800] text-zinc-950 border border-[#FCD200] text-sm font-bold rounded-full transition-colors whitespace-nowrap cursor-pointer"
-                  >
-                    {deal.code ? (
-                      <>
-                        <Copy className="w-4 h-4" />
-                        {t.copyCodeAndActivate}
-                      </>
-                    ) : (
-                      <>
-                        <ExternalLink className="w-4 h-4" />
-                        {t.activateDeal}
-                      </>
-                    )}
-                  </button>
-                  <ShareButton
-                    url={deal.affiliateUrl || matchedStore.affiliateUrl}
-                    shareId={deal.id}
-                    title={deal.title}
-                    price={deal.price}
-                    oldPrice={deal.oldPrice}
-                    discount={deal.discountLabel}
+                ))}
+              </div>
+            ) : filteredProducts.length === 0 ? (
+              <div className="bg-white border border-dashed border-zinc-300 rounded-xl p-8 text-center">
+                <p className="font-display text-lg font-extrabold text-zinc-900">
+                  {t.comingSoonTitle}
+                </p>
+                <p className="mt-1 text-sm text-zinc-600">
+                  {isAr
+                    ? 'لا توجد منتجات في هذا النطاق السعري حالياً لهذا المتجر — انتظر أقوى الخصومات قريباً جداً.'
+                    : 'No products in this exact price range for this store yet — check All Prices or wait for upcoming deals.'}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setSelectedTier('all')}
+                  className="mt-4 px-5 py-2 bg-[#FFD814] hover:bg-[#F7CA00] text-zinc-950 font-extrabold text-xs sm:text-sm rounded-full border border-[#FCD200] cursor-pointer"
+                >
+                  {isAr ? 'عرض كل الأسعار المتوفرة' : 'Show All Available Prices'}
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredProducts.map((product) => (
+                  <DealProductCard
+                    key={product.id}
+                    product={product}
                     isAr={isAr}
-                    dropDirection="up"
+                    buyNowLabel={t.buyNow}
+                    onOpenProduct={onOpenProduct}
                   />
-                </div>
-              </article>
-            );
-          })}
-        </div>
+                ))}
+              </div>
+            )}
+          </>
+        )}
 
-        <p className="mt-6 text-xs text-zinc-600 leading-relaxed">
-          {t.affiliateStatement}
-        </p>
+        <p className="mt-6 text-xs text-zinc-600 leading-relaxed">{t.affiliateStatement}</p>
       </div>
     </section>
+  );
+};
+
+interface DealProductCardProps {
+  product: CatalogProduct;
+  isAr: boolean;
+  buyNowLabel: string;
+  onOpenProduct: (id: string) => void;
+}
+
+const DealProductCard: React.FC<DealProductCardProps> = ({
+  product,
+  isAr,
+  buyNowLabel,
+  onOpenProduct,
+}) => {
+  const title = isAr ? product.titleAr : product.titleEn;
+  const specs = isAr ? product.specsAr : product.specsEn;
+  const badge = isAr ? product.discountBadgeAr : product.discountBadgeEn;
+
+  return (
+    <article className="bg-white border border-zinc-200 rounded-lg overflow-hidden flex flex-col justify-between shadow-xs hover:border-[#00453E] transition-colors">
+      <div>
+        <a
+          href={product.affiliateUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="relative block aspect-[16/10] bg-zinc-50 border-b border-zinc-100 overflow-hidden group"
+        >
+          <img
+            src={product.image}
+            alt={title}
+            loading="lazy"
+            className={`w-full h-full group-hover:scale-105 transition-transform duration-300 ${
+              product.containImage ? 'object-contain bg-white p-2.5' : 'object-cover'
+            }`}
+          />
+          <span className="absolute top-2.5 start-2.5 bg-[#CC0C39] text-white text-[11px] font-extrabold px-2 py-0.5 rounded-xs shadow-xs tabular-nums">
+            {badge}
+          </span>
+        </a>
+
+        <div className="p-4">
+          <div className="flex items-center justify-between gap-2 text-[11px] font-semibold text-zinc-500">
+            <span>{product.brand}</span>
+            <button
+              type="button"
+              onClick={() => onOpenProduct(product.id)}
+              className="text-[#007185] hover:underline cursor-pointer"
+            >
+              {isAr ? 'صفحة المنتج' : 'Product Details'}
+            </button>
+          </div>
+
+          <h4 className="mt-1 font-display text-sm sm:text-base font-bold text-zinc-950 leading-snug line-clamp-2">
+            <a
+              href={product.affiliateUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-[#C7511F] hover:underline"
+            >
+              {title}
+            </a>
+          </h4>
+
+          <p className="mt-1 text-xs text-zinc-600 line-clamp-2">{specs}</p>
+
+          <div className="mt-2.5 flex flex-wrap items-baseline gap-2" dir="ltr">
+            <span className="font-display text-lg font-extrabold text-[#B12704] tabular-nums">
+              {product.price}
+            </span>
+            {product.oldPrice && (
+              <span className="text-xs text-zinc-500 line-through tabular-nums">
+                {product.oldPrice}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="px-4 pb-4 pt-1 flex items-center gap-2">
+        <a
+          href={product.affiliateUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[40px] bg-[#FFD814] hover:bg-[#F7CA00] active:bg-[#F0B800] text-zinc-950 border border-[#FCD200] text-xs sm:text-sm font-extrabold rounded-full transition-colors whitespace-nowrap"
+        >
+          <span>{buyNowLabel}</span>
+          <ExternalLink className="w-3.5 h-3.5" />
+        </a>
+        <ShareButton
+          url={product.affiliateUrl}
+          shareId={product.id}
+          title={title}
+          price={product.price}
+          oldPrice={product.oldPrice}
+          discount={badge}
+          isAr={isAr}
+          dropDirection="up"
+        />
+      </div>
+    </article>
   );
 };

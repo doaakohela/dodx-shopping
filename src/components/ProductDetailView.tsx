@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowLeft, Check, Copy, ExternalLink, ShieldCheck, Store as StoreIcon, Tag } from 'lucide-react';
+import { CATALOG_PRODUCTS, COUPONS_CATALOG } from '../data/unifiedCatalog';
 import { ShareProductItem, Store } from '../types/coupons';
 import { TranslationDict } from '../i18n/translations';
 import { ShareButton } from './ShareButton';
@@ -40,7 +41,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
           }
         }
       } catch {
-        // Fallback to coupons.json store data below
+        // Fallback to local unifiedCatalog / coupons.json
       } finally {
         if (active) setLoading(false);
       }
@@ -52,6 +53,41 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
   }, [productId]);
 
   const item: ShareProductItem | null = React.useMemo(() => {
+    const unifiedProduct = CATALOG_PRODUCTS.find((p) => p.id === productId);
+    if (unifiedProduct) {
+      return {
+        id: unifiedProduct.id,
+        title: unifiedProduct.titleEn,
+        titleAr: unifiedProduct.titleAr,
+        description: unifiedProduct.specsEn,
+        descriptionAr: unifiedProduct.specsAr,
+        price: unifiedProduct.price,
+        oldPrice: unifiedProduct.oldPrice,
+        discount: isAr ? unifiedProduct.discountBadgeAr : unifiedProduct.discountBadgeEn,
+        image: unifiedProduct.image,
+        storeId: unifiedProduct.storeId,
+        storeName: isAr ? unifiedProduct.storeNameAr : unifiedProduct.storeNameEn,
+        affiliateUrl: unifiedProduct.affiliateUrl,
+      };
+    }
+
+    const unifiedCoupon = COUPONS_CATALOG.find((c) => c.id === productId);
+    if (unifiedCoupon) {
+      return {
+        id: unifiedCoupon.id,
+        title: unifiedCoupon.titleEn,
+        titleAr: unifiedCoupon.titleAr,
+        description: unifiedCoupon.descriptionEn,
+        descriptionAr: unifiedCoupon.descriptionAr,
+        discount: isAr ? unifiedCoupon.discountBadgeAr : unifiedCoupon.discountBadgeEn,
+        code: unifiedCoupon.code || null,
+        image: unifiedCoupon.image,
+        storeId: unifiedCoupon.storeId,
+        storeName: isAr ? unifiedCoupon.storeNameAr : unifiedCoupon.storeNameEn,
+        affiliateUrl: unifiedCoupon.affiliateUrl,
+      };
+    }
+
     const direct = catalog[productId];
     if (direct) return direct;
 
@@ -86,7 +122,7 @@ export const ProductDetailView: React.FC<ProductDetailViewProps> = ({
       }
     }
     return null;
-  }, [catalog, productId, stores]);
+  }, [catalog, productId, stores, isAr]);
 
   useEffect(() => {
     if (!item) return;

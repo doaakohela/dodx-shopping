@@ -10,12 +10,12 @@ import {
   Tag,
   X,
 } from 'lucide-react';
-import { AppRoute, Store } from '../types/coupons';
+import { AppRoute } from '../types/coupons';
+import { STORE_GROUPS } from '../data/unifiedCatalog';
 import { LanguageCode, TranslationDict } from '../i18n/translations';
 import { LanguageSelector } from './LanguageSelector';
 
 interface HeaderProps {
-  stores: Store[];
   searchQuery: string;
   onSearchChange: (value: string) => void;
   searchStoreFilter: string;
@@ -28,8 +28,10 @@ interface HeaderProps {
   onChangeLang: (lang: LanguageCode) => void;
   t: TranslationDict;
   activeRoute: AppRoute;
+  activeStoreId: string | null;
   onNavigateHome: (sectionId?: string) => void;
   onNavigateProducts: (deptId?: string) => void;
+  onNavigateCoupons: () => void;
   onSelectStore: (storeId: string) => void;
   onNavigateLegal: (route: 'disclosure' | 'privacy') => void;
   onOpenInstallModal: () => void;
@@ -37,7 +39,6 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  stores,
   searchQuery,
   onSearchChange,
   searchStoreFilter,
@@ -50,13 +51,16 @@ export const Header: React.FC<HeaderProps> = ({
   onChangeLang,
   t,
   activeRoute,
+  activeStoreId,
   onNavigateHome,
   onNavigateProducts,
+  onNavigateCoupons,
   onSelectStore,
   onNavigateLegal,
   onOpenInstallModal,
   onOpenDrawer,
 }) => {
+  const isAr = currentLang === 'ar';
   const [mobileSearchExpanded, setMobileSearchExpanded] = useState(false);
   const searchFormRef = useRef<HTMLFormElement | null>(null);
   const searchInputRef = useRef<HTMLInputElement | null>(null);
@@ -99,7 +103,7 @@ export const Header: React.FC<HeaderProps> = ({
       {/* Tier 1: Primary Deep Forest Green Header (#00453E) */}
       <div className="bg-[#00453E]">
         <div className="max-w-[1520px] mx-auto px-2 sm:px-4 h-[62px] sm:h-[60px] flex items-center gap-1.5 sm:gap-3">
-          {/* Mobile Menu Trigger (collapses when mobile search is expanded) */}
+          {/* Mobile Menu Trigger */}
           <button
             type="button"
             onClick={onOpenDrawer}
@@ -111,7 +115,7 @@ export const Header: React.FC<HeaderProps> = ({
             <Menu className="w-6 h-6" />
           </button>
 
-          {/* Brand Logo: Dodx with signature smile arrow strictly under 'dodx' from first 'd' to second 'd' */}
+          {/* Brand Logo */}
           <a
             href="/"
             onClick={(e) => {
@@ -180,7 +184,7 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
 
-          {/* Wide Search Bar (expands full-width on mobile tap/focus) */}
+          {/* Search Bar */}
           <form
             ref={searchFormRef}
             onSubmit={handleFormSubmit}
@@ -210,9 +214,9 @@ export const Header: React.FC<HeaderProps> = ({
                 className="appearance-none bg-transparent ps-3 pe-7 h-full text-xs font-medium text-zinc-800 focus:outline-none cursor-pointer"
               >
                 <option value="all">{t.allOption}</option>
-                {stores.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.name}
+                {STORE_GROUPS.map((group) => (
+                  <option key={group.id} value={group.id}>
+                    {isAr ? group.nameAr : group.nameEn}
                   </option>
                 ))}
               </select>
@@ -249,7 +253,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             <button
               type="submit"
-              aria-label="Search coupons"
+              aria-label="Search deals"
               className={`${
                 mobileSearchExpanded ? 'w-12' : 'w-10 sm:w-12'
               } bg-[#B12767] hover:bg-[#991E57] text-white flex items-center justify-center transition-colors cursor-pointer shrink-0`}
@@ -258,7 +262,7 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           </form>
 
-          {/* Universal Language Switcher (hidden on < sm while mobile search is expanded) */}
+          {/* Language Switcher */}
           <div className={mobileSearchExpanded ? 'hidden sm:block' : 'block'}>
             <LanguageSelector
               currentLang={currentLang}
@@ -267,7 +271,7 @@ export const Header: React.FC<HeaderProps> = ({
             />
           </div>
 
-          {/* Right Account / Action Links (Tablet & Desktop) */}
+          {/* Right Action Links */}
           <div className="hidden md:flex items-center gap-0.5 lg:gap-1 shrink-0">
             <button
               type="button"
@@ -298,7 +302,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             <button
               type="button"
-              onClick={() => onNavigateHome('hot-deals')}
+              onClick={onNavigateCoupons}
               className="flex items-center gap-1.5 px-2 py-1 rounded-sm border border-transparent hover:border-white transition-colors cursor-pointer shrink-0 whitespace-nowrap"
             >
               <div className="relative shrink-0">
@@ -308,16 +312,16 @@ export const Header: React.FC<HeaderProps> = ({
                 </span>
               </div>
               <span className="text-xs font-bold text-white whitespace-nowrap ms-1">
-                {t.claimed}
+                {t.couponsNav}
               </span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Tier 2: Secondary Sub-Navbar (#005A50) */}
-      <div className="bg-[#005A50] border-t border-white/10">
-        <div className="max-w-[1520px] mx-auto px-3 sm:px-4 h-[39px] flex items-center gap-1 overflow-x-auto no-scrollbar">
+      {/* Tier 2: Secondary Sub-Navbar (#005A50) — Parent Stores Only + Coupons + Products */}
+      <nav aria-label="Primary Stores and Coupons" className="bg-[#005A50] border-t border-white/10">
+        <div className="max-w-[1520px] mx-auto px-3 sm:px-4 h-[40px] flex items-center gap-1 overflow-x-auto no-scrollbar">
           <button
             type="button"
             onClick={onOpenDrawer}
@@ -330,9 +334,26 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             type="button"
             onClick={() => onNavigateHome('hot-deals')}
-            className="px-2.5 py-1 rounded-sm border border-transparent hover:border-white text-[13px] font-medium text-white whitespace-nowrap shrink-0 cursor-pointer"
+            className={`px-2.5 py-1 rounded-sm border text-[13px] font-semibold whitespace-nowrap shrink-0 cursor-pointer ${
+              activeRoute === 'home'
+                ? 'border-white/70 bg-white/10 text-white'
+                : 'border-transparent hover:border-white text-white'
+            }`}
           >
             {t.todaysDeals}
+          </button>
+
+          <button
+            type="button"
+            onClick={onNavigateCoupons}
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm border text-[13px] font-bold whitespace-nowrap shrink-0 cursor-pointer transition-colors ${
+              activeRoute === 'coupons'
+                ? 'bg-[#FFD814] border-[#FCD200] text-zinc-950'
+                : 'border-transparent hover:border-white text-[#FFD814]'
+            }`}
+          >
+            <Tag className="w-3.5 h-3.5" />
+            <span>{t.couponsNav}</span>
           </button>
 
           <button
@@ -341,41 +362,38 @@ export const Header: React.FC<HeaderProps> = ({
             className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm border text-[13px] font-bold whitespace-nowrap shrink-0 cursor-pointer transition-colors ${
               activeRoute === 'products'
                 ? 'bg-white/15 border-white text-[#FFD814]'
-                : 'border-transparent hover:border-white text-[#FFD814]'
+                : 'border-transparent hover:border-white text-white'
             }`}
           >
             <LayoutGrid className="w-3.5 h-3.5" />
             <span>{t.productsNav}</span>
           </button>
 
-          {stores.map((store) => (
-            <button
-              key={store.id}
-              type="button"
-              onClick={() => onSelectStore(store.id)}
-              className="px-2.5 py-1 rounded-sm border border-transparent hover:border-white text-[13px] font-medium text-white whitespace-nowrap shrink-0 cursor-pointer"
-            >
-              {store.name}
-            </button>
-          ))}
+          <span className="h-4 w-px bg-white/25 mx-1 shrink-0" aria-hidden="true" />
 
-          <button
-            type="button"
-            onClick={onOpenInstallModal}
-            className="px-2.5 py-1 rounded-sm border border-transparent hover:border-white text-[13px] font-medium text-[#FFD814] whitespace-nowrap shrink-0 cursor-pointer"
-          >
-            {t.chromeExtension}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => onNavigateLegal('disclosure')}
-            className="px-2.5 py-1 rounded-sm border border-transparent hover:border-white text-[13px] font-medium text-white whitespace-nowrap shrink-0 cursor-pointer"
-          >
-            {t.affiliateDisclosure}
-          </button>
+          {STORE_GROUPS.map((group) => {
+            const isSelectedGroup =
+              activeRoute === 'deals' &&
+              activeStoreId !== null &&
+              (activeStoreId.toLowerCase() === group.id ||
+                group.branches.some((b) => b.id === activeStoreId.toLowerCase()));
+            return (
+              <button
+                key={group.id}
+                type="button"
+                onClick={() => onSelectStore(group.defaultStoreId)}
+                className={`px-2.5 py-1 rounded-sm border text-[13px] font-semibold whitespace-nowrap shrink-0 cursor-pointer transition-colors ${
+                  isSelectedGroup
+                    ? 'bg-white/20 border-white text-[#FFD814]'
+                    : 'border-transparent hover:border-white text-white'
+                }`}
+              >
+                {isAr ? group.nameAr : group.nameEn}
+              </button>
+            );
+          })}
         </div>
-      </div>
+      </nav>
     </header>
   );
 };
