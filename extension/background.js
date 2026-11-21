@@ -231,7 +231,7 @@ function sanitizePayload(rawPayload) {
       const offers = Array.isArray(store.offers)
         ? store.offers
             .filter((o) => o && typeof o === 'object' && typeof o.title === 'string')
-            .slice(0, 60)
+            .slice(0, 150)
             .map((offer) => {
               const fallbackImage = sanitizeLocalImage(offer.fallbackImage, 'images/featured-deals.jpg');
               return {
@@ -284,7 +284,7 @@ function sanitizePayload(rawPayload) {
   const featuredProducts = Array.isArray(rawPayload.featuredProducts)
     ? rawPayload.featuredProducts
         .filter((p) => p && typeof p === 'object' && typeof p.title === 'string')
-        .slice(0, 150)
+        .slice(0, 300)
         .map((product, index) => {
           const fallbackImage = sanitizeLocalImage(product.fallbackImage, 'images/featured-deals.jpg');
           return {
