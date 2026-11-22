@@ -7,7 +7,7 @@ const OFFERS_API_ENDPOINTS = [
 const SITE_HOME_URL = 'https://www.dodx.shop';
 const SITE_PRODUCTS_URL = 'https://www.dodx.shop/products';
 const SITE_COUPONS_URL = 'https://www.dodx.shop/coupons';
-const CACHE_STORAGE_KEY = 'dodx_offers_cache_v6';
+const CACHE_STORAGE_KEY = 'dodx_offers_cache_v7';
 const REFRESH_ALARM_NAME = 'dodx_refresh_offers';
 const CACHE_TTL_MS = 2 * 60 * 60 * 1000;
 const REFRESH_PERIOD_MINUTES = 120;
@@ -57,10 +57,13 @@ const OFFLINE_DIRECTORY_FALLBACK = {
       id: 'amz-8',
       storeId: 'amazon',
       storeName: 'Amazon US',
+      storeNameAr: 'أمازون أمريكا',
       categoryId: 'audio',
       category: 'audio',
       title: 'TAGRY Hybrid ANC Bluetooth Headphones (100H Playtime)',
+      titleAr: 'سماعات TAGRY لاسلكية بعزل الضوضاء النشط ANC (100 ساعة)',
       badge: '50% COUPON',
+      badgeAr: 'خصم 50%',
       badgeColor: '#CC0C39',
       price: '~$24.50 USD',
       oldPrice: '$149.99',
@@ -75,18 +78,21 @@ const OFFLINE_DIRECTORY_FALLBACK = {
       id: 'amz-eg-3',
       storeId: 'amazon-eg',
       storeName: 'Amazon Egypt',
+      storeNameAr: 'أمازون مصر',
       categoryId: 'home-furniture',
       category: 'home-furniture',
       title: 'Sokany SK-100A Single Electric Burner Hot Plate (1000W)',
+      titleAr: 'سخان كهربائي مفرد سوكاني SK-100A بقوة 1000 واط',
       badge: '22% OFF',
+      badgeAr: 'خصم 22%',
       badgeColor: '#CC0C39',
       price: '639.00 EGP',
       oldPrice: '819.00 EGP',
       numericPrice: 639,
       imageUrl: 'images/home-kitchen.jpg',
       fallbackImage: 'images/home-kitchen.jpg',
-      keywords: 'amazon egypt sokany امازون مصر',
-      affiliateUrl: 'https://link.amazon/B09i8b797',
+      keywords: 'amazon egypt sokany امازون مصر سوكاني',
+      affiliateUrl: 'https://link.amazon/B03bXQEs9',
       dodxPageUrl: 'https://www.dodx.shop/p/amz-eg-3'
     }
   ],
@@ -95,11 +101,15 @@ const OFFLINE_DIRECTORY_FALLBACK = {
       id: 'amz-eg-swype',
       storeId: 'amazon-eg',
       storeName: 'Amazon Egypt · CIB Swype',
+      storeNameAr: 'أمازون مصر · بطاقة CIB Swype',
       type: 'bank',
       title: '25% Instant Bank Discount up to 250 EGP (CIB Swype)',
+      titleAr: 'خصم بنكي فوري 25% حتى 250 جنيه مع بطاقة CIB Swype',
       description: 'Min order 1,000 EGP on Amazon.eg',
+      descriptionAr: 'حد أدنى للطلب 1,000 جنيه على أمازون مصر · استخدم الكود SWYPE25 عند الدفع.',
       code: 'SWYPE25',
       badge: '25% OFF',
+      badgeAr: 'خصم 25%',
       imageUrl: 'images/featured-deals.jpg',
       fallbackImage: 'images/featured-deals.jpg',
       affiliateUrl: 'https://link.amazon/B02evOzAd',
@@ -111,7 +121,9 @@ const OFFLINE_DIRECTORY_FALLBACK = {
       id: 'amazon',
       groupId: 'amazon',
       groupName: 'Amazon',
+      groupNameAr: 'أمازون',
       name: 'Amazon US ($)',
+      nameAr: 'أمازون أمريكا ($)',
       flag: '🇺🇸',
       currencySymbol: '$',
       currencyCode: 'USD',
@@ -126,7 +138,9 @@ const OFFLINE_DIRECTORY_FALLBACK = {
       id: 'amazon-eg',
       groupId: 'amazon',
       groupName: 'Amazon',
+      groupNameAr: 'أمازون',
       name: 'Amazon Egypt (EGP)',
+      nameAr: 'أمازون مصر (جنيه)',
       flag: '🇪🇬',
       currencySymbol: 'EGP',
       currencyCode: 'EGP',
@@ -141,7 +155,9 @@ const OFFLINE_DIRECTORY_FALLBACK = {
       id: 'ebay',
       groupId: 'ebay',
       groupName: 'eBay',
+      groupNameAr: 'إيباي eBay',
       name: 'eBay Global ($)',
+      nameAr: 'إيباي العالمي ($)',
       flag: '🌐',
       currencySymbol: '$',
       currencyCode: 'USD',
@@ -157,7 +173,9 @@ const OFFLINE_DIRECTORY_FALLBACK = {
       id: 'noon',
       groupId: 'noon',
       groupName: 'Noon',
+      groupNameAr: 'نون Noon',
       name: 'Noon Regional',
+      nameAr: 'نون الإقليمي',
       flag: '🟡',
       currencySymbol: 'AED',
       currencyCode: 'AED',
@@ -231,7 +249,7 @@ function sanitizePayload(rawPayload) {
       const offers = Array.isArray(store.offers)
         ? store.offers
             .filter((o) => o && typeof o === 'object' && typeof o.title === 'string')
-            .slice(0, 150)
+            .slice(0, 250)
             .map((offer) => {
               const fallbackImage = sanitizeLocalImage(offer.fallbackImage, 'images/featured-deals.jpg');
               return {
@@ -284,7 +302,7 @@ function sanitizePayload(rawPayload) {
   const featuredProducts = Array.isArray(rawPayload.featuredProducts)
     ? rawPayload.featuredProducts
         .filter((p) => p && typeof p === 'object' && typeof p.title === 'string')
-        .slice(0, 300)
+        .slice(0, 500)
         .map((product, index) => {
           const fallbackImage = sanitizeLocalImage(product.fallbackImage, 'images/featured-deals.jpg');
           return {

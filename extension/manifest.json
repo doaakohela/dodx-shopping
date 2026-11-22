@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Dodx – Official Shopping Partners & Store Directory",
   "short_name": "Dodx",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "Quickly access official global shopping partners, tech stores, and curated product directories synced from dodx.shop.",
   "permissions": [
     "storage",

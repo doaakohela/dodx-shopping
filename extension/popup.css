@@ -31,6 +31,10 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+html[dir="rtl"] body {
+  font-family: "Cairo", "Tajawal", "Segoe UI", Tahoma, sans-serif;
+}
+
 body.is-standalone {
   width: 100%;
   min-width: 340px;
@@ -122,6 +126,107 @@ body.is-standalone .popup-shell {
   border-radius: 4px;
 }
 
+/* Language Picker Dropdown */
+.lang-picker {
+  position: relative;
+}
+
+.lang-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 26px;
+  padding: 0 7px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.lang-btn:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.lang-flag {
+  font-size: 12px;
+  line-height: 1;
+}
+
+.lang-caret {
+  font-size: 9px;
+  opacity: 0.85;
+}
+
+.lang-menu {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 0;
+  width: 158px;
+  background: #ffffff;
+  color: var(--dodx-text);
+  border: 1px solid #d4d4d8;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+  padding: 6px;
+  z-index: 60;
+}
+
+html[dir="rtl"] .lang-menu {
+  right: auto;
+  left: 0;
+}
+
+.lang-menu[hidden] {
+  display: none;
+}
+
+.lang-menu-title {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--dodx-muted);
+  padding: 3px 6px 5px;
+  border-bottom: 1px solid var(--dodx-border);
+  margin-bottom: 4px;
+}
+
+.lang-option {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 6px 8px;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--dodx-text);
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: start;
+}
+
+.lang-option:hover {
+  background: #f4f4f5;
+}
+
+.lang-option .lang-check {
+  opacity: 0;
+  font-size: 11px;
+}
+
+.lang-option.is-active {
+  background: var(--dodx-green);
+  color: #ffffff;
+}
+
+.lang-option.is-active .lang-check {
+  opacity: 1;
+}
+
 .active-domain {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 10px;
@@ -129,9 +234,9 @@ body.is-standalone .popup-shell {
   color: #d1fae5;
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 3px 6px;
+  padding: 2px 6px;
   border-radius: 4px;
-  max-width: 96px;
+  max-width: 84px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -192,6 +297,13 @@ body.is-standalone .popup-shell {
   font-weight: 600;
   color: #ecfdf5;
   text-decoration: none;
+  min-width: 0;
+}
+
+.official-site-link span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .official-site-link strong {
@@ -211,6 +323,7 @@ body.is-standalone .popup-shell {
   display: flex;
   align-items: center;
   gap: 5px;
+  flex-shrink: 0;
 }
 
 .top-coupons-btn {
@@ -483,6 +596,11 @@ body.is-standalone .popup-content {
   border-radius: 3px;
 }
 
+html[dir="rtl"] .product-badge {
+  left: auto;
+  right: 5px;
+}
+
 .product-body {
   padding: 7px 8px 8px;
   display: flex;
@@ -519,7 +637,6 @@ body.is-standalone .popup-content {
   overflow: hidden;
 }
 
-/* Red background with white text matching user specification */
 .price-badge-row {
   display: flex;
   flex-wrap: wrap;

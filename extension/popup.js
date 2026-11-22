@@ -1,8 +1,10 @@
 'use strict';
 
 const SITE_HOME_URL = 'https://www.dodx.shop';
+const LANG_STORAGE_KEY = 'dodx_ext_lang';
 const isStandaloneWindow = new URLSearchParams(window.location.search).get('mode') === 'window';
 
+let currentLang = 'en'; // Always defaults to English on first load
 let currentPayload = null;
 let currentMatchedStore = null;
 let activeHostname = '';
@@ -11,6 +13,156 @@ let selectedBranchId = 'all';
 let selectedCategoryId = 'all';
 let selectedPriceTier = 'all';
 let viewMode = 'products'; // 'products' | 'coupons'
+
+const I18N = {
+  en: {
+    pageTitle: 'Dodx – Official Shopping Partners & Verified Deals',
+    langShort: 'EN',
+    langFlag: '🇺🇸',
+    langMenuTitle: 'Display Language',
+    langBtnTitle: 'Select display language',
+    flashTimerTitle: 'Flash Deal Countdown',
+    popoutTitle: 'Open in standalone window',
+    refreshTitle: 'Sync latest offers',
+    topBarTagline: '<strong>dodx.shop</strong> · Verified Deals',
+    couponsBtn: 'Coupons',
+    productsLink: 'Products',
+    searchPlaceholder: 'Search iPhone, laptop, Samsung, Amazon...',
+    searchAria: 'Search products and stores',
+    catAria: 'Filter by category',
+    priceAria: 'Filter by price bracket',
+    allPriceTiers: 'All Price Tiers',
+    allStores: 'All Stores',
+    allPrefix: 'All',
+    soonSuffix: '(Soon)',
+    loadingText: 'Loading products & stores from dodx.shop...',
+    offlineError: 'Unable to load offers. Visit https://www.dodx.shop directly.',
+    disclosurePrefix: 'Affiliate Disclosure:',
+    defaultDisclosure: 'As an affiliate, dodx.shop may earn a commission from qualifying purchases at no extra cost to you.',
+    footerCoupons: 'Coupons',
+    footerProducts: 'Products',
+    footerDisclosure: 'Disclosure',
+    couponsHeading: 'Verified Coupons & Bank Codes',
+    offersCount: (n) => `${n} offers`,
+    itemsCount: (n) => `${n} items`,
+    noCoupons: 'No matching coupons found.',
+    whiteFridayStrip: 'Best Deals — Huge White & Black Friday Discounts',
+    comingSoonHeading: 'Biggest Discounts Coming Very Soon',
+    comingSoonStoreBody: (name) => `${name} deals are coming very soon on dodx.shop.`,
+    comingSoonFilterBody: 'No matching deals in this selection — try All Stores or switch price brackets.',
+    openStorefront: (name) => `Open ${name} Storefront →`,
+    topProductsHeading: 'Top Verified Deals & Flash Markdowns',
+    storeProductsHeading: (name) => `${name} Products`,
+    buyNow: 'Buy Now →',
+    codeLabel: 'Code:',
+    copyAndShop: (code) => `Copy ${code} & Shop →`,
+    openOffer: 'Open Offer →',
+    syncedNotice: 'Synced latest prices, categories & coupons from dodx.shop',
+    partnerFallback: 'Dodx Partner',
+    dealBadgeFallback: 'DEAL',
+    couponBadgeFallback: 'COUPON',
+    tierLabels: {
+      '1-30': '1 – 30 (Top Discounts)',
+      '30-60': '30 – 60',
+      '60-100': '60 – 100',
+      '100-150': '100 – 150',
+      '150-500': '150 – 500',
+      '500-1000': '500 – 1,000',
+      '1000-2000': '1,000 – 2,000',
+      '2000-3000': '2,000 – 3,000',
+      '3000-5000': '3,000 – 5,000',
+      'over-5000': '> 5,000 (Major)',
+      'over-10000': '> 10,000 (⚡ Lightning)',
+    },
+  },
+  ar: {
+    pageTitle: 'Dodx – شركاء التسوق الرسميون وأفضل العروض الموثقة',
+    langShort: 'AR',
+    langFlag: '🇸🇦',
+    langMenuTitle: 'لغة العرض',
+    langBtnTitle: 'اختر لغة العرض',
+    flashTimerTitle: 'عد تنازلي لعروض البرق',
+    popoutTitle: 'فتح في نافذة مستقلة',
+    refreshTitle: 'تحديث أحدث العروض',
+    topBarTagline: '<strong>dodx.shop</strong> · عروض موثقة',
+    couponsBtn: 'الكوبونات',
+    productsLink: 'الأقسام',
+    searchPlaceholder: 'ابحث عن آيفون، لابتوب، سامسونج، أمازون...',
+    searchAria: 'البحث عن المنتجات والمتاجر',
+    catAria: 'تصفية حسب القسم',
+    priceAria: 'تصفية حسب نطاق السعر',
+    allPriceTiers: 'كل نطاقات الأسعار',
+    allStores: 'كل المتاجر',
+    allPrefix: 'كل فروع',
+    soonSuffix: '(قريباً)',
+    loadingText: 'جاري تحميل المنتجات والمتاجر من dodx.shop...',
+    offlineError: 'تعذر تحميل العروض. قم بزيارة https://www.dodx.shop مباشرة.',
+    disclosurePrefix: 'إفصاح الشراكة:',
+    defaultDisclosure: 'كموقع تسويق بالعمولة، قد يحصل dodx.shop على عمولة من المشتريات المؤهلة دون أي تكلفة إضافية عليك.',
+    footerCoupons: 'الكوبونات',
+    footerProducts: 'الأقسام',
+    footerDisclosure: 'الإفصاح',
+    couponsHeading: 'أكواد الخصم والبطاقات البنكية الموثقة',
+    offersCount: (n) => `${n} عرض`,
+    itemsCount: (n) => `${n} منتج`,
+    noCoupons: 'لم يتم العثور على كوبونات مطابقة.',
+    whiteFridayStrip: 'أفضل الصفقات — خصومات كبيرة جداً بمناسبة الجمعة البيضاء',
+    comingSoonHeading: 'انتظر أقوى الخصومات قريباً جداً',
+    comingSoonStoreBody: (name) => `عروض ${name} قيد الإضافة وستتوفر قريباً جداً على dodx.shop.`,
+    comingSoonFilterBody: 'لا توجد منتجات مطابقة في هذا النطاق السعري — جرب كل المتاجر أو نطاق سعر آخر.',
+    openStorefront: (name) => `فتح واجهة متجر ${name} ←`,
+    topProductsHeading: 'أقوى العروض والخصومات الموثقة',
+    storeProductsHeading: (name) => `منتجات ${name}`,
+    buyNow: 'اشترِ الآن ←',
+    codeLabel: 'الكود:',
+    copyAndShop: (code) => `نسخ ${code} والتسوق ←`,
+    openOffer: 'فتح العرض ←',
+    syncedNotice: 'تم تحديث أحدث الأسعار والأقسام والكوبونات من dodx.shop',
+    partnerFallback: 'شريك Dodx',
+    dealBadgeFallback: 'عرض',
+    couponBadgeFallback: 'كوبون',
+    tierLabels: {
+      '1-30': '1 – 30 (أكبر الخصومات)',
+      '30-60': 'من 30 إلى 60',
+      '60-100': 'من 60 إلى 100',
+      '100-150': 'من 100 إلى 150',
+      '150-500': 'من 150 إلى 500',
+      '500-1000': 'من 500 إلى 1,000',
+      '1000-2000': 'من 1,000 إلى 2,000',
+      '2000-3000': 'من 2,000 إلى 3,000',
+      '3000-5000': 'من 3,000 إلى 5,000',
+      'over-5000': 'أكبر من 5,000 (خصومات كبيرة)',
+      'over-10000': 'أكبر من 10,000 (⚡ عرض البرق)',
+    },
+  },
+};
+
+function getDict() {
+  return I18N[currentLang] || I18N.en;
+}
+
+function isArLang() {
+  return currentLang === 'ar';
+}
+
+function formatPriceForLang(rawPrice) {
+  if (!rawPrice) return '';
+  let text = String(rawPrice).trim();
+  if (isArLang()) {
+    text = text
+      .replace(/\bUSD\b/gi, 'دولار')
+      .replace(/\bEGP\b/gi, 'جنيه')
+      .replace(/\bAED\b/gi, 'درهم')
+      .replace(/\bJPY\b/gi, 'ين');
+  } else {
+    text = text
+      .replace(/جنيه(?:\s+مصري)?/g, 'EGP')
+      .replace(/درهم(?:\s+إماراتي)?/g, 'AED')
+      .replace(/دولار(?:\s+أمريكي)?/g, 'USD')
+      .replace(/\bين\b/g, 'JPY');
+  }
+  return text.replace(/\s{2,}/g, ' ').trim();
+}
 
 function isSafeHttpsUrl(rawUrl) {
   if (typeof rawUrl !== 'string') return false;
@@ -81,6 +233,109 @@ function matchesPriceTier(numericPrice, tierId) {
   return true;
 }
 
+async function loadSavedLang() {
+  try {
+    if (chrome.storage?.local) {
+      const res = await chrome.storage.local.get(LANG_STORAGE_KEY);
+      if (res && (res[LANG_STORAGE_KEY] === 'en' || res[LANG_STORAGE_KEY] === 'ar')) {
+        return res[LANG_STORAGE_KEY];
+      }
+    }
+  } catch {
+    // Fallback to localStorage
+  }
+  try {
+    const saved = localStorage.getItem(LANG_STORAGE_KEY);
+    if (saved === 'en' || saved === 'ar') return saved;
+  } catch {
+    // Ignore
+  }
+  return 'en';
+}
+
+async function saveLang(lang) {
+  try {
+    if (chrome.storage?.local) {
+      await chrome.storage.local.set({ [LANG_STORAGE_KEY]: lang });
+    }
+  } catch {
+    // Ignore
+  }
+  try {
+    localStorage.setItem(LANG_STORAGE_KEY, lang);
+  } catch {
+    // Ignore
+  }
+}
+
+function applyLanguageUI() {
+  const dict = getDict();
+  document.documentElement.lang = currentLang;
+  document.documentElement.dir = isArLang() ? 'rtl' : 'ltr';
+  document.title = dict.pageTitle;
+
+  const langFlag = document.getElementById('lang-flag');
+  const langCode = document.getElementById('lang-code');
+  const langBtn = document.getElementById('lang-btn');
+  const langMenuTitle = document.getElementById('lang-menu-title');
+  if (langFlag) langFlag.textContent = dict.langFlag;
+  if (langCode) langCode.textContent = dict.langShort;
+  if (langBtn) {
+    langBtn.title = dict.langBtnTitle;
+    langBtn.setAttribute('aria-label', dict.langBtnTitle);
+  }
+  if (langMenuTitle) langMenuTitle.textContent = dict.langMenuTitle;
+
+  document.querySelectorAll('.lang-option').forEach((btn) => {
+    btn.classList.toggle('is-active', btn.getAttribute('data-lang') === currentLang);
+  });
+
+  const flashPill = document.getElementById('flash-timer-pill');
+  const popoutBtn = document.getElementById('popout-btn');
+  const refreshBtn = document.getElementById('refresh-btn');
+  const topTagline = document.getElementById('top-bar-tagline');
+  const couponsBtn = document.getElementById('coupons-mode-btn');
+  const topProducts = document.getElementById('top-products-link');
+  const searchInput = document.getElementById('offer-search');
+  const catSelect = document.getElementById('category-filter');
+  const priceSelect = document.getElementById('price-filter');
+  const loadingCard = document.getElementById('loading-card');
+  const footerCoupons = document.getElementById('footer-coupons-link');
+  const footerProducts = document.getElementById('footer-products-link');
+  const footerDisclosure = document.getElementById('footer-disclosure-link');
+  const disclosureEl = document.getElementById('affiliate-disclosure');
+
+  if (flashPill) flashPill.title = dict.flashTimerTitle;
+  if (popoutBtn) popoutBtn.title = dict.popoutTitle;
+  if (refreshBtn) refreshBtn.title = dict.refreshTitle;
+  if (topTagline) {
+    const strongEl = document.createElement('strong');
+    strongEl.textContent = 'dodx.shop';
+    const suffixText = isArLang() ? ' · عروض موثقة' : ' · Verified Deals';
+    topTagline.replaceChildren(strongEl, document.createTextNode(suffixText));
+  }
+  if (couponsBtn) couponsBtn.textContent = dict.couponsBtn;
+  if (topProducts) topProducts.textContent = dict.productsLink;
+  if (searchInput) {
+    searchInput.placeholder = dict.searchPlaceholder;
+    searchInput.setAttribute('aria-label', dict.searchAria);
+  }
+  if (catSelect) catSelect.setAttribute('aria-label', dict.catAria);
+  if (priceSelect) priceSelect.setAttribute('aria-label', dict.priceAria);
+  if (loadingCard) loadingCard.textContent = dict.loadingText;
+  if (footerCoupons) footerCoupons.textContent = dict.footerCoupons;
+  if (footerProducts) footerProducts.textContent = dict.footerProducts;
+  if (footerDisclosure) footerDisclosure.textContent = dict.footerDisclosure;
+  if (disclosureEl) {
+    disclosureEl.textContent = `${dict.disclosurePrefix} ${dict.defaultDisclosure}`;
+  }
+
+  populatePriceSelect();
+  populateCategorySelect();
+  renderStoreTabs();
+  renderPopupContent();
+}
+
 async function openExternalUrl(rawUrl) {
   const safeUrl = isSafeHttpsUrl(rawUrl) ? rawUrl : SITE_HOME_URL;
   try {
@@ -139,14 +394,40 @@ function hideStatusNotice() {
   statusEl.hidden = true;
 }
 
+function populatePriceSelect() {
+  const selectEl = document.getElementById('price-filter');
+  if (!selectEl) return;
+  const dict = getDict();
+  const prev = selectedPriceTier || 'all';
+  selectEl.replaceChildren();
+
+  const allOpt = document.createElement('option');
+  allOpt.value = 'all';
+  allOpt.textContent = dict.allPriceTiers;
+  selectEl.appendChild(allOpt);
+
+  Object.entries(dict.tierLabels).forEach(([id, label]) => {
+    const opt = document.createElement('option');
+    opt.value = id;
+    opt.textContent = label;
+    selectEl.appendChild(opt);
+  });
+
+  selectEl.value = prev;
+}
+
 function populateCategorySelect() {
   const selectEl = document.getElementById('category-filter');
-  if (!selectEl || !currentPayload || !Array.isArray(currentPayload.categories)) return;
+  if (!selectEl) return;
+  const categories = currentPayload && Array.isArray(currentPayload.categories)
+    ? currentPayload.categories
+    : [{ id: 'all', nameEn: 'All Categories', nameAr: 'كل الأقسام' }];
+
   selectEl.replaceChildren();
-  currentPayload.categories.forEach((cat) => {
+  categories.forEach((cat) => {
     const opt = document.createElement('option');
     opt.value = cat.id;
-    opt.textContent = cat.nameAr ? `${cat.nameEn} · ${cat.nameAr}` : cat.nameEn;
+    opt.textContent = isArLang() ? (cat.nameAr || cat.nameEn) : (cat.nameEn || cat.nameAr);
     selectEl.appendChild(opt);
   });
   selectEl.value = selectedCategoryId;
@@ -157,12 +438,14 @@ function renderStoreTabs() {
   const branchEl = document.getElementById('branch-tabs');
   if (!tabsEl || !currentPayload || !Array.isArray(currentPayload.storeGroups)) return;
 
+  const dict = getDict();
+  const ar = isArLang();
   tabsEl.replaceChildren();
 
   const allTab = document.createElement('button');
   allTab.type = 'button';
   allTab.className = viewMode === 'products' && selectedGroupId === 'all' ? 'store-tab is-active' : 'store-tab';
-  allTab.textContent = 'All Stores';
+  allTab.textContent = dict.allStores;
   allTab.addEventListener('click', () => {
     viewMode = 'products';
     selectedGroupId = 'all';
@@ -177,7 +460,8 @@ function renderStoreTabs() {
     const tabBtn = document.createElement('button');
     tabBtn.type = 'button';
     tabBtn.className = viewMode === 'products' && selectedGroupId === group.id ? 'store-tab is-active' : 'store-tab';
-    tabBtn.textContent = group.comingSoon ? `${group.nameEn} (Soon)` : group.nameEn;
+    const gName = ar ? (group.nameAr || group.nameEn) : (group.nameEn || group.nameAr);
+    tabBtn.textContent = group.comingSoon ? `${gName} ${dict.soonSuffix}` : gName;
     tabBtn.addEventListener('click', () => {
       viewMode = 'products';
       selectedGroupId = group.id;
@@ -196,10 +480,14 @@ function renderStoreTabs() {
       branchEl.hidden = false;
       branchEl.replaceChildren();
 
+      const groupLabel = ar
+        ? (branches[0].groupNameAr || branches[0].groupName || '')
+        : (branches[0].groupName || branches[0].groupNameAr || '');
+
       const allBranchBtn = document.createElement('button');
       allBranchBtn.type = 'button';
       allBranchBtn.className = selectedBranchId === 'all' ? 'branch-tab is-active' : 'branch-tab';
-      allBranchBtn.textContent = `All ${branches[0].groupName || ''}`;
+      allBranchBtn.textContent = `${dict.allPrefix} ${groupLabel}`.trim();
       allBranchBtn.addEventListener('click', () => {
         selectedBranchId = 'all';
         renderStoreTabs();
@@ -211,7 +499,8 @@ function renderStoreTabs() {
         const bBtn = document.createElement('button');
         bBtn.type = 'button';
         bBtn.className = selectedBranchId === branch.id ? 'branch-tab is-active' : 'branch-tab';
-        bBtn.textContent = `${branch.flag || ''} ${branch.name}`.trim();
+        const bName = ar ? (branch.nameAr || branch.name) : (branch.name || branch.nameAr);
+        bBtn.textContent = `${branch.flag || ''} ${bName}`.trim();
         bBtn.addEventListener('click', () => {
           selectedBranchId = branch.id;
           renderStoreTabs();
@@ -234,6 +523,16 @@ function updateCouponsButtonState() {
 }
 
 function createProductCard(product) {
+  const dict = getDict();
+  const ar = isArLang();
+  const titleText = ar ? (product.titleAr || product.title) : (product.title || product.titleAr);
+  const storeText = ar
+    ? (product.storeNameAr || product.storeName || dict.partnerFallback)
+    : (product.storeName || product.storeNameAr || dict.partnerFallback);
+  const badgeText = ar
+    ? (product.badgeAr || product.badge || dict.dealBadgeFallback)
+    : (product.badge || product.badgeAr || dict.dealBadgeFallback);
+
   const card = document.createElement('article');
   card.className = 'product-card';
 
@@ -244,14 +543,14 @@ function createProductCard(product) {
   const imgEl = createSafeImageElement(
     product.imageUrl,
     product.fallbackImage,
-    product.title,
+    titleText,
     'product-img'
   );
   mediaWrap.appendChild(imgEl);
 
   const badge = document.createElement('span');
   badge.className = 'product-badge';
-  badge.textContent = product.badge || 'DEAL';
+  badge.textContent = badgeText;
   mediaWrap.appendChild(badge);
 
   const body = document.createElement('div');
@@ -263,31 +562,31 @@ function createProductCard(product) {
   dot.className = 'store-dot';
   dot.style.backgroundColor = product.badgeColor || '#00453E';
   storeRow.appendChild(dot);
-  storeRow.appendChild(document.createTextNode(product.storeName || 'Dodx Partner'));
+  storeRow.appendChild(document.createTextNode(storeText));
 
   const titleEl = document.createElement('h3');
   titleEl.className = 'product-title';
-  titleEl.textContent = product.title;
+  titleEl.textContent = titleText;
 
   const priceRow = document.createElement('div');
   priceRow.className = 'price-badge-row';
   if (product.price) {
     const pricePill = document.createElement('span');
     pricePill.className = 'price-pill';
-    pricePill.textContent = product.price;
+    pricePill.textContent = formatPriceForLang(product.price);
     priceRow.appendChild(pricePill);
   }
   if (product.oldPrice) {
     const oldEl = document.createElement('span');
     oldEl.className = 'old-price-text';
-    oldEl.textContent = product.oldPrice;
+    oldEl.textContent = formatPriceForLang(product.oldPrice);
     priceRow.appendChild(oldEl);
   }
 
   const ctaBtn = document.createElement('button');
   ctaBtn.type = 'button';
   ctaBtn.className = 'product-cta-btn';
-  ctaBtn.textContent = 'Buy Now · اشترِ الآن →';
+  ctaBtn.textContent = dict.buyNow;
   ctaBtn.addEventListener('click', () => openExternalUrl(product.affiliateUrl));
 
   body.appendChild(storeRow);
@@ -301,6 +600,16 @@ function createProductCard(product) {
 }
 
 function createCouponCard(coupon) {
+  const dict = getDict();
+  const ar = isArLang();
+  const storeText = ar
+    ? (coupon.storeNameAr || coupon.storeName || dict.partnerFallback)
+    : (coupon.storeName || coupon.storeNameAr || dict.partnerFallback);
+  const badgeText = ar
+    ? (coupon.badgeAr || coupon.badge || dict.couponBadgeFallback)
+    : (coupon.badge || coupon.badgeAr || dict.couponBadgeFallback);
+  const titleText = ar ? (coupon.titleAr || coupon.title) : (coupon.title || coupon.titleAr);
+
   const card = document.createElement('article');
   card.className = 'coupon-card';
 
@@ -308,16 +617,16 @@ function createCouponCard(coupon) {
   top.className = 'coupon-top';
   const storeSpan = document.createElement('span');
   storeSpan.className = 'coupon-store';
-  storeSpan.textContent = coupon.storeName || 'Dodx Partner';
+  storeSpan.textContent = storeText;
   const badgeSpan = document.createElement('span');
   badgeSpan.className = 'coupon-badge';
-  badgeSpan.textContent = coupon.badge || 'COUPON';
+  badgeSpan.textContent = badgeText;
   top.appendChild(storeSpan);
   top.appendChild(badgeSpan);
 
   const titleEl = document.createElement('div');
   titleEl.className = 'coupon-title';
-  titleEl.textContent = coupon.title;
+  titleEl.textContent = titleText;
 
   card.appendChild(top);
   card.appendChild(titleEl);
@@ -325,19 +634,21 @@ function createCouponCard(coupon) {
   if (coupon.code) {
     const codeBox = document.createElement('code');
     codeBox.className = 'coupon-code-box';
-    codeBox.textContent = `Code: ${coupon.code}`;
+    codeBox.textContent = `${dict.codeLabel} ${coupon.code}`;
     card.appendChild(codeBox);
   }
 
   const ctaBtn = document.createElement('button');
   ctaBtn.type = 'button';
   ctaBtn.className = 'product-cta-btn';
-  ctaBtn.textContent = coupon.code ? `Copy ${coupon.code} & Shop →` : 'Open Offer →';
+  ctaBtn.textContent = coupon.code ? dict.copyAndShop(coupon.code) : dict.openOffer;
   ctaBtn.addEventListener('click', async () => {
     if (coupon.code && navigator.clipboard?.writeText) {
       try {
         await navigator.clipboard.writeText(coupon.code);
-      } catch {}
+      } catch {
+        // Ignore clipboard denial
+      }
     }
     openExternalUrl(coupon.affiliateUrl);
   });
@@ -352,19 +663,22 @@ function renderPopupContent() {
   const searchInput = document.getElementById('offer-search');
   if (!container) return;
 
+  const dict = getDict();
+  const ar = isArLang();
   const query = normalizeText(searchInput ? searchInput.value : '');
   container.replaceChildren();
 
   if (!currentPayload || !Array.isArray(currentPayload.stores)) {
     const fallback = document.createElement('div');
     fallback.className = 'offline-card';
-    fallback.textContent = 'Unable to load offers. Visit https://www.dodx.shop directly.';
+    fallback.textContent = dict.offlineError;
     container.appendChild(fallback);
     return;
   }
 
-  if (disclosureEl && currentPayload.disclosure) {
-    disclosureEl.textContent = `Affiliate Disclosure: ${currentPayload.disclosure}`;
+  if (disclosureEl) {
+    const discBody = ar ? dict.defaultDisclosure : (currentPayload.disclosure || dict.defaultDisclosure);
+    disclosureEl.textContent = `${dict.disclosurePrefix} ${discBody}`;
   }
 
   if (viewMode === 'coupons') {
@@ -372,15 +686,15 @@ function renderPopupContent() {
     header.className = 'section-header';
     const title = document.createElement('span');
     title.className = 'section-title';
-    title.textContent = 'Verified Coupons & Bank Codes · كوبونات الخصم';
+    title.textContent = dict.couponsHeading;
     const coupons = Array.isArray(currentPayload.coupons) ? currentPayload.coupons : [];
     const filteredCoupons = coupons.filter((c) => {
       if (!query) return true;
-      return normalizeText(`${c.title} ${c.titleAr} ${c.storeName} ${c.code || ''}`).includes(query);
+      return normalizeText(`${c.title} ${c.titleAr} ${c.storeName} ${c.storeNameAr || ''} ${c.code || ''}`).includes(query);
     });
     const count = document.createElement('span');
     count.className = 'section-count';
-    count.textContent = `${filteredCoupons.length} offers`;
+    count.textContent = dict.offersCount(filteredCoupons.length);
     header.appendChild(title);
     header.appendChild(count);
     container.appendChild(header);
@@ -388,7 +702,7 @@ function renderPopupContent() {
     if (filteredCoupons.length === 0) {
       const empty = document.createElement('div');
       empty.className = 'coming-soon-card';
-      empty.textContent = 'No matching coupons found.';
+      empty.textContent = dict.noCoupons;
       container.appendChild(empty);
       return;
     }
@@ -397,23 +711,23 @@ function renderPopupContent() {
     return;
   }
 
-  // White Friday Header Strip
+  // Unified language Deal Banner Strip
   const wfStrip = document.createElement('div');
   wfStrip.className = 'white-friday-strip';
   const wfText = document.createElement('span');
-  wfText.textContent = 'أفضل الصفقات — خصومات كبيرة جداً بمناسبة الجمعة البيضاء';
+  wfText.textContent = dict.whiteFridayStrip;
   wfStrip.appendChild(wfText);
   container.appendChild(wfStrip);
 
-  // Determine allowed branch IDs for selectedGroupId / selectedBranchId
   const groupObj = (currentPayload.storeGroups || []).find((g) => g.id === selectedGroupId);
   if (groupObj && groupObj.comingSoon) {
+    const gName = ar ? (groupObj.nameAr || groupObj.nameEn) : (groupObj.nameEn || groupObj.nameAr);
     const cs = document.createElement('div');
     cs.className = 'coming-soon-card';
     const h = document.createElement('h3');
-    h.textContent = 'انتظر أقوى الخصومات قريباً جداً';
+    h.textContent = dict.comingSoonHeading;
     const p = document.createElement('p');
-    p.textContent = `${groupObj.nameEn} deals are coming very soon on dodx.shop.`;
+    p.textContent = dict.comingSoonStoreBody(gName);
     cs.appendChild(h);
     cs.appendChild(p);
     container.appendChild(cs);
@@ -437,7 +751,7 @@ function renderPopupContent() {
     if (selectedCategoryId !== 'all' && prod.categoryId !== selectedCategoryId) return false;
     if (!matchesPriceTier(Number(prod.numericPrice || 0), selectedPriceTier)) return false;
     if (!query) return true;
-    const hay = normalizeText(`${prod.title} ${prod.titleAr} ${prod.brand} ${prod.storeName} ${prod.keywords}`);
+    const hay = normalizeText(`${prod.title} ${prod.titleAr} ${prod.brand} ${prod.storeName} ${prod.storeNameAr || ''} ${prod.keywords}`);
     return hay.includes(query);
   });
 
@@ -445,10 +759,15 @@ function renderPopupContent() {
   prodHeader.className = 'section-header';
   const prodTitle = document.createElement('span');
   prodTitle.className = 'section-title';
-  prodTitle.textContent = selectedGroupId === 'all' ? 'Top White & Black Friday Products' : `${groupObj?.nameEn || 'Store'} Products`;
+  const groupDisplayName = groupObj
+    ? (ar ? (groupObj.nameAr || groupObj.nameEn) : (groupObj.nameEn || groupObj.nameAr))
+    : dict.partnerFallback;
+  prodTitle.textContent = selectedGroupId === 'all'
+    ? dict.topProductsHeading
+    : dict.storeProductsHeading(groupDisplayName);
   const prodCount = document.createElement('span');
   prodCount.className = 'section-count';
-  prodCount.textContent = `${filteredProducts.length} items`;
+  prodCount.textContent = dict.itemsCount(filteredProducts.length);
   prodHeader.appendChild(prodTitle);
   prodHeader.appendChild(prodCount);
   container.appendChild(prodHeader);
@@ -457,20 +776,23 @@ function renderPopupContent() {
     const cs = document.createElement('div');
     cs.className = 'coming-soon-card';
     const h = document.createElement('h3');
-    h.textContent = 'انتظر أقوى الخصومات قريباً جداً';
+    h.textContent = dict.comingSoonHeading;
     const p = document.createElement('p');
-    p.textContent = 'Biggest Discounts Coming Very Soon — try All Stores or switch price brackets.';
+    p.textContent = dict.comingSoonFilterBody;
     cs.appendChild(h);
     cs.appendChild(p);
 
     if (selectedGroupId !== 'all' && currentMatchedStore === null) {
       const storeObj = (currentPayload.stores || []).find((s) => s.groupId === selectedGroupId);
       if (storeObj && isSafeHttpsUrl(storeObj.affiliateUrl)) {
+        const sName = ar
+          ? (storeObj.groupNameAr || storeObj.nameAr || storeObj.groupName || storeObj.name)
+          : (storeObj.groupName || storeObj.name);
         const visitBtn = document.createElement('button');
         visitBtn.type = 'button';
         visitBtn.className = 'product-cta-btn';
         visitBtn.style.marginTop = '10px';
-        visitBtn.textContent = `Open ${storeObj.groupName || storeObj.name} Storefront →`;
+        visitBtn.textContent = dict.openStorefront(sName);
         visitBtn.addEventListener('click', () => openExternalUrl(storeObj.affiliateUrl));
         cs.appendChild(visitBtn);
       }
@@ -502,7 +824,7 @@ function loadOffers(forceRefresh = false) {
       currentMatchedStore = response.matchedStore || null;
 
       if (forceRefresh && !currentPayload.isOfflineFallback) {
-        showStatusNotice('Synced latest prices, categories & coupons from dodx.shop', true);
+        showStatusNotice(getDict().syncedNotice, true);
       } else {
         hideStatusNotice();
       }
@@ -515,6 +837,7 @@ function loadOffers(forceRefresh = false) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+  currentLang = await loadSavedLang();
   startFlashCountdown();
 
   const domainEl = document.getElementById('active-domain');
@@ -524,12 +847,42 @@ document.addEventListener('DOMContentLoaded', async () => {
   const couponsBtn = document.getElementById('coupons-mode-btn');
   const refreshBtn = document.getElementById('refresh-btn');
   const popoutBtn = document.getElementById('popout-btn');
+  const langPicker = document.getElementById('lang-picker');
+  const langBtn = document.getElementById('lang-btn');
+  const langMenu = document.getElementById('lang-menu');
 
   if (isStandaloneWindow) {
     document.body.classList.add('is-standalone');
     if (popoutBtn) popoutBtn.hidden = true;
   } else if (popoutBtn) {
     popoutBtn.addEventListener('click', openStandalonePopupWindow);
+  }
+
+  if (langBtn && langMenu) {
+    langBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const willOpen = langMenu.hidden;
+      langMenu.hidden = !willOpen;
+      langBtn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+    });
+
+    langMenu.querySelectorAll('.lang-option').forEach((optBtn) => {
+      optBtn.addEventListener('click', async () => {
+        const nextLang = optBtn.getAttribute('data-lang') === 'ar' ? 'ar' : 'en';
+        currentLang = nextLang;
+        await saveLang(nextLang);
+        langMenu.hidden = true;
+        langBtn.setAttribute('aria-expanded', 'false');
+        applyLanguageUI();
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (langPicker && !langPicker.contains(e.target)) {
+        langMenu.hidden = true;
+        langBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
   }
 
   document.querySelectorAll('[data-external-url]').forEach((anchor) => {
@@ -579,5 +932,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   if (refreshBtn) refreshBtn.addEventListener('click', () => loadOffers(true));
 
+  applyLanguageUI();
   loadOffers(false);
 });

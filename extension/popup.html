@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dodx – Official Shopping Partners & Verified Coupons</title>
+    <title>Dodx – Official Shopping Partners & Verified Deals</title>
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
@@ -16,6 +16,7 @@
           target="_blank"
           rel="noopener noreferrer"
           class="dodx-logo"
+          dir="ltr"
           aria-label="Open https://www.dodx.shop"
         >
           <img
@@ -36,11 +37,38 @@
         </a>
 
         <div class="header-actions">
-          <div id="flash-timer-pill" class="flash-timer-pill" title="Flash White Friday Countdown">
+          <div id="flash-timer-pill" class="flash-timer-pill" title="Flash Deal Countdown" dir="ltr">
             <span>⚡</span>
             <span id="flash-countdown">05:59:59</span>
           </div>
-          <span id="active-domain" class="active-domain" title="Current active tab">dodx.shop</span>
+
+          <div id="lang-picker" class="lang-picker">
+            <button
+              id="lang-btn"
+              type="button"
+              class="lang-btn"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              aria-label="Select display language"
+              title="Select display language"
+            >
+              <span id="lang-flag" class="lang-flag" aria-hidden="true">🇺🇸</span>
+              <span id="lang-code" class="lang-code">EN</span>
+              <span class="lang-caret" aria-hidden="true">▾</span>
+            </button>
+            <div id="lang-menu" class="lang-menu" role="listbox" hidden>
+              <div id="lang-menu-title" class="lang-menu-title">Display Language</div>
+              <button type="button" class="lang-option is-active" data-lang="en">
+                <span>🇺🇸 English</span>
+                <span class="lang-check">✓</span>
+              </button>
+              <button type="button" class="lang-option" data-lang="ar">
+                <span>🇸🇦 العربية</span>
+                <span class="lang-check">✓</span>
+              </button>
+            </div>
+          </div>
+
           <button
             id="popout-btn"
             type="button"
@@ -77,13 +105,15 @@
           class="official-site-link"
         >
           <span class="official-site-dot" aria-hidden="true"></span>
-          <span><strong>dodx.shop</strong> · White Friday Deals</span>
+          <span id="top-bar-tagline"><strong>dodx.shop</strong> · Verified Deals</span>
         </a>
         <div class="top-bar-actions">
+          <span id="active-domain" class="active-domain" title="Current active tab">dodx.shop</span>
           <button id="coupons-mode-btn" type="button" class="top-coupons-btn">
-            Coupons / كوبونات
+            Coupons
           </button>
           <a
+            id="top-products-link"
             href="https://www.dodx.shop/products"
             data-external-url="https://www.dodx.shop/products"
             target="_blank"
@@ -101,7 +131,7 @@
           <input
             id="offer-search"
             type="search"
-            placeholder="Search iPhone, laptop, Samsung, Amazon, eBay..."
+            placeholder="Search iPhone, laptop, Samsung, Amazon..."
             aria-label="Search products and stores"
             class="search-input"
           />
@@ -119,17 +149,6 @@
           </select>
           <select id="price-filter" class="filter-select" aria-label="Filter by price bracket">
             <option value="all">All Price Tiers</option>
-            <option value="1-30">1 – 30 (Top Discounts)</option>
-            <option value="30-60">30 – 60</option>
-            <option value="60-100">60 – 100</option>
-            <option value="100-150">100 – 150</option>
-            <option value="150-500">150 – 500</option>
-            <option value="500-1000">500 – 1,000</option>
-            <option value="1000-2000">1,000 – 2,000</option>
-            <option value="2000-3000">2,000 – 3,000</option>
-            <option value="3000-5000">3,000 – 5,000</option>
-            <option value="over-5000">&gt; 5,000 (Major)</option>
-            <option value="over-10000">&gt; 10,000 (⚡ Lightning)</option>
           </select>
         </div>
 
@@ -140,7 +159,7 @@
       <div id="status-bar" class="status-bar" hidden></div>
 
       <main id="popup-content" class="popup-content">
-        <div class="loading-card">Loading products & stores from dodx.shop...</div>
+        <div id="loading-card" class="loading-card">Loading products &amp; stores from dodx.shop...</div>
       </main>
 
       <footer class="popup-footer">
@@ -150,11 +169,11 @@
         <div class="footer-links">
           <a href="https://www.dodx.shop" data-external-url="https://www.dodx.shop" target="_blank" rel="noopener noreferrer" class="footer-link footer-link-primary">dodx.shop ↗</a>
           <span class="dot" aria-hidden="true">·</span>
-          <a href="https://www.dodx.shop/coupons" data-external-url="https://www.dodx.shop/coupons" target="_blank" rel="noopener noreferrer" class="footer-link">Coupons</a>
+          <a id="footer-coupons-link" href="https://www.dodx.shop/coupons" data-external-url="https://www.dodx.shop/coupons" target="_blank" rel="noopener noreferrer" class="footer-link">Coupons</a>
           <span class="dot" aria-hidden="true">·</span>
-          <a href="https://www.dodx.shop/products" data-external-url="https://www.dodx.shop/products" target="_blank" rel="noopener noreferrer" class="footer-link">Products</a>
+          <a id="footer-products-link" href="https://www.dodx.shop/products" data-external-url="https://www.dodx.shop/products" target="_blank" rel="noopener noreferrer" class="footer-link">Products</a>
           <span class="dot" aria-hidden="true">·</span>
-          <a href="https://www.dodx.shop/disclosure" data-external-url="https://www.dodx.shop/disclosure" target="_blank" rel="noopener noreferrer" class="footer-link">Disclosure</a>
+          <a id="footer-disclosure-link" href="https://www.dodx.shop/disclosure" data-external-url="https://www.dodx.shop/disclosure" target="_blank" rel="noopener noreferrer" class="footer-link">Disclosure</a>
         </div>
       </footer>
     </div>
