@@ -14,17 +14,67 @@ let selectedCategoryId = 'all';
 let selectedPriceTier = 'all';
 let viewMode = 'products'; // 'products' | 'coupons'
 
+const SUPPORTED_LANGUAGES = [
+  { code: 'en', shortLabel: 'EN', nativeName: 'English', flag: '🇺🇸', dir: 'ltr' },
+  { code: 'ar', shortLabel: 'AR', nativeName: 'العربية', flag: '🇸🇦', dir: 'rtl' },
+  { code: 'es', shortLabel: 'ES', nativeName: 'Español', flag: '🇪🇸', dir: 'ltr' },
+  { code: 'fr', shortLabel: 'FR', nativeName: 'Français', flag: '🇫🇷', dir: 'ltr' },
+  { code: 'de', shortLabel: 'DE', nativeName: 'Deutsch', flag: '🇩🇪', dir: 'ltr' },
+  { code: 'pt', shortLabel: 'PT', nativeName: 'Português', flag: '🇧🇷', dir: 'ltr' },
+  { code: 'zh', shortLabel: 'ZH', nativeName: '简体中文', flag: '🇨🇳', dir: 'ltr' },
+  { code: 'ja', shortLabel: 'JA', nativeName: '日本語', flag: '🇯🇵', dir: 'ltr' },
+  { code: 'ko', shortLabel: 'KO', nativeName: '한국어', flag: '🇰🇷', dir: 'ltr' },
+  { code: 'hi', shortLabel: 'HI', nativeName: 'हिन्दी', flag: '🇮🇳', dir: 'ltr' },
+  { code: 'tr', shortLabel: 'TR', nativeName: 'Türkçe', flag: '🇹🇷', dir: 'ltr' },
+  { code: 'ru', shortLabel: 'RU', nativeName: 'Русский', flag: '🇷🇺', dir: 'ltr' },
+  { code: 'it', shortLabel: 'IT', nativeName: 'Italiano', flag: '🇮🇹', dir: 'ltr' },
+  { code: 'id', shortLabel: 'ID', nativeName: 'Bahasa Indonesia', flag: '🇮🇩', dir: 'ltr' },
+  { code: 'nl', shortLabel: 'NL', nativeName: 'Nederlands', flag: '🇳🇱', dir: 'ltr' },
+  { code: 'pl', shortLabel: 'PL', nativeName: 'Polski', flag: '🇵🇱', dir: 'ltr' },
+];
+
+const EXTRA_WORLD_LANGUAGES = [
+  { code: 'ur', label: 'اردو (Urdu)' },
+  { code: 'fa', label: 'فارسی (Persian)' },
+  { code: 'bn', label: 'বাংলা (Bengali)' },
+  { code: 'vi', label: 'Tiếng Việt (Vietnamese)' },
+  { code: 'th', label: 'ไทย (Thai)' },
+  { code: 'uk', label: 'Українська (Ukrainian)' },
+  { code: 'sv', label: 'Svenska (Swedish)' },
+  { code: 'el', label: 'Ελληνικά (Greek)' },
+  { code: 'ro', label: 'Română (Romanian)' },
+  { code: 'he', label: 'עברית (Hebrew)' },
+  { code: 'ms', label: 'Bahasa Melayu (Malay)' },
+  { code: 'sw', label: 'Kiswahili (Swahili)' },
+];
+
+function makeTierLabels(rangeWord, toWord, overWord, topLabel, majorLabel, lightningLabel) {
+  return {
+    '1-30': `${rangeWord}1 ${toWord} 30 (${topLabel})`.trim(),
+    '30-60': `${rangeWord}30 ${toWord} 60`.trim(),
+    '60-100': `${rangeWord}60 ${toWord} 100`.trim(),
+    '100-150': `${rangeWord}100 ${toWord} 150`.trim(),
+    '150-500': `${rangeWord}150 ${toWord} 500`.trim(),
+    '500-1000': `${rangeWord}500 ${toWord} 1,000`.trim(),
+    '1000-2000': `${rangeWord}1,000 ${toWord} 2,000`.trim(),
+    '2000-3000': `${rangeWord}2,000 ${toWord} 3,000`.trim(),
+    '3000-5000': `${rangeWord}3,000 ${toWord} 5,000`.trim(),
+    'over-5000': `${overWord} 5,000 (${majorLabel})`.trim(),
+    'over-10000': `${overWord} 10,000 (⚡ ${lightningLabel})`.trim(),
+  };
+}
+
 const I18N = {
   en: {
     pageTitle: 'Dodx – Official Shopping Partners & Verified Deals',
-    langShort: 'EN',
-    langFlag: '🇺🇸',
-    langMenuTitle: 'Display Language',
+    langMenuTitle: 'Choose Language',
     langBtnTitle: 'Select display language',
+    extraLangLabel: 'More world languages (Translate):',
+    extraLangPlaceholder: 'Select another language...',
     flashTimerTitle: 'Flash Deal Countdown',
     popoutTitle: 'Open in standalone window',
     refreshTitle: 'Sync latest offers',
-    topBarTagline: '<strong>dodx.shop</strong> · Verified Deals',
+    taglineSuffix: 'Verified Deals',
     couponsBtn: 'Coupons',
     productsLink: 'Products',
     searchPlaceholder: 'Search iPhone, laptop, Samsung, Amazon...',
@@ -61,32 +111,20 @@ const I18N = {
     partnerFallback: 'Dodx Partner',
     dealBadgeFallback: 'DEAL',
     couponBadgeFallback: 'COUPON',
-    tierLabels: {
-      '1-30': '1 – 30 (Top Discounts)',
-      '30-60': '30 – 60',
-      '60-100': '60 – 100',
-      '100-150': '100 – 150',
-      '150-500': '150 – 500',
-      '500-1000': '500 – 1,000',
-      '1000-2000': '1,000 – 2,000',
-      '2000-3000': '2,000 – 3,000',
-      '3000-5000': '3,000 – 5,000',
-      'over-5000': '> 5,000 (Major)',
-      'over-10000': '> 10,000 (⚡ Lightning)',
-    },
+    tierLabels: makeTierLabels('', '–', '>', 'Top Discounts', 'Major', 'Lightning'),
   },
   ar: {
     pageTitle: 'Dodx – شركاء التسوق الرسميون وأفضل العروض الموثقة',
-    langShort: 'AR',
-    langFlag: '🇸🇦',
-    langMenuTitle: 'لغة العرض',
+    langMenuTitle: 'اختر اللغة',
     langBtnTitle: 'اختر لغة العرض',
+    extraLangLabel: 'لغات عالمية أخرى (ترجمة فورية):',
+    extraLangPlaceholder: 'اختر لغة أخرى...',
     flashTimerTitle: 'عد تنازلي لعروض البرق',
     popoutTitle: 'فتح في نافذة مستقلة',
     refreshTitle: 'تحديث أحدث العروض',
-    topBarTagline: '<strong>dodx.shop</strong> · عروض موثقة',
+    taglineSuffix: 'عروض موثقة',
     couponsBtn: 'الكوبونات',
-    productsLink: 'الأقسام',
+    productsLink: 'المنتجات',
     searchPlaceholder: 'ابحث عن آيفون، لابتوب، سامسونج، أمازون...',
     searchAria: 'البحث عن المنتجات والمتاجر',
     catAria: 'تصفية حسب القسم',
@@ -100,7 +138,7 @@ const I18N = {
     disclosurePrefix: 'إفصاح الشراكة:',
     defaultDisclosure: 'كموقع تسويق بالعمولة، قد يحصل dodx.shop على عمولة من المشتريات المؤهلة دون أي تكلفة إضافية عليك.',
     footerCoupons: 'الكوبونات',
-    footerProducts: 'الأقسام',
+    footerProducts: 'المنتجات',
     footerDisclosure: 'الإفصاح',
     couponsHeading: 'أكواد الخصم والبطاقات البنكية الموثقة',
     offersCount: (n) => `${n} عرض`,
@@ -121,19 +159,778 @@ const I18N = {
     partnerFallback: 'شريك Dodx',
     dealBadgeFallback: 'عرض',
     couponBadgeFallback: 'كوبون',
-    tierLabels: {
-      '1-30': '1 – 30 (أكبر الخصومات)',
-      '30-60': 'من 30 إلى 60',
-      '60-100': 'من 60 إلى 100',
-      '100-150': 'من 100 إلى 150',
-      '150-500': 'من 150 إلى 500',
-      '500-1000': 'من 500 إلى 1,000',
-      '1000-2000': 'من 1,000 إلى 2,000',
-      '2000-3000': 'من 2,000 إلى 3,000',
-      '3000-5000': 'من 3,000 إلى 5,000',
-      'over-5000': 'أكبر من 5,000 (خصومات كبيرة)',
-      'over-10000': 'أكبر من 10,000 (⚡ عرض البرق)',
-    },
+    tierLabels: makeTierLabels('من ', 'إلى', 'أكبر من', 'أكبر الخصومات', 'خصومات كبيرة', 'عرض البرق'),
+  },
+  es: {
+    pageTitle: 'Dodx – Tiendas Oficiales y Ofertas Verificadas',
+    langMenuTitle: 'Elegir idioma',
+    langBtnTitle: 'Seleccionar idioma de visualización',
+    extraLangLabel: 'Más idiomas (Traducción):',
+    extraLangPlaceholder: 'Selecciona otro idioma...',
+    flashTimerTitle: 'Cuenta regresiva de ofertas relámpago',
+    popoutTitle: 'Abrir en ventana independiente',
+    refreshTitle: 'Sincronizar últimas ofertas',
+    taglineSuffix: 'Ofertas Verificadas',
+    couponsBtn: 'Cupones',
+    productsLink: 'Productos',
+    searchPlaceholder: 'Buscar iPhone, portátil, Samsung, Amazon...',
+    searchAria: 'Buscar productos y tiendas',
+    catAria: 'Filtrar por categoría',
+    priceAria: 'Filtrar por rango de precio',
+    allPriceTiers: 'Todos los precios',
+    allStores: 'Todas las tiendas',
+    allPrefix: 'Todo',
+    soonSuffix: '(Pronto)',
+    loadingText: 'Cargando productos y tiendas de dodx.shop...',
+    offlineError: 'No se pudieron cargar las ofertas. Visita https://www.dodx.shop directamente.',
+    disclosurePrefix: 'Aviso de afiliados:',
+    defaultDisclosure: 'Como afiliado, dodx.shop puede obtener comisión por compras elegibles sin costo adicional para ti.',
+    footerCoupons: 'Cupones',
+    footerProducts: 'Productos',
+    footerDisclosure: 'Aviso',
+    couponsHeading: 'Cupones Verificados y Códigos Bancarios',
+    offersCount: (n) => `${n} ofertas`,
+    itemsCount: (n) => `${n} artículos`,
+    noCoupons: 'No se encontraron cupones coincidentes.',
+    whiteFridayStrip: 'Mejores Ofertas — Grandes Descuentos de Viernes Negro',
+    comingSoonHeading: 'Mayores Descuentos Muy Pronto',
+    comingSoonStoreBody: (name) => `Las ofertas de ${name} estarán disponibles muy pronto en dodx.shop.`,
+    comingSoonFilterBody: 'Sin ofertas en esta selección — prueba Todas las tiendas o cambia el precio.',
+    openStorefront: (name) => `Abrir tienda ${name} →`,
+    topProductsHeading: 'Mejores Ofertas y Descuentos Verificados',
+    storeProductsHeading: (name) => `Productos de ${name}`,
+    buyNow: 'Comprar ahora →',
+    codeLabel: 'Código:',
+    copyAndShop: (code) => `Copiar ${code} y comprar →`,
+    openOffer: 'Ver oferta →',
+    syncedNotice: 'Precios, categorías y cupones sincronizados desde dodx.shop',
+    partnerFallback: 'Tienda asociada',
+    dealBadgeFallback: 'OFERTA',
+    couponBadgeFallback: 'CUPÓN',
+    tierLabels: makeTierLabels('De ', 'a', 'Más de', 'Mayores descuentos', 'Grandes ofertas', 'Relámpago'),
+  },
+  fr: {
+    pageTitle: 'Dodx – Boutiques Officielles et Offres Vérifiées',
+    langMenuTitle: 'Choisir la langue',
+    langBtnTitle: "Sélectionner la langue d'affichage",
+    extraLangLabel: "Plus de langues (Traduction) :",
+    extraLangPlaceholder: 'Choisir une autre langue...',
+    flashTimerTitle: 'Compte à rebours offres flash',
+    popoutTitle: 'Ouvrir dans une fenêtre séparée',
+    refreshTitle: 'Actualiser les offres',
+    taglineSuffix: 'Offres Vérifiées',
+    couponsBtn: 'Coupons',
+    productsLink: 'Produits',
+    searchPlaceholder: 'Rechercher iPhone, PC portable, Samsung, Amazon...',
+    searchAria: 'Rechercher produits et boutiques',
+    catAria: 'Filtrer par rayon',
+    priceAria: 'Filtrer par tranche de prix',
+    allPriceTiers: 'Tous les prix',
+    allStores: 'Toutes les boutiques',
+    allPrefix: 'Tout',
+    soonSuffix: '(Bientôt)',
+    loadingText: 'Chargement des offres depuis dodx.shop...',
+    offlineError: 'Impossible de charger les offres. Visitez https://www.dodx.shop directement.',
+    disclosurePrefix: 'Mention affiliation :',
+    defaultDisclosure: "En tant que partenaire affilié, dodx.shop peut percevoir une commission sur les achats éligibles sans coût supplémentaire.",
+    footerCoupons: 'Coupons',
+    footerProducts: 'Produits',
+    footerDisclosure: 'Mentions',
+    couponsHeading: 'Coupons Vérifiés et Codes Bancaires',
+    offersCount: (n) => `${n} offres`,
+    itemsCount: (n) => `${n} articles`,
+    noCoupons: 'Aucun coupon correspondant.',
+    whiteFridayStrip: 'Meilleures Offres — Énormes Remises Black Friday',
+    comingSoonHeading: 'Les Plus Grosses Remises Arrivent Bientôt',
+    comingSoonStoreBody: (name) => `Les offres ${name} arrivent très bientôt sur dodx.shop.`,
+    comingSoonFilterBody: 'Aucune offre pour cette sélection — essayez Toutes les boutiques ou un autre prix.',
+    openStorefront: (name) => `Ouvrir ${name} →`,
+    topProductsHeading: 'Meilleures Offres Vérifiées & Ventes Flash',
+    storeProductsHeading: (name) => `Produits ${name}`,
+    buyNow: 'Acheter →',
+    codeLabel: 'Code :',
+    copyAndShop: (code) => `Copier ${code} et acheter →`,
+    openOffer: "Voir l'offre →",
+    syncedNotice: 'Prix, rayons et coupons synchronisés depuis dodx.shop',
+    partnerFallback: 'Partenaire Dodx',
+    dealBadgeFallback: 'PROMO',
+    couponBadgeFallback: 'COUPON',
+    tierLabels: makeTierLabels('De ', 'à', 'Plus de', 'Top remises', 'Grandes offres', 'Offre Éclair'),
+  },
+  de: {
+    pageTitle: 'Dodx – Offizielle Partner-Shops & Geprüfte Deals',
+    langMenuTitle: 'Sprache wählen',
+    langBtnTitle: 'Anzeigesprache auswählen',
+    extraLangLabel: 'Weitere Sprachen (Übersetzer):',
+    extraLangPlaceholder: 'Andere Sprache wählen...',
+    flashTimerTitle: 'Blitzangebot-Countdown',
+    popoutTitle: 'In eigenem Fenster öffnen',
+    refreshTitle: 'Neueste Angebote laden',
+    taglineSuffix: 'Geprüfte Deals',
+    couponsBtn: 'Gutscheine',
+    productsLink: 'Produkte',
+    searchPlaceholder: 'Suche nach iPhone, Laptop, Samsung, Amazon...',
+    searchAria: 'Produkte und Shops durchsuchen',
+    catAria: 'Nach Kategorie filtern',
+    priceAria: 'Nach Preisbereich filtern',
+    allPriceTiers: 'Alle Preisstufen',
+    allStores: 'Alle Shops',
+    allPrefix: 'Alle',
+    soonSuffix: '(Bald)',
+    loadingText: 'Produkte und Shops werden von dodx.shop geladen...',
+    offlineError: 'Angebote konnten nicht geladen werden. Besuche https://www.dodx.shop direkt.',
+    disclosurePrefix: 'Partner-Hinweis:',
+    defaultDisclosure: 'Als Affiliate-Partner verdient dodx.shop an qualifizierten Käufen ohne Mehrkosten für dich.',
+    footerCoupons: 'Gutscheine',
+    footerProducts: 'Produkte',
+    footerDisclosure: 'Hinweis',
+    couponsHeading: 'Geprüfte Gutscheine & Bank-Codes',
+    offersCount: (n) => `${n} Angebote`,
+    itemsCount: (n) => `${n} Artikel`,
+    noCoupons: 'Keine passenden Gutscheine gefunden.',
+    whiteFridayStrip: 'Top-Deals — Riesige Black-Friday-Rabatte',
+    comingSoonHeading: 'Größte Rabatte kommen sehr bald',
+    comingSoonStoreBody: (name) => `${name}-Angebote starten sehr bald auf dodx.shop.`,
+    comingSoonFilterBody: 'Keine Treffer — versuche Alle Shops oder eine andere Preisstufe.',
+    openStorefront: (name) => `${name} Shop öffnen →`,
+    topProductsHeading: 'Top-Angebote & Geprüfte Rabatte',
+    storeProductsHeading: (name) => `${name} Produkte`,
+    buyNow: 'Jetzt kaufen →',
+    codeLabel: 'Code:',
+    copyAndShop: (code) => `${code} kopieren & shoppen →`,
+    openOffer: 'Zum Angebot →',
+    syncedNotice: 'Preise, Kategorien und Gutscheine von dodx.shop aktualisiert',
+    partnerFallback: 'Dodx Partner',
+    dealBadgeFallback: 'DEAL',
+    couponBadgeFallback: 'CODE',
+    tierLabels: makeTierLabels('', '–', 'Über', 'Top-Rabatte', 'Große Deals', 'Blitzangebot'),
+  },
+  pt: {
+    pageTitle: 'Dodx – Lojas Oficiais e Ofertas Verificadas',
+    langMenuTitle: 'Escolher Idioma',
+    langBtnTitle: 'Selecionar idioma de exibição',
+    extraLangLabel: 'Mais idiomas (Traduzir):',
+    extraLangPlaceholder: 'Selecione outro idioma...',
+    flashTimerTitle: 'Contagem regressiva de ofertas relâmpago',
+    popoutTitle: 'Abrir em janela separada',
+    refreshTitle: 'Sincronizar ofertas',
+    taglineSuffix: 'Ofertas Verificadas',
+    couponsBtn: 'Cupons',
+    productsLink: 'Produtos',
+    searchPlaceholder: 'Buscar iPhone, notebook, Samsung, Amazon...',
+    searchAria: 'Buscar produtos e lojas',
+    catAria: 'Filtrar por categoria',
+    priceAria: 'Filtrar por faixa de preço',
+    allPriceTiers: 'Todas as faixas',
+    allStores: 'Todas as lojas',
+    allPrefix: 'Todos',
+    soonSuffix: '(Em breve)',
+    loadingText: 'Carregando ofertas de dodx.shop...',
+    offlineError: 'Erro ao carregar ofertas. Acesse https://www.dodx.shop diretamente.',
+    disclosurePrefix: 'Divulgação de afiliados:',
+    defaultDisclosure: 'Como afiliado, dodx.shop pode ganhar comissão por compras qualificadas sem custo extra.',
+    footerCoupons: 'Cupons',
+    footerProducts: 'Produtos',
+    footerDisclosure: 'Divulgação',
+    couponsHeading: 'Cupons Verificados e Códigos Bancários',
+    offersCount: (n) => `${n} ofertas`,
+    itemsCount: (n) => `${n} itens`,
+    noCoupons: 'Nenhum cupom encontrado.',
+    whiteFridayStrip: 'Melhores Ofertas — Grandes Descontos Black Friday',
+    comingSoonHeading: 'Maiores Descontos Muito Em Breve',
+    comingSoonStoreBody: (name) => `As ofertas de ${name} chegam muito em breve no dodx.shop.`,
+    comingSoonFilterBody: 'Sem ofertas nesta seleção — tente Todas as lojas ou mude a faixa de preço.',
+    openStorefront: (name) => `Abrir loja ${name} →`,
+    topProductsHeading: 'Principais Ofertas Verificadas e Relâmpago',
+    storeProductsHeading: (name) => `Produtos ${name}`,
+    buyNow: 'Comprar agora →',
+    codeLabel: 'Código:',
+    copyAndShop: (code) => `Copiar ${code} e comprar →`,
+    openOffer: 'Abrir oferta →',
+    syncedNotice: 'Preços, categorias e cupons sincronizados de dodx.shop',
+    partnerFallback: 'Parceiro Dodx',
+    dealBadgeFallback: 'OFERTA',
+    couponBadgeFallback: 'CUPOM',
+    tierLabels: makeTierLabels('De ', 'a', 'Acima de', 'Maiores descontos', 'Grandes ofertas', 'Relâmpago'),
+  },
+  zh: {
+    pageTitle: 'Dodx – 官方合作商城与真实优惠精选',
+    langMenuTitle: '选择语言',
+    langBtnTitle: '选择显示语言',
+    extraLangLabel: '更多全球语言 (翻译)：',
+    extraLangPlaceholder: '选择其他语言...',
+    flashTimerTitle: '限时闪购倒计时',
+    popoutTitle: '在独立窗口打开',
+    refreshTitle: '同步最新优惠',
+    taglineSuffix: '官方认证优惠',
+    couponsBtn: '优惠券',
+    productsLink: '全部商品',
+    searchPlaceholder: '搜索 iPhone、笔记本、三星、亚马逊...',
+    searchAria: '搜索商品和商店',
+    catAria: '按分类筛选',
+    priceAria: '按价格区间筛选',
+    allPriceTiers: '所有价格区间',
+    allStores: '全部商店',
+    allPrefix: '全部',
+    soonSuffix: '(即将上线)',
+    loadingText: '正在从 dodx.shop 加载商品与商店...',
+    offlineError: '无法加载优惠，请直接访问 https://www.dodx.shop。',
+    disclosurePrefix: '联盟声明：',
+    defaultDisclosure: '作为推广合作伙伴，dodx.shop 可能会从符合条件的购买中获得佣金，且不会增加您的费用。',
+    footerCoupons: '优惠券',
+    footerProducts: '商品',
+    footerDisclosure: '声明',
+    couponsHeading: '已验证优惠码与银行折扣',
+    offersCount: (n) => `${n} 项优惠`,
+    itemsCount: (n) => `${n} 件商品`,
+    noCoupons: '未找到匹配的优惠券。',
+    whiteFridayStrip: '精选特惠 — 黑色星期五超值大促',
+    comingSoonHeading: '超强折扣即将上线',
+    comingSoonStoreBody: (name) => `${name} 优惠即将上线 dodx.shop。`,
+    comingSoonFilterBody: '该筛选条件下暂无商品 — 请尝试全部商店或切换价格区间。',
+    openStorefront: (name) => `打开 ${name} 商城 →`,
+    topProductsHeading: '热门认证折扣与限时直降',
+    storeProductsHeading: (name) => `${name} 精选商品`,
+    buyNow: '立即购买 →',
+    codeLabel: '优惠码：',
+    copyAndShop: (code) => `复制 ${code} 并选购 →`,
+    openOffer: '查看优惠 →',
+    syncedNotice: '已从 dodx.shop 同步最新价格、分类与优惠券',
+    partnerFallback: 'Dodx 合作商家',
+    dealBadgeFallback: '特惠',
+    couponBadgeFallback: '礼券',
+    tierLabels: makeTierLabels('', '–', '高于', '超值特惠', '大额商品', '限时闪购'),
+  },
+  ja: {
+    pageTitle: 'Dodx – 公式パートナーストア＆厳選割引',
+    langMenuTitle: '言語を選択',
+    langBtnTitle: '表示言語を選択',
+    extraLangLabel: 'その他の言語 (翻訳):',
+    extraLangPlaceholder: '他の言語を選択...',
+    flashTimerTitle: 'タイムセール終了まで',
+    popoutTitle: '別ウィンドウで開く',
+    refreshTitle: '最新セールを同期',
+    taglineSuffix: '認証済みセール',
+    couponsBtn: 'クーポン',
+    productsLink: '製品一覧',
+    searchPlaceholder: 'iPhone、ノートPC、Samsung、Amazonを検索...',
+    searchAria: '商品とストアを検索',
+    catAria: 'カテゴリーで絞り込む',
+    priceAria: '価格帯で絞り込む',
+    allPriceTiers: 'すべての価格帯',
+    allStores: 'すべてのストア',
+    allPrefix: 'すべて',
+    soonSuffix: '(近日公開)',
+    loadingText: 'dodx.shop から商品とストアを読み込み中...',
+    offlineError: 'セールを読み込めません。https://www.dodx.shop に直接アクセスしてください。',
+    disclosurePrefix: 'アフィリエイト開示:',
+    defaultDisclosure: '提携サイトとして dodx.shop は適格な購入から紹介料を得る場合があります（追加費用なし）。',
+    footerCoupons: 'クーポン',
+    footerProducts: '製品一覧',
+    footerDisclosure: '開示情報',
+    couponsHeading: '認証済みクーポン＆銀行割引コード',
+    offersCount: (n) => `${n} 件の特典`,
+    itemsCount: (n) => `${n} 点の商品`,
+    noCoupons: '一致するクーポンが見つかりません。',
+    whiteFridayStrip: 'ベストディール — ブラックフライデー大型割引',
+    comingSoonHeading: '最大級の割引がまもなく登場',
+    comingSoonStoreBody: (name) => `${name} のセールは dodx.shop でまもなく開始されます。`,
+    comingSoonFilterBody: '一致する商品がありません — すべてのストアや別の価格帯をお試しください。',
+    openStorefront: (name) => `${name} ストアを開く →`,
+    topProductsHeading: '注目セール＆タイムセール',
+    storeProductsHeading: (name) => `${name} の商品`,
+    buyNow: '今すぐ購入 →',
+    codeLabel: 'コード:',
+    copyAndShop: (code) => `${code} をコピーして購入 →`,
+    openOffer: 'セールを見る →',
+    syncedNotice: 'dodx.shop から最新価格・カテゴリ・クーポンを同期しました',
+    partnerFallback: 'Dodx パートナー',
+    dealBadgeFallback: 'お得',
+    couponBadgeFallback: 'クーポン',
+    tierLabels: makeTierLabels('', '～', '以上', '最大割引', '高額商品', 'タイムセール'),
+  },
+  ko: {
+    pageTitle: 'Dodx – 공식 쇼핑 파트너 & 검증된 할인',
+    langMenuTitle: '언어 선택',
+    langBtnTitle: '표시 언어 선택',
+    extraLangLabel: '더 많은 언어 (번역):',
+    extraLangPlaceholder: '다른 언어 선택...',
+    flashTimerTitle: '타임 특가 카운트다운',
+    popoutTitle: '새 창에서 열기',
+    refreshTitle: '최신 특가 동기화',
+    taglineSuffix: '검증된 특가',
+    couponsBtn: '쿠폰',
+    productsLink: '제품',
+    searchPlaceholder: 'iPhone, 노트북, 삼성, Amazon 검색...',
+    searchAria: '상품 및 스토어 검색',
+    catAria: '카테고리별 필터',
+    priceAria: '가격대별 필터',
+    allPriceTiers: '모든 가격대',
+    allStores: '모든 스토어',
+    allPrefix: '전체',
+    soonSuffix: '(예정)',
+    loadingText: 'dodx.shop에서 상품과 스토어를 불러오는 중...',
+    offlineError: '특가를 불러올 수 없습니다. https://www.dodx.shop 에 직접 방문하세요.',
+    disclosurePrefix: '제휴 안내:',
+    defaultDisclosure: '제휴 파트너로서 dodx.shop은 적격 구매에 대해 추가 비용 없이 수수료를 받을 수 있습니다.',
+    footerCoupons: '쿠폰',
+    footerProducts: '제품',
+    footerDisclosure: '안내',
+    couponsHeading: '검증된 쿠폰 및 카드 할인 코드',
+    offersCount: (n) => `${n}개 혜택`,
+    itemsCount: (n) => `${n}개 상품`,
+    noCoupons: '일치하는 쿠폰이 없습니다.',
+    whiteFridayStrip: '최고의 특가 — 블랙 프라이데이 대규모 할인',
+    comingSoonHeading: '최대 할인 혜택 곧 출시 예정',
+    comingSoonStoreBody: (name) => `${name} 특가가 dodx.shop에 곧 출시됩니다.`,
+    comingSoonFilterBody: '조건에 맞는 상품이 없습니다 — 모든 스토어나 다른 가격대를 선택하세요.',
+    openStorefront: (name) => `${name} 스토어 열기 →`,
+    topProductsHeading: '인기 검증 특가 및 번개 세일',
+    storeProductsHeading: (name) => `${name} 상품`,
+    buyNow: '지금 구매 →',
+    codeLabel: '코드:',
+    copyAndShop: (code) => `${code} 복사 및 쇼핑 →`,
+    openOffer: '혜택 보기 →',
+    syncedNotice: 'dodx.shop에서 최신 가격, 카테고리 및 쿠폰을 동기화했습니다',
+    partnerFallback: 'Dodx 파트너',
+    dealBadgeFallback: '특가',
+    couponBadgeFallback: '쿠폰',
+    tierLabels: makeTierLabels('', '~', '초과', '최대 할인', '고액 상품', '번개 특가'),
+  },
+  hi: {
+    pageTitle: 'Dodx – आधिकारिक शॉपिंग पार्टनर और सत्यापित डील्स',
+    langMenuTitle: 'भाषा चुनें',
+    langBtnTitle: 'प्रदर्शन भाषा चुनें',
+    extraLangLabel: 'अन्य विश्व भाषाएं (अनुवाद):',
+    extraLangPlaceholder: 'कोई अन्य भाषा चुनें...',
+    flashTimerTitle: 'फ़्लैश डील काउंटडाउन',
+    popoutTitle: 'अलग विंडो में खोलें',
+    refreshTitle: 'नवीनतम ऑफ़र सिंक करें',
+    taglineSuffix: 'सत्यापित डील्स',
+    couponsBtn: 'कूपन',
+    productsLink: 'उत्पाद',
+    searchPlaceholder: 'iPhone, लैपटॉप, Samsung, Amazon खोजें...',
+    searchAria: 'उत्पाद और स्टोर खोजें',
+    catAria: 'श्रेणी के अनुसार फ़िल्टर करें',
+    priceAria: 'मूल्य सीमा के अनुसार फ़िल्टर करें',
+    allPriceTiers: 'सभी मूल्य श्रेणियां',
+    allStores: 'सभी स्टोर',
+    allPrefix: 'सभी',
+    soonSuffix: '(जल्द)',
+    loadingText: 'dodx.shop से उत्पाद और स्टोर लोड हो रहे हैं...',
+    offlineError: 'ऑफ़र लोड करने में असमर्थ। सीधे https://www.dodx.shop पर जाएं।',
+    disclosurePrefix: 'संबद्ध प्रकटीकरण:',
+    defaultDisclosure: 'एक संबद्ध के रूप में, dodx.shop बिना किसी अतिरिक्त लागत के योग्य खरीद से कमीशन कमा सकता है।',
+    footerCoupons: 'कूपन',
+    footerProducts: 'उत्पाद',
+    footerDisclosure: 'प्रकटीकरण',
+    couponsHeading: 'सत्यापित कूपन और बैंक कोड',
+    offersCount: (n) => `${n} ऑफ़र`,
+    itemsCount: (n) => `${n} आइटम`,
+    noCoupons: 'कोई मेल खाने वाला कूपन नहीं मिला।',
+    whiteFridayStrip: 'सर्वश्रेष्ठ डील्स — भारी ब्लैक फ़्राइडे छूट',
+    comingSoonHeading: 'सबसे बड़ी छूट बहुत जल्द आ रही है',
+    comingSoonStoreBody: (name) => `${name} डील्स बहुत जल्द dodx.shop पर आ रही हैं।`,
+    comingSoonFilterBody: 'इस चयन में कोई डील नहीं — सभी स्टोर या अन्य मूल्य चुनें।',
+    openStorefront: (name) => `${name} स्टोर खोलें →`,
+    topProductsHeading: 'शीर्ष सत्यापित डील्स और फ़्लैश छूट',
+    storeProductsHeading: (name) => `${name} उत्पाद`,
+    buyNow: 'अभी खरीदें →',
+    codeLabel: 'कोड:',
+    copyAndShop: (code) => `${code} कॉपी करें और खरीदें →`,
+    openOffer: 'ऑफ़र खोलें →',
+    syncedNotice: 'dodx.shop से नवीनतम मूल्य, श्रेणियां और कूपन सिंक किए गए',
+    partnerFallback: 'Dodx पार्टनर',
+    dealBadgeFallback: 'डील',
+    couponBadgeFallback: 'कूपन',
+    tierLabels: makeTierLabels('', '–', 'से अधिक', 'शीर्ष छूट', 'बड़ी डील', 'लाइटनिंग'),
+  },
+  tr: {
+    pageTitle: 'Dodx – Resmi Alışveriş Ortakları ve Doğrulanmış Fırsatlar',
+    langMenuTitle: 'Dil Seçin',
+    langBtnTitle: 'Görüntüleme dilini seçin',
+    extraLangLabel: 'Diğer diller (Çeviri):',
+    extraLangPlaceholder: 'Başka bir dil seçin...',
+    flashTimerTitle: 'Flaş Fırsat Geri Sayımı',
+    popoutTitle: 'Ayrı pencerede aç',
+    refreshTitle: 'En yeni fırsatları senkronize et',
+    taglineSuffix: 'Doğrulanmış Fırsatlar',
+    couponsBtn: 'Kuponlar',
+    productsLink: 'Ürünler',
+    searchPlaceholder: 'iPhone, dizüstü bilgisayar, Samsung, Amazon ara...',
+    searchAria: 'Ürün ve mağaza ara',
+    catAria: 'Kategoriye göre filtrele',
+    priceAria: 'Fiyat aralığına göre filtrele',
+    allPriceTiers: 'Tüm Fiyat Aralıkları',
+    allStores: 'Tüm Mağazalar',
+    allPrefix: 'Tüm',
+    soonSuffix: '(Yakında)',
+    loadingText: 'dodx.shop üzerinden ürünler ve mağazalar yükleniyor...',
+    offlineError: 'Fırsatlar yüklenemedi. Doğrudan https://www.dodx.shop adresini ziyaret edin.',
+    disclosurePrefix: 'Ortaklık Açıklaması:',
+    defaultDisclosure: 'Bir bağlı kuruluş olarak dodx.shop, size ek bir maliyet getirmeden uygun satın alımlardan komisyon kazanabilir.',
+    footerCoupons: 'Kuponlar',
+    footerProducts: 'Ürünler',
+    footerDisclosure: 'Açıklama',
+    couponsHeading: 'Doğrulanmış Kuponlar ve Banka Kodları',
+    offersCount: (n) => `${n} fırsat`,
+    itemsCount: (n) => `${n} ürün`,
+    noCoupons: 'Eşleşen kupon bulunamadı.',
+    whiteFridayStrip: 'En İyi Fırsatlar — Büyük Kara Cuma İndirimleri',
+    comingSoonHeading: 'En Büyük İndirimler Çok Yakında',
+    comingSoonStoreBody: (name) => `${name} fırsatları çok yakında dodx.shop üzerinde yayınlanacak.`,
+    comingSoonFilterBody: 'Bu seçimde ürün bulunamadı — Tüm Mağazalar veya başka bir fiyat deneyin.',
+    openStorefront: (name) => `${name} Mağazasını Aç →`,
+    topProductsHeading: 'Öne Çıkan Doğrulanmış Fırsatlar',
+    storeProductsHeading: (name) => `${name} Ürünleri`,
+    buyNow: 'Şimdi Satın Al →',
+    codeLabel: 'Kod:',
+    copyAndShop: (code) => `${code} Kopyala ve Alışveriş Yap →`,
+    openOffer: 'Fırsatı Aç →',
+    syncedNotice: 'dodx.shop üzerindeki güncel fiyatlar, kategoriler ve kuponlar eşitlendi',
+    partnerFallback: 'Dodx Ortağı',
+    dealBadgeFallback: 'FIRSAT',
+    couponBadgeFallback: 'KUPON',
+    tierLabels: makeTierLabels('', '–', 'Üzeri', 'En Yüksek İndirim', 'Büyük', 'Flaş'),
+  },
+  ru: {
+    pageTitle: 'Dodx – Официальные магазины и проверенные скидки',
+    langMenuTitle: 'Выберите язык',
+    langBtnTitle: 'Выбрать язык интерфейса',
+    extraLangLabel: 'Другие языки (Перевод):',
+    extraLangPlaceholder: 'Выберите другой язык...',
+    flashTimerTitle: 'Обратный отсчёт горящих скидок',
+    popoutTitle: 'Открыть в отдельном окне',
+    refreshTitle: 'Обновить предложения',
+    taglineSuffix: 'Проверенные скидки',
+    couponsBtn: 'Купоны',
+    productsLink: 'Товары',
+    searchPlaceholder: 'Поиск iPhone, ноутбук, Samsung, Amazon...',
+    searchAria: 'Поиск товаров и магазинов',
+    catAria: 'Фильтр по категории',
+    priceAria: 'Фильтр по цене',
+    allPriceTiers: 'Любая цена',
+    allStores: 'Все магазины',
+    allPrefix: 'Все',
+    soonSuffix: '(Скоро)',
+    loadingText: 'Загрузка товаров и магазинов с dodx.shop...',
+    offlineError: 'Не удалось загрузить предложения. Перейдите на https://www.dodx.shop.',
+    disclosurePrefix: 'Партнёрское уведомление:',
+    defaultDisclosure: 'Как партнёрский сервис, dodx.shop может получать комиссию с покупок без доплаты для вас.',
+    footerCoupons: 'Купоны',
+    footerProducts: 'Товары',
+    footerDisclosure: 'Условия',
+    couponsHeading: 'Проверенные купоны и банковские коды',
+    offersCount: (n) => `${n} предл.`,
+    itemsCount: (n) => `${n} товаров`,
+    noCoupons: 'Подходящие купоны не найдены.',
+    whiteFridayStrip: 'Лучшие предложения — Огромные скидки Чёрной пятницы',
+    comingSoonHeading: 'Максимальные скидки совсем скоро',
+    comingSoonStoreBody: (name) => `Скидки для ${name} появятся на dodx.shop совсем скоро.`,
+    comingSoonFilterBody: 'Нет подходящих товаров — выберите Все магазины или другой ценовой диапазон.',
+    openStorefront: (name) => `Открыть ${name} →`,
+    topProductsHeading: 'Лучшие проверенные скидки и акции',
+    storeProductsHeading: (name) => `Товары ${name}`,
+    buyNow: 'Купить сейчас →',
+    codeLabel: 'Код:',
+    copyAndShop: (code) => `Копировать ${code} и купить →`,
+    openOffer: 'Открыть акцию →',
+    syncedNotice: 'Цены, категории и купоны обновлены с dodx.shop',
+    partnerFallback: 'Партнёр Dodx',
+    dealBadgeFallback: 'СКИДКА',
+    couponBadgeFallback: 'КУПОН',
+    tierLabels: makeTierLabels('От ', 'до', 'Более', 'Лучшие скидки', 'Крупные', 'Молния'),
+  },
+  it: {
+    pageTitle: 'Dodx – Partner Ufficiali e Offerte Verificate',
+    langMenuTitle: 'Scegli Lingua',
+    langBtnTitle: 'Seleziona la lingua',
+    extraLangLabel: 'Altre lingue (Traduzione):',
+    extraLangPlaceholder: "Seleziona un'altra lingua...",
+    flashTimerTitle: 'Conto alla rovescia offerte lampo',
+    popoutTitle: 'Apri in finestra separata',
+    refreshTitle: 'Sincronizza offerte',
+    taglineSuffix: 'Offerte Verificate',
+    couponsBtn: 'Coupon',
+    productsLink: 'Prodotti',
+    searchPlaceholder: 'Cerca iPhone, laptop, Samsung, Amazon...',
+    searchAria: 'Cerca prodotti e negozi',
+    catAria: 'Filtra per categoria',
+    priceAria: 'Filtra per fascia di prezzo',
+    allPriceTiers: 'Tutte le fasce',
+    allStores: 'Tutti i negozi',
+    allPrefix: 'Tutti',
+    soonSuffix: '(Presto)',
+    loadingText: 'Caricamento prodotti e negozi da dodx.shop...',
+    offlineError: 'Impossibile caricare le offerte. Visita https://www.dodx.shop direttamente.',
+    disclosurePrefix: 'Informativa affiliazione:',
+    defaultDisclosure: 'In qualità di affiliato, dodx.shop può ricevere una commissione sugli acquisti idonei senza costi aggiuntivi.',
+    footerCoupons: 'Coupon',
+    footerProducts: 'Prodotti',
+    footerDisclosure: 'Informativa',
+    couponsHeading: 'Coupon Verificati e Codici Bancari',
+    offersCount: (n) => `${n} offerte`,
+    itemsCount: (n) => `${n} articoli`,
+    noCoupons: 'Nessun coupon trovato.',
+    whiteFridayStrip: 'Migliori Offerte — Grandi Sconti Black Friday',
+    comingSoonHeading: 'Grandi Sconti in Arrivo Molto Presto',
+    comingSoonStoreBody: (name) => `Le offerte ${name} arriveranno molto presto su dodx.shop.`,
+    comingSoonFilterBody: 'Nessuna offerta corrispondente — prova Tutti i negozi o un altro prezzo.',
+    openStorefront: (name) => `Apri negozio ${name} →`,
+    topProductsHeading: 'Migliori Offerte Verificate & Sconti Lampo',
+    storeProductsHeading: (name) => `Prodotti ${name}`,
+    buyNow: 'Acquista ora →',
+    codeLabel: 'Codice:',
+    copyAndShop: (code) => `Copia ${code} e acquista →`,
+    openOffer: 'Apri offerta →',
+    syncedNotice: 'Prezzi, categorie e coupon sincronizzati da dodx.shop',
+    partnerFallback: 'Partner Dodx',
+    dealBadgeFallback: 'OFFERTA',
+    couponBadgeFallback: 'COUPON',
+    tierLabels: makeTierLabels('Da ', 'a', 'Oltre', 'Sconti Top', 'Grandi', 'Lampo'),
+  },
+  id: {
+    pageTitle: 'Dodx – Mitra Belanja Resmi & Promo Terverifikasi',
+    langMenuTitle: 'Pilih Bahasa',
+    langBtnTitle: 'Pilih bahasa tampilan',
+    extraLangLabel: 'Bahasa dunia lainnya (Terjemahan):',
+    extraLangPlaceholder: 'Pilih bahasa lain...',
+    flashTimerTitle: 'Hitung Mundur Flash Sale',
+    popoutTitle: 'Buka di jendela terpisah',
+    refreshTitle: 'Sinkronkan promo terbaru',
+    taglineSuffix: 'Promo Terverifikasi',
+    couponsBtn: 'Kupon',
+    productsLink: 'Produk',
+    searchPlaceholder: 'Cari iPhone, laptop, Samsung, Amazon...',
+    searchAria: 'Cari produk dan toko',
+    catAria: 'Filter berdasarkan kategori',
+    priceAria: 'Filter berdasarkan harga',
+    allPriceTiers: 'Semua Rentang Harga',
+    allStores: 'Semua Toko',
+    allPrefix: 'Semua',
+    soonSuffix: '(Segera)',
+    loadingText: 'Memuat produk & toko dari dodx.shop...',
+    offlineError: 'Gagal memuat promo. Kunjungi https://www.dodx.shop langsung.',
+    disclosurePrefix: 'Pengungkapan Afiliasi:',
+    defaultDisclosure: 'Sebagai afiliasi, dodx.shop dapat memperoleh komisi dari pembelian yang memenuhi syarat tanpa biaya tambahan.',
+    footerCoupons: 'Kupon',
+    footerProducts: 'Produk',
+    footerDisclosure: 'Info',
+    couponsHeading: 'Kupon Terverifikasi & Kode Bank',
+    offersCount: (n) => `${n} promo`,
+    itemsCount: (n) => `${n} item`,
+    noCoupons: 'Tidak ada kupon yang cocok.',
+    whiteFridayStrip: 'Promo Terbaik — Diskon Besar Black Friday',
+    comingSoonHeading: 'Diskon Terbesar Segera Hadir',
+    comingSoonStoreBody: (name) => `Promo ${name} akan segera hadir di dodx.shop.`,
+    comingSoonFilterBody: 'Tidak ada promo yang cocok — coba Semua Toko atau ganti rentang harga.',
+    openStorefront: (name) => `Buka Toko ${name} →`,
+    topProductsHeading: 'Promo Terverifikasi & Diskon Kilat',
+    storeProductsHeading: (name) => `Produk ${name}`,
+    buyNow: 'Beli Sekarang →',
+    codeLabel: 'Kode:',
+    copyAndShop: (code) => `Salin ${code} & Belanja →`,
+    openOffer: 'Buka Promo →',
+    syncedNotice: 'Harga, kategori & kupon terbaru disinkronkan dari dodx.shop',
+    partnerFallback: 'Mitra Dodx',
+    dealBadgeFallback: 'PROMO',
+    couponBadgeFallback: 'KUPON',
+    tierLabels: makeTierLabels('', '–', 'Di atas', 'Diskon Terbesar', 'Besar', 'Kilat'),
+  },
+  nl: {
+    pageTitle: 'Dodx – Officiële Winkelpartners & Gecontroleerde Deals',
+    langMenuTitle: 'Kies taal',
+    langBtnTitle: 'Selecteer weergavetaal',
+    extraLangLabel: 'Meer wereldtalen (Vertalen):',
+    extraLangPlaceholder: 'Kies een andere taal...',
+    flashTimerTitle: 'Flash Deal-aftelling',
+    popoutTitle: 'Openen in los venster',
+    refreshTitle: 'Nieuwste deals ophalen',
+    taglineSuffix: 'Gecontroleerde Deals',
+    couponsBtn: 'Kortingen',
+    productsLink: 'Producten',
+    searchPlaceholder: 'Zoek iPhone, laptop, Samsung, Amazon...',
+    searchAria: 'Zoek producten en winkels',
+    catAria: 'Filter op categorie',
+    priceAria: 'Filter op prijsklasse',
+    allPriceTiers: 'Alle prijsklassen',
+    allStores: 'Alle winkels',
+    allPrefix: 'Alle',
+    soonSuffix: '(Binnenkort)',
+    loadingText: 'Producten en winkels laden van dodx.shop...',
+    offlineError: 'Kan deals niet laden. Bezoek https://www.dodx.shop rechtstreeks.',
+    disclosurePrefix: 'Affiliate-verklaring:',
+    defaultDisclosure: 'Als affiliate kan dodx.shop commissie verdienen op geldige aankopen zonder extra kosten voor jou.',
+    footerCoupons: 'Kortingen',
+    footerProducts: 'Producten',
+    footerDisclosure: 'Verklaring',
+    couponsHeading: 'Gecontroleerde Kortingscodes & Bankdeals',
+    offersCount: (n) => `${n} deals`,
+    itemsCount: (n) => `${n} artikelen`,
+    noCoupons: 'Geen passende kortingscodes gevonden.',
+    whiteFridayStrip: 'Beste Deals — Enorme Black Friday-kortingen',
+    comingSoonHeading: 'Grootste Kortingen Komen Zeer Binnenkort',
+    comingSoonStoreBody: (name) => `${name}-deals verschijnen zeer binnenkort op dodx.shop.`,
+    comingSoonFilterBody: 'Geen resultaten — probeer Alle winkels of kies een andere prijsklasse.',
+    openStorefront: (name) => `Open ${name}-winkel →`,
+    topProductsHeading: 'Top Gecontroleerde Deals & Flash-kortingen',
+    storeProductsHeading: (name) => `${name} Producten`,
+    buyNow: 'Koop nu →',
+    codeLabel: 'Code:',
+    copyAndShop: (code) => `Kopieer ${code} & shop →`,
+    openOffer: 'Deal openen →',
+    syncedNotice: 'Nieuwste prijzen, categorieën en kortingscodes gesynchroniseerd',
+    partnerFallback: 'Dodx Partner',
+    dealBadgeFallback: 'DEAL',
+    couponBadgeFallback: 'CODE',
+    tierLabels: makeTierLabels('Van ', 'tot', 'Meer dan', 'Topkortingen', 'Groot', 'Bliksem'),
+  },
+  pl: {
+    pageTitle: 'Dodx – Oficjalni Partnerzy i Zweryfikowane Okazje',
+    langMenuTitle: 'Wybierz język',
+    langBtnTitle: 'Wybierz język wyświetlania',
+    extraLangLabel: 'Więcej języków (Tłumacz):',
+    extraLangPlaceholder: 'Wybierz inny język...',
+    flashTimerTitle: 'Odliczanie błyskawicznych okazji',
+    popoutTitle: 'Otwórz w osobnym oknie',
+    refreshTitle: 'Synchronizuj najnowsze okazje',
+    taglineSuffix: 'Zweryfikowane Okazje',
+    couponsBtn: 'Kupony',
+    productsLink: 'Produkty',
+    searchPlaceholder: 'Szukaj iPhone, laptop, Samsung, Amazon...',
+    searchAria: 'Szukaj produktów i sklepów',
+    catAria: 'Filtruj według kategorii',
+    priceAria: 'Filtruj według przedziału cenowego',
+    allPriceTiers: 'Wszystkie ceny',
+    allStores: 'Wszystkie sklepy',
+    allPrefix: 'Wszystkie',
+    soonSuffix: '(Wkrótce)',
+    loadingText: 'Ładowanie produktów i sklepów z dodx.shop...',
+    offlineError: 'Nie udało się załadować ofert. Odwiedź bezpośrednio https://www.dodx.shop.',
+    disclosurePrefix: 'Informacja partnerska:',
+    defaultDisclosure: 'Jako partner afiliacyjny dodx.shop może otrzymywać prowizję od kwalifikujących się zakupów bez dodatkowych kosztów.',
+    footerCoupons: 'Kupony',
+    footerProducts: 'Produkty',
+    footerDisclosure: 'Informacje',
+    couponsHeading: 'Zweryfikowane Kupony i Kody Bankowe',
+    offersCount: (n) => `${n} ofert`,
+    itemsCount: (n) => `${n} produktów`,
+    noCoupons: 'Nie znaleziono pasujących kuponów.',
+    whiteFridayStrip: 'Najlepsze Okazje — Wielkie Zniżki Black Friday',
+    comingSoonHeading: 'Największe Zniżki Już Wkrótce',
+    comingSoonStoreBody: (name) => `Okazje ${name} pojawią się wkrótce na dodx.shop.`,
+    comingSoonFilterBody: 'Brak pasujących okazji — wybierz Wszystkie sklepy lub inny zakres cen.',
+    openStorefront: (name) => `Otwórz sklep ${name} →`,
+    topProductsHeading: 'Najlepsze Zweryfikowane Okazje',
+    storeProductsHeading: (name) => `Produkty ${name}`,
+    buyNow: 'Kup teraz →',
+    codeLabel: 'Kod:',
+    copyAndShop: (code) => `Kopiuj ${code} i kupuj →`,
+    openOffer: 'Otwórz okazję →',
+    syncedNotice: 'Zsynchronizowano najnowsze ceny, kategorie i kupony z dodx.shop',
+    partnerFallback: 'Partner Dodx',
+    dealBadgeFallback: 'OKAZJA',
+    couponBadgeFallback: 'KUPON',
+    tierLabels: makeTierLabels('Od ', 'do', 'Powyżej', 'Największe zniżki', 'Duże', 'Błyskawica'),
+  },
+};
+
+const CAT_I18N = {
+  all: {
+    es: 'Todas las categorías', fr: 'Toutes les catégories', de: 'Alle Kategorien', pt: 'Todas as categorias',
+    zh: '全部分类', ja: 'すべてのカテゴリー', ko: '모든 카테고리', hi: 'सभी श्रेणियां',
+    tr: 'Tüm Kategoriler', ru: 'Все категории', it: 'Tutte le categorie', id: 'Semua Kategori',
+    nl: 'Alle categorieën', pl: 'Wszystkie kategorie',
+  },
+  smartphones: {
+    es: 'Teléfonos y Móviles', fr: 'Smartphones et Mobiles', de: 'Smartphones & Handys', pt: 'Smartphones e Celulares',
+    zh: '智能手机与通讯', ja: 'スマートフォン・携帯', ko: '스마트폰 및 모바일', hi: 'स्मार्टफ़ोन और मोबाइल',
+    tr: 'Akıllı Telefonlar', ru: 'Смартфоны и телефоны', it: 'Smartphone e Cellulari', id: 'Smartphone & Ponsel',
+    nl: 'Smartphones & Mobiel', pl: 'Smartfony i telefony',
+  },
+  laptops: {
+    es: 'Portátiles y PC', fr: 'Ordinateurs portables & PC', de: 'Laptops & Computer', pt: 'Notebooks e PCs',
+    zh: '笔记本与电脑', ja: 'ノートPC・パソコン', ko: '노트북 및 컴퓨터', hi: 'लैपटॉप और कंप्यूटर',
+    tr: 'Dizüstü ve Bilgisayar', ru: 'Ноутбуки и ПК', it: 'Laptop e Computer', id: 'Laptop & Komputer',
+    nl: 'Laptops & Computers', pl: 'Laptopy i komputery',
+  },
+  'tablets-wearables': {
+    es: 'Tablets y Relojes', fr: 'Tablettes et Montres', de: 'Tablets & Wearables', pt: 'Tablets e Vestíveis',
+    zh: '平板与智能穿戴', ja: 'タブレット・ウェアラブル', ko: '태블릿 및 웨어러블', hi: 'टैबलेट और वियरेबल्स',
+    tr: 'Tablet ve Giyilebilir', ru: 'Планшеты и гаджеты', it: 'Tablet e Wearable', id: 'Tablet & Wearable',
+    nl: 'Tablets & Wearables', pl: 'Tablety i smartwatch',
+  },
+  audio: {
+    es: 'Audio y Auriculares', fr: 'Audio et Casques', de: 'Audio & Kopfhörer', pt: 'Áudio e Fones',
+    zh: '音频与耳机', ja: 'オーディオ・ヘッドホン', ko: '오디오 및 헤드폰', hi: 'ऑडियो और हेडफ़ोन',
+    tr: 'Ses ve Kulaklık', ru: 'Аудио и наушники', it: 'Audio e Cuffie', id: 'Audio & Headphone',
+    nl: 'Audio & Koptelefoons', pl: 'Audio i słuchawki',
+  },
+  'tv-monitors': {
+    es: 'TV y Monitores', fr: 'TV et Moniteurs', de: 'TVs & Monitore', pt: 'TVs e Monitores',
+    zh: '电视与显示器', ja: 'テレビ・モニター', ko: 'TV 및 모니터', hi: 'टीवी और मॉनिटर',
+    tr: 'TV ve Monitörler', ru: 'ТВ и мониторы', it: 'TV e Monitor', id: 'TV & Monitor',
+    nl: 'TV’s & Monitoren', pl: 'Telewizory i monitory',
+  },
+  'men-fashion': {
+    es: 'Moda Hombre', fr: 'Mode Homme', de: 'Herrenmode', pt: 'Moda Masculina',
+    zh: '男装时尚', ja: 'メンズファッション', ko: '남성 패션', hi: 'पुरुष फ़ैशन',
+    tr: 'Erkek Giyim', ru: 'Мужская одежда', it: 'Moda Uomo', id: 'Fesyen Pria',
+    nl: 'Herenmode', pl: 'Moda męska',
+  },
+  'women-fashion': {
+    es: 'Moda Mujer', fr: 'Mode Femme', de: 'Damenmode', pt: 'Moda Feminina',
+    zh: '女装时尚', ja: 'レディースファッション', ko: '여성 패션', hi: 'महिला फ़ैशन',
+    tr: 'Kadın Giyim', ru: 'Женская одежда', it: 'Moda Donna', id: 'Fesyen Wanita',
+    nl: 'Damesmode', pl: 'Moda damska',
+  },
+  accessories: {
+    es: 'Accesorios y Equipo', fr: 'Accessoires et Équipement', de: 'Zubehör & Ausrüstung', pt: 'Acessórios e Equipamentos',
+    zh: '配件与装备', ja: 'アクセサリー・周辺機器', ko: '액세서리 및 장비', hi: 'एक्सेसरीज़ और गियर',
+    tr: 'Aksesuarlar', ru: 'Аксессуары', it: 'Accessori', id: 'Aksesori & Perlengkapan',
+    nl: 'Accessoires', pl: 'Akcesoria',
+  },
+  'watches-jewelry': {
+    es: 'Relojes y Joyería', fr: 'Montres et Bijoux', de: 'Uhren & Schmuck', pt: 'Relógios e Joias',
+    zh: '手表与珠宝', ja: '時計・ジュエリー', ko: '시계 및 주얼리', hi: 'घड़ियां और आभूषण',
+    tr: 'Saat ve Mücevher', ru: 'Часы и украшения', it: 'Orologi e Gioielli', id: 'Jam Tangan & Perhiasan',
+    nl: 'Horloges & Sieraden', pl: 'Zegarki i biżuteria',
+  },
+  'beauty-health': {
+    es: 'Salud y Belleza', fr: 'Santé et Beauté', de: 'Gesundheit & Schönheit', pt: 'Saúde e Beleza',
+    zh: '健康与美容', ja: '美容・ヘルスケア', ko: '뷰티 및 건강', hi: 'स्वास्थ्य और सौंदर्य',
+    tr: 'Sağlık ve Güzellik', ru: 'Красота и здоровье', it: 'Salute e Bellezza', id: 'Kesehatan & Kecantikan',
+    nl: 'Gezondheid & Beauty', pl: 'Zdrowie i uroda',
+  },
+  'home-furniture': {
+    es: 'Hogar y Muebles', fr: 'Maison et Meubles', de: 'Haus & Möbel', pt: 'Casa e Móveis',
+    zh: '家居与家具', ja: 'ホーム＆家具', ko: '홈 및 가구', hi: 'घर और फ़र्नीचर',
+    tr: 'Ev ve Mobilya', ru: 'Дом и мебель', it: 'Casa e Arredamento', id: 'Rumah & Furnitur',
+    nl: 'Wonen & Meubels', pl: 'Dom i meble',
+  },
+  'food-grocery': {
+    es: 'Alimentos y Despensa', fr: 'Alimentation et Épicerie', de: 'Lebensmittel', pt: 'Alimentos e Mercado',
+    zh: '食品与生鲜', ja: '食品・食料品', ko: '식품 및 식료품', hi: 'खाद्य और किराना',
+    tr: 'Gıda ve Market', ru: 'Продукты питания', it: 'Alimentari e Spesa', id: 'Makanan & Kebutuhan',
+    nl: 'Eten & Boodschappen', pl: 'Żywność i zakupy',
+  },
+  cars: {
+    es: 'Autos y Accesorios', fr: 'Voitures et Auto', de: 'Autos & Zubehör', pt: 'Carros e Auto',
+    zh: '汽车与配件', ja: '自動車・カー用品', ko: '자동차 용품', hi: 'कार और ऑटो',
+    tr: 'Otomobil ve Aksesuar', ru: 'Автотовары', it: 'Auto e Accessori', id: 'Mobil & Otomotif',
+    nl: 'Auto & Onderdelen', pl: 'Motoryzacja',
+  },
+  motorcycles: {
+    es: 'Motocicletas', fr: 'Motos', de: 'Motorräder', pt: 'Motocicletas',
+    zh: '摩托车配件', ja: 'バイク用品', ko: '오토바이', hi: 'मोटरसाइकिल',
+    tr: 'Motosiklet', ru: 'Мотоциклы', it: 'Moto', id: 'Sepeda Motor',
+    nl: 'Motoren', pl: 'Motocykle',
+  },
+  software: {
+    es: 'Software y Seguridad', fr: 'Logiciels et Sécurité', de: 'Software & Sicherheit', pt: 'Software e Segurança',
+    zh: '软件与安全工具', ja: 'ソフトウェア', ko: '소프트웨어', hi: 'सॉफ़्टवेयर',
+    tr: 'Yazılım', ru: 'Программы', it: 'Software', id: 'Perangkat Lunak',
+    nl: 'Software', pl: 'Oprogramowanie',
   },
 };
 
@@ -141,8 +938,19 @@ function getDict() {
   return I18N[currentLang] || I18N.en;
 }
 
+function getLangMeta(code) {
+  return SUPPORTED_LANGUAGES.find((l) => l.code === code) || SUPPORTED_LANGUAGES[0];
+}
+
 function isArLang() {
   return currentLang === 'ar';
+}
+
+function getLocalizedCategoryName(cat) {
+  if (!cat) return '';
+  if (isArLang()) return cat.nameAr || cat.nameEn;
+  const localized = CAT_I18N[cat.id] && CAT_I18N[cat.id][currentLang];
+  return localized || cat.nameEn || cat.nameAr;
 }
 
 function formatPriceForLang(rawPrice) {
@@ -237,7 +1045,7 @@ async function loadSavedLang() {
   try {
     if (chrome.storage?.local) {
       const res = await chrome.storage.local.get(LANG_STORAGE_KEY);
-      if (res && (res[LANG_STORAGE_KEY] === 'en' || res[LANG_STORAGE_KEY] === 'ar')) {
+      if (res && typeof res[LANG_STORAGE_KEY] === 'string' && I18N[res[LANG_STORAGE_KEY]]) {
         return res[LANG_STORAGE_KEY];
       }
     }
@@ -246,7 +1054,7 @@ async function loadSavedLang() {
   }
   try {
     const saved = localStorage.getItem(LANG_STORAGE_KEY);
-    if (saved === 'en' || saved === 'ar') return saved;
+    if (saved && I18N[saved]) return saved;
   } catch {
     // Ignore
   }
@@ -268,26 +1076,98 @@ async function saveLang(lang) {
   }
 }
 
+function buildLanguageMenu() {
+  const gridEl = document.getElementById('lang-options-grid');
+  const extraSelect = document.getElementById('extra-lang-select');
+  const langMenu = document.getElementById('lang-menu');
+  const langBtn = document.getElementById('lang-btn');
+
+  if (gridEl) {
+    gridEl.replaceChildren();
+    SUPPORTED_LANGUAGES.forEach((meta) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = meta.code === currentLang ? 'lang-option is-active' : 'lang-option';
+      btn.setAttribute('data-lang', meta.code);
+      btn.setAttribute('role', 'option');
+      btn.setAttribute('aria-selected', meta.code === currentLang ? 'true' : 'false');
+
+      const labelWrap = document.createElement('span');
+      labelWrap.className = 'lang-option-label';
+      const flagSpan = document.createElement('span');
+      flagSpan.textContent = meta.flag;
+      const textSpan = document.createElement('span');
+      textSpan.className = 'lang-option-text';
+      textSpan.textContent = meta.nativeName;
+      labelWrap.appendChild(flagSpan);
+      labelWrap.appendChild(textSpan);
+
+      const checkSpan = document.createElement('span');
+      checkSpan.className = 'lang-check';
+      checkSpan.textContent = '✓';
+
+      btn.appendChild(labelWrap);
+      btn.appendChild(checkSpan);
+
+      btn.addEventListener('click', async () => {
+        currentLang = meta.code;
+        await saveLang(meta.code);
+        if (langMenu) langMenu.hidden = true;
+        if (langBtn) langBtn.setAttribute('aria-expanded', 'false');
+        applyLanguageUI();
+      });
+
+      gridEl.appendChild(btn);
+    });
+  }
+
+  if (extraSelect) {
+    const dict = getDict();
+    extraSelect.replaceChildren();
+    const defaultOpt = document.createElement('option');
+    defaultOpt.value = '';
+    defaultOpt.textContent = dict.extraLangPlaceholder;
+    extraSelect.appendChild(defaultOpt);
+
+    EXTRA_WORLD_LANGUAGES.forEach((item) => {
+      const opt = document.createElement('option');
+      opt.value = item.code;
+      opt.textContent = item.label;
+      extraSelect.appendChild(opt);
+    });
+  }
+}
+
 function applyLanguageUI() {
   const dict = getDict();
+  const meta = getLangMeta(currentLang);
   document.documentElement.lang = currentLang;
-  document.documentElement.dir = isArLang() ? 'rtl' : 'ltr';
+  document.documentElement.dir = meta.dir;
   document.title = dict.pageTitle;
 
   const langFlag = document.getElementById('lang-flag');
   const langCode = document.getElementById('lang-code');
   const langBtn = document.getElementById('lang-btn');
   const langMenuTitle = document.getElementById('lang-menu-title');
-  if (langFlag) langFlag.textContent = dict.langFlag;
-  if (langCode) langCode.textContent = dict.langShort;
+  const extraLangLabel = document.getElementById('extra-lang-label');
+  const extraLangSelect = document.getElementById('extra-lang-select');
+
+  if (langFlag) langFlag.textContent = meta.flag;
+  if (langCode) langCode.textContent = meta.shortLabel;
   if (langBtn) {
     langBtn.title = dict.langBtnTitle;
     langBtn.setAttribute('aria-label', dict.langBtnTitle);
   }
   if (langMenuTitle) langMenuTitle.textContent = dict.langMenuTitle;
+  if (extraLangLabel) extraLangLabel.textContent = dict.extraLangLabel;
+  if (extraLangSelect && extraLangSelect.options.length > 0) {
+    extraLangSelect.options[0].textContent = dict.extraLangPlaceholder;
+  }
 
   document.querySelectorAll('.lang-option').forEach((btn) => {
-    btn.classList.toggle('is-active', btn.getAttribute('data-lang') === currentLang);
+    const isSel = btn.getAttribute('data-lang') === currentLang;
+    btn.classList.toggle('is-active', isSel);
+    btn.setAttribute('aria-selected', isSel ? 'true' : 'false');
   });
 
   const flashPill = document.getElementById('flash-timer-pill');
@@ -311,8 +1191,7 @@ function applyLanguageUI() {
   if (topTagline) {
     const strongEl = document.createElement('strong');
     strongEl.textContent = 'dodx.shop';
-    const suffixText = isArLang() ? ' · عروض موثقة' : ' · Verified Deals';
-    topTagline.replaceChildren(strongEl, document.createTextNode(suffixText));
+    topTagline.replaceChildren(strongEl, document.createTextNode(` · ${dict.taglineSuffix}`));
   }
   if (couponsBtn) couponsBtn.textContent = dict.couponsBtn;
   if (topProducts) topProducts.textContent = dict.productsLink;
@@ -427,7 +1306,7 @@ function populateCategorySelect() {
   categories.forEach((cat) => {
     const opt = document.createElement('option');
     opt.value = cat.id;
-    opt.textContent = isArLang() ? (cat.nameAr || cat.nameEn) : (cat.nameEn || cat.nameAr);
+    opt.textContent = getLocalizedCategoryName(cat);
     selectEl.appendChild(opt);
   });
   selectEl.value = selectedCategoryId;
@@ -677,7 +1556,7 @@ function renderPopupContent() {
   }
 
   if (disclosureEl) {
-    const discBody = ar ? dict.defaultDisclosure : (currentPayload.disclosure || dict.defaultDisclosure);
+    const discBody = currentLang === 'en' ? (currentPayload.disclosure || dict.defaultDisclosure) : dict.defaultDisclosure;
     disclosureEl.textContent = `${dict.disclosurePrefix} ${discBody}`;
   }
 
@@ -711,7 +1590,6 @@ function renderPopupContent() {
     return;
   }
 
-  // Unified language Deal Banner Strip
   const wfStrip = document.createElement('div');
   wfStrip.className = 'white-friday-strip';
   const wfText = document.createElement('span');
@@ -838,6 +1716,7 @@ function loadOffers(forceRefresh = false) {
 
 document.addEventListener('DOMContentLoaded', async () => {
   currentLang = await loadSavedLang();
+  buildLanguageMenu();
   startFlashCountdown();
 
   const domainEl = document.getElementById('active-domain');
@@ -850,6 +1729,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const langPicker = document.getElementById('lang-picker');
   const langBtn = document.getElementById('lang-btn');
   const langMenu = document.getElementById('lang-menu');
+  const extraLangSelect = document.getElementById('extra-lang-select');
 
   if (isStandaloneWindow) {
     document.body.classList.add('is-standalone');
@@ -866,22 +1746,29 @@ document.addEventListener('DOMContentLoaded', async () => {
       langBtn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
     });
 
-    langMenu.querySelectorAll('.lang-option').forEach((optBtn) => {
-      optBtn.addEventListener('click', async () => {
-        const nextLang = optBtn.getAttribute('data-lang') === 'ar' ? 'ar' : 'en';
-        currentLang = nextLang;
-        await saveLang(nextLang);
-        langMenu.hidden = true;
-        langBtn.setAttribute('aria-expanded', 'false');
-        applyLanguageUI();
-      });
-    });
-
     document.addEventListener('click', (e) => {
       if (langPicker && !langPicker.contains(e.target)) {
         langMenu.hidden = true;
         langBtn.setAttribute('aria-expanded', 'false');
       }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !langMenu.hidden) {
+        langMenu.hidden = true;
+        langBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  if (extraLangSelect) {
+    extraLangSelect.addEventListener('change', (e) => {
+      const targetCode = e.target.value;
+      if (!targetCode) return;
+      if (langMenu) langMenu.hidden = true;
+      if (langBtn) langBtn.setAttribute('aria-expanded', 'false');
+      const translateUrl = `https://translate.google.com/translate?sl=auto&tl=${encodeURIComponent(targetCode)}&u=${encodeURIComponent(SITE_HOME_URL)}`;
+      openExternalUrl(translateUrl);
     });
   }
 

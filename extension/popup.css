@@ -164,13 +164,13 @@ body.is-standalone .popup-shell {
   position: absolute;
   top: calc(100% + 5px);
   right: 0;
-  width: 158px;
+  width: 268px;
   background: #ffffff;
   color: var(--dodx-text);
   border: 1px solid #d4d4d8;
   border-radius: 8px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
-  padding: 6px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.22);
+  padding: 8px;
   z-index: 60;
 }
 
@@ -184,12 +184,20 @@ html[dir="rtl"] .lang-menu {
 }
 
 .lang-menu-title {
-  font-size: 10px;
+  font-size: 10.5px;
   font-weight: 800;
   color: var(--dodx-muted);
-  padding: 3px 6px 5px;
+  padding: 2px 4px 6px;
   border-bottom: 1px solid var(--dodx-border);
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+}
+
+.lang-options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3px;
+  max-height: 224px;
+  overflow-y: auto;
 }
 
 .lang-option {
@@ -197,16 +205,30 @@ html[dir="rtl"] .lang-menu {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 6px;
-  padding: 6px 8px;
+  gap: 4px;
+  padding: 5px 6px;
   border: none;
   border-radius: 5px;
   background: transparent;
   color: var(--dodx-text);
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 700;
   cursor: pointer;
   text-align: start;
+  min-width: 0;
+}
+
+.lang-option-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.lang-option-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .lang-option:hover {
@@ -215,7 +237,8 @@ html[dir="rtl"] .lang-menu {
 
 .lang-option .lang-check {
   opacity: 0;
-  font-size: 11px;
+  font-size: 10px;
+  flex-shrink: 0;
 }
 
 .lang-option.is-active {
@@ -225,6 +248,32 @@ html[dir="rtl"] .lang-menu {
 
 .lang-option.is-active .lang-check {
   opacity: 1;
+}
+
+.lang-extra-wrap {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--dodx-border);
+}
+
+.lang-extra-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--dodx-muted);
+  margin-bottom: 4px;
+}
+
+.lang-extra-select {
+  width: 100%;
+  padding: 4px 6px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--dodx-text);
+  background: #fafafa;
+  border: 1px solid #d4d4d8;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .active-domain {

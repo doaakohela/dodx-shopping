@@ -60,7 +60,7 @@ export const DealsView: React.FC<DealsViewProps> = ({
 
   const products = useMemo(() => {
     if (!activeBranch) return [];
-    return CATALOG_PRODUCTS.filter((p) => p.storeId === activeBranch.id);
+    return [...CATALOG_PRODUCTS].reverse().filter((p) => p.storeId === activeBranch.id);
   }, [activeBranch]);
 
   const filteredProducts = useMemo(() => {

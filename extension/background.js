@@ -7,13 +7,13 @@ const OFFERS_API_ENDPOINTS = [
 const SITE_HOME_URL = 'https://www.dodx.shop';
 const SITE_PRODUCTS_URL = 'https://www.dodx.shop/products';
 const SITE_COUPONS_URL = 'https://www.dodx.shop/coupons';
-const CACHE_STORAGE_KEY = 'dodx_offers_cache_v7';
+const CACHE_STORAGE_KEY = 'dodx_offers_cache_v8';
 const REFRESH_ALARM_NAME = 'dodx_refresh_offers';
 const CACHE_TTL_MS = 2 * 60 * 60 * 1000;
 const REFRESH_PERIOD_MINUTES = 120;
 
 const OFFLINE_DIRECTORY_FALLBACK = {
-  version: 'offline-3.1',
+  version: 'offline-3.2',
   updatedAt: null,
   siteUrl: SITE_HOME_URL,
   productsUrl: SITE_PRODUCTS_URL,

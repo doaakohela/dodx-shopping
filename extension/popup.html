@@ -56,16 +56,15 @@
               <span id="lang-code" class="lang-code">EN</span>
               <span class="lang-caret" aria-hidden="true">▾</span>
             </button>
-            <div id="lang-menu" class="lang-menu" role="listbox" hidden>
+            <div id="lang-menu" class="lang-menu" role="dialog" aria-label="Display Language" hidden>
               <div id="lang-menu-title" class="lang-menu-title">Display Language</div>
-              <button type="button" class="lang-option is-active" data-lang="en">
-                <span>🇺🇸 English</span>
-                <span class="lang-check">✓</span>
-              </button>
-              <button type="button" class="lang-option" data-lang="ar">
-                <span>🇸🇦 العربية</span>
-                <span class="lang-check">✓</span>
-              </button>
+              <div id="lang-options-grid" class="lang-options-grid" role="listbox"></div>
+              <div class="lang-extra-wrap">
+                <label id="extra-lang-label" for="extra-lang-select" class="lang-extra-label">More world languages (Translate):</label>
+                <select id="extra-lang-select" class="lang-extra-select">
+                  <option value="">Select another language...</option>
+                </select>
+              </div>
             </div>
           </div>
 

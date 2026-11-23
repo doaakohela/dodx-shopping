@@ -161,6 +161,11 @@ export interface TranslationDict {
   categoriesHeading: string;
   storesHeading: string;
   allPricesLabel: string;
+  bfBannerBadge: string;
+  bfBannerTitle: string;
+  bfBannerSub: string;
+  bfBannerCta: string;
+  bfGifCaption: string;
 }
 
 const EN: TranslationDict = {
@@ -307,6 +312,11 @@ const EN: TranslationDict = {
   categoriesHeading: 'Categories',
   storesHeading: 'Global Stores',
   allPricesLabel: 'All Prices',
+  bfBannerBadge: 'BLACK FRIDAY SPOTLIGHT',
+  bfBannerTitle: "Today's Big Deals — Amazon US Black Friday",
+  bfBannerSub: 'Curated Black Friday markdowns matched to our live spotlight showcase — direct product links & instant savings.',
+  bfBannerCta: 'Shop Amazon US Deals',
+  bfGifCaption: "Today's Big Deals · Amazon US",
 };
 
 const AR: TranslationDict = {
@@ -453,6 +463,11 @@ const AR: TranslationDict = {
   categoriesHeading: 'الأقسام والفئات',
   storesHeading: 'المتاجر العالمية',
   allPricesLabel: 'كل الأسعار',
+  bfBannerBadge: 'عروض الجمعة السوداء الحصرية',
+  bfBannerTitle: 'أقوى عروض اليوم — الجمعة السوداء على أمازون أمريكا',
+  bfBannerSub: 'باقة مختارة من أقوى خصومات الجمعة السوداء متناسقة مع العرض الترويجي المباشر — روابط شراء مباشرة وأقل الأسعار.',
+  bfBannerCta: 'تسوق عروض أمازون أمريكا',
+  bfGifCaption: 'عروض اليوم الكبرى · أمازون أمريكا',
 };
 
 const ES: TranslationDict = {
@@ -509,6 +524,11 @@ const ES: TranslationDict = {
   bfSubtitle: 'Descuentos verificados en Amazon US, UAE, Egipto y Japón, AliExpress, Alibaba, HONOR UAE, Huawei AE, Lenovo India y Canon UAE.',
   bfPrimaryCta: 'Ver Ofertas Amazon',
   bfSecondaryCta: 'Explorar Todas las Ofertas',
+  bfBannerBadge: 'ESPECIAL BLACK FRIDAY',
+  bfBannerTitle: 'Grandes Ofertas de Hoy — Black Friday Amazon US',
+  bfBannerSub: 'Descuentos directos seleccionados del Black Friday con enlaces directos a cada producto.',
+  bfBannerCta: 'Comprar en Amazon US',
+  bfGifCaption: 'Grandes Ofertas · Amazon US',
 };
 
 const FR: TranslationDict = {
@@ -565,6 +585,11 @@ const FR: TranslationDict = {
   bfSubtitle: 'Codes promo et remises vérifiés sur Amazon US, EAU, Égypte & Japon, AliExpress, Alibaba, HONOR UAE, Huawei AE, Lenovo India et Canon UAE.',
   bfPrimaryCta: 'Voir les Offres Amazon',
   bfSecondaryCta: 'Toutes les Offres',
+  bfBannerBadge: 'SPÉCIAL BLACK FRIDAY',
+  bfBannerTitle: 'Offres du Jour — Black Friday Amazon US',
+  bfBannerSub: 'Sélection de remises directes Black Friday avec liens produits vérifiés et économies immédiates.',
+  bfBannerCta: 'Voir Amazon US',
+  bfGifCaption: 'Offres du Jour · Amazon US',
 };
 
 const DE: TranslationDict = {
@@ -621,6 +646,11 @@ const DE: TranslationDict = {
   bfSubtitle: 'Aktive Gutscheine und Direktangebote für Amazon US, VAE, Ägypten & Japan, AliExpress, Alibaba, HONOR UAE, Huawei AE, Lenovo India und Canon UAE.',
   bfPrimaryCta: 'Amazon Deals ansehen',
   bfSecondaryCta: 'Alle Angebote ansehen',
+  bfBannerBadge: 'BLACK FRIDAY SPOTLIGHT',
+  bfBannerTitle: 'Heutige Top-Deals — Amazon US Black Friday',
+  bfBannerSub: 'Ausgewählte Black-Friday-Rabatte mit direkten Produktlinks und sofortiger Ersparnis.',
+  bfBannerCta: 'Amazon US Deals ansehen',
+  bfGifCaption: 'Top-Deals · Amazon US',
 };
 
 const PT: TranslationDict = {
@@ -647,6 +677,11 @@ const PT: TranslationDict = {
   copyCodeAndGo: 'Copiar Código e Ir para a Loja',
   activateDeal: 'Ativar Oferta',
   backToTop: 'Voltar ao topo',
+  bfBannerBadge: 'DESTAQUE BLACK FRIDAY',
+  bfBannerTitle: 'Grandes Ofertas de Hoje — Black Friday Amazon US',
+  bfBannerSub: 'Descontos diretos selecionados da Black Friday com links diretos e economia imediata.',
+  bfBannerCta: 'Ver Amazon US',
+  bfGifCaption: 'Grandes Ofertas · Amazon US',
 };
 
 const ZH: TranslationDict = {
@@ -703,6 +738,11 @@ const ZH: TranslationDict = {
   bfSubtitle: '立即获取 Amazon 美国/阿联酋/埃及/日本、AliExpress、Alibaba、HONOR UAE、Huawei AE、Lenovo India 和 Canon UAE 最新优惠券。',
   bfPrimaryCta: '浏览 Amazon 优惠',
   bfSecondaryCta: '浏览全部精选优惠',
+  bfBannerBadge: '黑色星期五精选特辑',
+  bfBannerTitle: '今日超值特惠 — Amazon 美国黑五专场',
+  bfBannerSub: '精选黑五直降爆款商品，点击直达官方购买页面立享折扣。',
+  bfBannerCta: '选购 Amazon 美国黑五',
+  bfGifCaption: '今日超值特惠 · Amazon 美国',
 };
 
 const JA: TranslationDict = {
@@ -729,6 +769,11 @@ const JA: TranslationDict = {
   copyCodeAndGo: 'コードをコピーしてストアへ',
   activateDeal: 'セールを有効化',
   backToTop: 'トップへ戻る',
+  bfBannerBadge: 'ブラックフライデー特集',
+  bfBannerTitle: '本日の特選セール — Amazon US ブラックフライデー',
+  bfBannerSub: '厳選されたブラックフライデー直結セールの特別価格を今すぐチェック。',
+  bfBannerCta: 'Amazon US セールを見る',
+  bfGifCaption: '本日のビッグセール · Amazon US',
 };
 
 const KO: TranslationDict = {
@@ -755,6 +800,11 @@ const KO: TranslationDict = {
   copyCodeAndGo: '코드 복사 및 스토어 이동',
   activateDeal: '할인 활성화',
   backToTop: '맨 위로',
+  bfBannerBadge: '블랙 프라이데이 스포트라이트',
+  bfBannerTitle: '오늘의 빅 세일 — Amazon US 블랙 프라이데이',
+  bfBannerSub: '엄선된 블랙 프라이데이 직접 할인 상품과 즉시 할인을 만나보세요.',
+  bfBannerCta: 'Amazon US 특가 보기',
+  bfGifCaption: '오늘의 빅 세일 · Amazon US',
 };
 
 const HI: TranslationDict = {
@@ -781,6 +831,11 @@ const HI: TranslationDict = {
   copyCodeAndGo: 'कोड कॉपी करें और स्टोर पर जाएं',
   activateDeal: 'डील सक्रिय करें',
   backToTop: 'ऊपर जाएं',
+  bfBannerBadge: 'ब्लैक फ़्राइडे स्पॉटलाइट',
+  bfBannerTitle: 'आज की बड़ी डील्स — Amazon US ब्लैक फ़्राइडे',
+  bfBannerSub: 'डायरेक्ट उत्पाद लिंक और तुरंत बचत के साथ चुनिंदा ब्लैक फ़्राइडे छूट।',
+  bfBannerCta: 'Amazon US डील्स देखें',
+  bfGifCaption: 'आज की बड़ी डील्स · Amazon US',
 };
 
 const TR: TranslationDict = {
@@ -807,6 +862,11 @@ const TR: TranslationDict = {
   copyCodeAndGo: 'Kodu Kopyala ve Mağazaya Git',
   activateDeal: 'Fırsatı Etkinleştir',
   backToTop: 'Başa dön',
+  bfBannerBadge: 'KARA CUMA ÖZEL',
+  bfBannerTitle: 'Günün Büyük Fırsatları — Amazon US Kara Cuma',
+  bfBannerSub: 'Doğrudan ürün bağlantılarıyla seçilmiş Kara Cuma indirimleri ve anında tasarruf.',
+  bfBannerCta: 'Amazon US Fırsatlarını Gör',
+  bfGifCaption: 'Günün Büyük Fırsatları · Amazon US',
 };
 
 const RU: TranslationDict = {
@@ -833,6 +893,11 @@ const RU: TranslationDict = {
   copyCodeAndGo: 'Копировать код и перейти',
   activateDeal: 'Активировать скидку',
   backToTop: 'Наверх',
+  bfBannerBadge: 'ХИТЫ ЧЁРНОЙ ПЯТНИЦЫ',
+  bfBannerTitle: 'Главные скидки дня — Amazon US Black Friday',
+  bfBannerSub: 'Отобранные скидки Чёрной пятницы с прямыми ссылками на товары.',
+  bfBannerCta: 'Смотреть скидки Amazon US',
+  bfGifCaption: 'Главные скидки · Amazon US',
 };
 
 const IT: TranslationDict = {
@@ -859,6 +924,11 @@ const IT: TranslationDict = {
   copyCodeAndGo: 'Copia Codice e Vai al Negozio',
   activateDeal: 'Attiva Offerta',
   backToTop: 'Torna su',
+  bfBannerBadge: 'SPECIALE BLACK FRIDAY',
+  bfBannerTitle: 'Grandi Offerte di Oggi — Black Friday Amazon US',
+  bfBannerSub: 'Sconti diretti selezionati per il Black Friday con link diretti ai prodotti.',
+  bfBannerCta: 'Vai su Amazon US',
+  bfGifCaption: 'Grandi Offerte · Amazon US',
 };
 
 const ID: TranslationDict = {
@@ -885,6 +955,11 @@ const ID: TranslationDict = {
   copyCodeAndGo: 'Salin Kode & Ke Toko',
   activateDeal: 'Aktifkan Promo',
   backToTop: 'Kembali ke atas',
+  bfBannerBadge: 'SOROTAN BLACK FRIDAY',
+  bfBannerTitle: 'Promo Besar Hari Ini — Black Friday Amazon US',
+  bfBannerSub: 'Diskon langsung Black Friday pilihan dengan tautan produk resmi.',
+  bfBannerCta: 'Lihat Promo Amazon US',
+  bfGifCaption: 'Promo Besar · Amazon US',
 };
 
 const NL: TranslationDict = {
@@ -911,6 +986,11 @@ const NL: TranslationDict = {
   copyCodeAndGo: 'Kopieer code & ga naar winkel',
   activateDeal: 'Deal activeren',
   backToTop: 'Terug naar boven',
+  bfBannerBadge: 'BLACK FRIDAY SPOTLIGHT',
+  bfBannerTitle: 'Topdeals van Vandaag — Amazon US Black Friday',
+  bfBannerSub: 'Geselecteerde Black Friday-kortingen met directe productlinks en direct voordeel.',
+  bfBannerCta: 'Bekijk Amazon US Deals',
+  bfGifCaption: 'Topdeals · Amazon US',
 };
 
 const PL: TranslationDict = {
@@ -937,6 +1017,11 @@ const PL: TranslationDict = {
   copyCodeAndGo: 'Kopiuj kod i przejdź do sklepu',
   activateDeal: 'Aktywuj okazję',
   backToTop: 'Powrót na górę',
+  bfBannerBadge: 'HIT BLACK FRIDAY',
+  bfBannerTitle: 'Wielkie Okazje Dnia — Amazon US Black Friday',
+  bfBannerSub: 'Wybrane promocje Black Friday z bezpośrednimi linkami do produktów.',
+  bfBannerCta: 'Zobacz okazje Amazon US',
+  bfGifCaption: 'Wielkie Okazje · Amazon US',
 };
 
 const DICTIONARIES: Record<LanguageCode, TranslationDict> = {

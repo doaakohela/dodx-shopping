@@ -62,19 +62,27 @@ export const HomeView: React.FC<HomeViewProps> = ({
   const rawQuery = searchQuery.trim();
   const isFilteredView = rawQuery.length > 0 || activeCategory !== 'all' || searchStoreFilter !== 'all';
 
-  // Top flash deals sorted by highest discount %
-  const flashDeals = useMemo(() => {
-    return [...CATALOG_PRODUCTS]
-      .filter((p) => p.isFlashDeal || p.discountPercent >= 25)
-      .sort((a, b) => b.discountPercent - a.discountPercent)
-      .slice(0, 14);
-  }, []);
+  const newestFirstCatalog = useMemo(() => [...CATALOG_PRODUCTS].reverse(), []);
 
-  // Search + Category + Store Filter results
+  // Always prioritize the latest batch of newly added deals for the Hero Showcase
+  const flashDeals = useMemo(() => {
+    const latestWindow = newestFirstCatalog.slice(0, 45);
+    const discountedLatest = latestWindow
+      .filter((p) => p.discountPercent >= 10 || p.isFlashDeal)
+      .sort((a, b) => b.discountPercent - a.discountPercent);
+    if (discountedLatest.length >= 14) {
+      return discountedLatest.slice(0, 16);
+    }
+    const seen = new Set(discountedLatest.map((p) => p.id));
+    const fill = latestWindow.filter((p) => !seen.has(p.id));
+    return [...discountedLatest, ...fill].slice(0, 16);
+  }, [newestFirstCatalog]);
+
+  // Search + Category + Store Filter results (newest added products first by default)
   const filteredResults = useMemo(() => {
     if (!isFilteredView) return [];
 
-    let list = CATALOG_PRODUCTS;
+    let list = newestFirstCatalog;
 
     if (activeCategory !== 'all') {
       list = list.filter((p) => p.categoryId === activeCategory);
@@ -114,7 +122,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
       .filter((entry) => entry.matched)
       .sort((a, b) => b.score - a.score)
       .map((entry) => entry.product);
-  }, [isFilteredView, activeCategory, searchStoreFilter, rawQuery]);
+  }, [isFilteredView, newestFirstCatalog, activeCategory, searchStoreFilter, rawQuery]);
 
   // Categories for Shelf Rows on Home
   const shelfCategories = useMemo(
@@ -138,16 +146,16 @@ export const HomeView: React.FC<HomeViewProps> = ({
   return (
     <div className="bg-[#EAEDED] min-h-screen pb-10">
       <div className="max-w-[1440px] mx-auto px-3 sm:px-5 pt-4 space-y-6">
-        {/* Top Hero: Biggest Discounts Ending in Hours + Live Countdown */}
+        {/* Top Hero: Black Friday Animated GIF + Daily Updated Flash Deals Harmonized in GIF Orange */}
         <section
           aria-labelledby="flash-hero-heading"
-          className="rounded-xl overflow-hidden shadow-sm border border-zinc-200 bg-gradient-to-br from-[#00453E] via-[#005A50] to-[#02332D] text-white"
+          className="rounded-xl overflow-hidden shadow-sm border border-[#FF7E2E] bg-gradient-to-br from-[#FF5E00] via-[#FE6404] to-[#B83800] text-white"
         >
-          <div className="px-4 sm:px-6 pt-4 pb-3 flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-white/15">
+          <div className="px-4 sm:px-6 pt-4 pb-3 flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-white/20">
             <div>
-              <div className="inline-flex items-center gap-2 bg-[#CC0C39] text-white px-2.5 py-1 rounded-xs text-[11px] font-extrabold uppercase tracking-wider">
-                <Flame className="w-3.5 h-3.5 text-[#FFD814]" />
-                <span>{isAr ? 'عروض البرق اليومية' : 'LIVE FLASH DEALS'}</span>
+              <div className="inline-flex items-center gap-2 bg-zinc-950 text-[#FFD814] px-2.5 py-1 rounded-xs text-[11px] font-extrabold uppercase tracking-wider shadow-xs">
+                <Flame className="w-3.5 h-3.5 text-[#FE6404]" />
+                <span>{t.bfBannerBadge}</span>
               </div>
               <h1
                 id="flash-hero-heading"
@@ -155,15 +163,15 @@ export const HomeView: React.FC<HomeViewProps> = ({
               >
                 {t.flashHeroTitle}
               </h1>
-              <p className="mt-0.5 text-xs sm:text-sm text-emerald-100">
-                {t.flashHeroSub}
+              <p className="mt-0.5 text-xs sm:text-sm text-orange-50">
+                {t.bfBannerSub}
               </p>
             </div>
 
             <div className="flex flex-wrap items-center gap-2.5 shrink-0">
-              <div className="inline-flex items-center gap-2 bg-zinc-950/60 border border-[#FFD814]/60 px-3.5 py-2 rounded-lg">
-                <Clock className="w-4 h-4 text-[#FFD814] animate-pulse" />
-                <span className="text-xs font-bold text-emerald-100">{t.endsIn}:</span>
+              <div className="inline-flex items-center gap-2 bg-zinc-950/75 border border-[#FFD814]/70 px-3.5 py-2 rounded-lg">
+                <Clock className="w-4 h-4 text-[#FFD814]" />
+                <span className="text-xs font-bold text-orange-100">{t.endsIn}:</span>
                 <span
                   className="font-mono text-base sm:text-lg font-extrabold text-[#FFD814] tracking-wider tabular-nums"
                   dir="ltr"
@@ -177,7 +185,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   type="button"
                   onClick={() => scrollHero('left')}
                   aria-label="Scroll previous"
-                  className="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center cursor-pointer transition-colors"
+                  className="w-9 h-9 rounded-full bg-zinc-950/35 hover:bg-zinc-950/55 border border-white/25 text-white flex items-center justify-center cursor-pointer transition-colors"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
@@ -185,7 +193,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   type="button"
                   onClick={() => scrollHero('right')}
                   aria-label="Scroll next"
-                  className="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center cursor-pointer transition-colors"
+                  className="w-9 h-9 rounded-full bg-zinc-950/35 hover:bg-zinc-950/55 border border-white/25 text-white flex items-center justify-center cursor-pointer transition-colors"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
@@ -193,21 +201,44 @@ export const HomeView: React.FC<HomeViewProps> = ({
             </div>
           </div>
 
-          {/* Horizontal Flash Deal Cards */}
-          <div
-            ref={heroScrollRef}
-            className="flex gap-3.5 overflow-x-auto px-4 sm:px-6 py-4 scroll-smooth no-scrollbar"
-          >
-            {flashDeals.map((product) => (
-              <HomeProductCard
-                key={product.id}
-                product={product}
-                isAr={isAr}
-                buyNowLabel={t.buyNow}
-                onOpenProduct={onOpenProduct}
-                compactWidth="w-[246px] sm:w-[264px] shrink-0"
-              />
-            ))}
+          {/* Side Animated GIF Card + Daily Updated Discount Offers */}
+          <div className="flex flex-col lg:flex-row gap-3.5 px-4 sm:px-6 py-4 items-stretch">
+            <button
+              type="button"
+              onClick={() => onSelectStore('amazon')}
+              className="w-full lg:w-[224px] xl:w-[244px] shrink-0 rounded-xl overflow-hidden bg-[#FE6404] border-2 border-white/75 hover:border-white shadow-md flex flex-col justify-between text-start cursor-pointer group transition-transform duration-200 hover:-translate-y-0.5"
+            >
+              <div className="w-full flex-1 flex items-center justify-center bg-[#FE6404] p-2">
+                <img
+                  src="/assets/banners/amazon-us-bf-showcase.gif"
+                  alt={t.bfGifCaption}
+                  loading="eager"
+                  referrerPolicy="no-referrer"
+                  className="w-full max-w-[230px] lg:max-w-full max-h-[260px] lg:max-h-[300px] object-contain rounded-lg group-hover:scale-[1.02] transition-transform duration-300"
+                />
+              </div>
+              <div className="bg-[#9A2D00]/95 px-3 py-2.5 border-t border-white/25 flex items-center justify-between gap-2 text-xs font-extrabold text-white">
+                <span className="truncate">{t.bfBannerCta}</span>
+                <ExternalLink className="w-3.5 h-3.5 text-[#FFD814] shrink-0" />
+              </div>
+            </button>
+
+            <div
+              ref={heroScrollRef}
+              className="flex-1 min-w-0 flex gap-3.5 overflow-x-auto scroll-smooth no-scrollbar"
+            >
+              {flashDeals.map((product) => (
+                <HomeProductCard
+                  key={product.id}
+                  product={product}
+                  isAr={isAr}
+                  buyNowLabel={t.buyNow}
+                  onOpenProduct={onOpenProduct}
+                  compactWidth="w-[240px] sm:w-[254px] shrink-0"
+                  surfaceTone="gifWarm"
+                />
+              ))}
+            </div>
           </div>
         </section>
 
@@ -309,10 +340,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
             )}
           </section>
         ) : (
-          /* Full Amazon-Style Category Shelf Rows */
+          /* Full Amazon-Style Category Shelf Rows (Newest Products First) */
           <section id="hot-deals" className="space-y-5">
             {shelfCategories.map((cat) => {
-              const items = CATALOG_PRODUCTS.filter((p) => p.categoryId === cat.id);
+              const items = newestFirstCatalog.filter((p) => p.categoryId === cat.id);
               const heading = isAr ? cat.homeRowTitleAr : cat.homeRowTitleEn;
               return (
                 <CategoryShelfRow
@@ -594,6 +625,7 @@ interface HomeProductCardProps {
   buyNowLabel: string;
   onOpenProduct: (id: string) => void;
   compactWidth?: string;
+  surfaceTone?: 'default' | 'gifWarm';
 }
 
 const HomeProductCard: React.FC<HomeProductCardProps> = ({
@@ -602,21 +634,30 @@ const HomeProductCard: React.FC<HomeProductCardProps> = ({
   buyNowLabel,
   onOpenProduct,
   compactWidth = '',
+  surfaceTone = 'default',
 }) => {
   const title = isAr ? product.titleAr : product.titleEn;
   const storeName = isAr ? product.storeNameAr : product.storeNameEn;
   const badge = isAr ? product.discountBadgeAr : product.discountBadgeEn;
 
+  const isGifWarm = surfaceTone === 'gifWarm';
+  const cardSurfaceClass = isGifWarm
+    ? 'bg-gradient-to-b from-[#FFF3EA] to-[#FFE2CC] border-[#FFB380] hover:border-white shadow-sm'
+    : 'bg-white border-zinc-200 hover:border-[#FF9900] shadow-xs';
+  const mediaSurfaceClass = isGifWarm
+    ? 'bg-white border-b border-[#FFD0AD]'
+    : 'bg-zinc-50 border-b border-zinc-100';
+
   return (
     <article
-      className={`${compactWidth} bg-white border border-zinc-200 rounded-lg overflow-hidden flex flex-col justify-between shadow-xs hover:border-[#FF9900] transition-colors text-zinc-950`}
+      className={`${compactWidth} ${cardSurfaceClass} border rounded-lg overflow-hidden flex flex-col justify-between transition-colors text-zinc-950`}
     >
       <div>
         <a
           href={product.affiliateUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="relative block aspect-[16/10] bg-zinc-50 border-b border-zinc-100 overflow-hidden group"
+          className={`relative block aspect-[16/10] ${mediaSurfaceClass} overflow-hidden group`}
         >
           <img
             src={product.image}
