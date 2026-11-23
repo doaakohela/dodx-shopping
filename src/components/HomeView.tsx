@@ -66,7 +66,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
   // Always prioritize the latest batch of newly added deals for the Hero Showcase
   const flashDeals = useMemo(() => {
-    const latestWindow = newestFirstCatalog.slice(0, 45);
+    const latestWindow = newestFirstCatalog.slice(0, 125);
     const discountedLatest = latestWindow
       .filter((p) => p.discountPercent >= 10 || p.isFlashDeal)
       .sort((a, b) => b.discountPercent - a.discountPercent);
