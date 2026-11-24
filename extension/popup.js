@@ -961,13 +961,15 @@ function formatPriceForLang(rawPrice) {
       .replace(/\bUSD\b/gi, 'دولار')
       .replace(/\bEGP\b/gi, 'جنيه')
       .replace(/\bAED\b/gi, 'درهم')
-      .replace(/\bJPY\b/gi, 'ين');
+      .replace(/\bJPY\b/gi, 'ين')
+      .replace(/zł|\bPLN\b/gi, 'زلوطي');
   } else {
     text = text
       .replace(/جنيه(?:\s+مصري)?/g, 'EGP')
       .replace(/درهم(?:\s+إماراتي)?/g, 'AED')
       .replace(/دولار(?:\s+أمريكي)?/g, 'USD')
-      .replace(/\bين\b/g, 'JPY');
+      .replace(/\bين\b/g, 'JPY')
+      .replace(/زلوطي/g, 'zł');
   }
   return text.replace(/\s{2,}/g, ' ').trim();
 }
@@ -1620,11 +1622,44 @@ function renderPopupContent() {
     allowedStoreIds = new Set(groupBranches.map((b) => b.id));
   }
 
-  const rawProducts = Array.isArray(currentPayload.featuredProducts)
+  const featuredList = Array.isArray(currentPayload.featuredProducts)
     ? currentPayload.featuredProducts
     : [];
+  const seenProdIds = new Set(featuredList.map((p) => p && p.id).filter(Boolean));
+  const mergedProducts = [...featuredList];
 
-  const filteredProducts = rawProducts.filter((prod) => {
+  (currentPayload.stores || []).forEach((store) => {
+    if (!store || !Array.isArray(store.offers)) return;
+    store.offers.forEach((offer) => {
+      if (!offer || !offer.id || seenProdIds.has(offer.id)) return;
+      seenProdIds.add(offer.id);
+      mergedProducts.push({
+        id: offer.id,
+        storeId: store.id,
+        storeName: store.name,
+        storeNameAr: store.nameAr || store.name,
+        categoryId: offer.categoryId || 'all',
+        category: offer.categoryId || 'Featured',
+        title: offer.title,
+        titleAr: offer.titleAr || '',
+        brand: '',
+        badge: offer.discountLabel || 'DEAL',
+        badgeAr: offer.discountLabelAr || '',
+        badgeColor: store.badgeColor || '#00453E',
+        price: offer.price || '',
+        oldPrice: offer.oldPrice || '',
+        numericPrice: Number(offer.numericPrice || 0),
+        imageUrl: offer.imageUrl,
+        fallbackImage: offer.fallbackImage || 'images/featured-deals.jpg',
+        keywords: `${offer.title || ''} ${offer.titleAr || ''} ${store.name || ''} ${store.nameAr || ''}`,
+        affiliateUrl: offer.affiliateUrl,
+        dodxPageUrl: offer.dodxPageUrl,
+        isFlashDeal: Boolean(offer.featured),
+      });
+    });
+  });
+
+  const filteredProducts = mergedProducts.filter((prod) => {
     if (allowedStoreIds && !allowedStoreIds.has(prod.storeId)) return false;
     if (selectedCategoryId !== 'all' && prod.categoryId !== selectedCategoryId) return false;
     if (!matchesPriceTier(Number(prod.numericPrice || 0), selectedPriceTier)) return false;
