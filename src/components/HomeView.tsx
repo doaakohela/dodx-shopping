@@ -1,5 +1,6 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import {
+  ArrowDownWideNarrow,
   ChevronLeft,
   ChevronRight,
   Chrome,
@@ -25,6 +26,66 @@ import {
 } from '../utils/multilingualSearch';
 import { ShareButton } from './ShareButton';
 import { StoreLogo } from './StoreLogo';
+
+const approxUsdPrice = (p: CatalogProduct): number => {
+  if (p.storeId === 'amazon-eg') return p.numericPrice / 50;
+  if (p.storeId === 'amazon-uae' || p.storeId === 'honor-uae' || p.storeId === 'huawei-ae' || p.storeId === 'canon-uae') {
+    return p.numericPrice / 3.67;
+  }
+  if (p.storeId === 'amazon-jp') return p.numericPrice / 150;
+  if (p.storeId === 'lenovo-india') return p.numericPrice / 84;
+  return p.numericPrice;
+};
+
+/**
+ * Interleave products round-robin across store branches and categories
+ * so every branch (US, Egypt, UAE, Japan, etc.) & category shines cleanly.
+ */
+const diversifyAcrossBranchesAndCategories = (
+  sortedPool: CatalogProduct[],
+  limit: number
+): CatalogProduct[] => {
+  const byStore = new Map<string, CatalogProduct[]>();
+  for (const item of sortedPool) {
+    const bucket = byStore.get(item.storeId) ?? [];
+    bucket.push(item);
+    byStore.set(item.storeId, bucket);
+  }
+  const storeKeys = Array.from(byStore.keys());
+  const picked: CatalogProduct[] = [];
+  const usedIds = new Set<string>();
+  const categoryUsage = new Map<string, number>();
+
+  // Pick highest-priority item per store round-robin while maximizing distinct categories
+  while (picked.length < limit && storeKeys.length > 0) {
+    let addedInRound = false;
+    for (const storeId of storeKeys) {
+      const bucket = byStore.get(storeId);
+      if (!bucket || bucket.length === 0) continue;
+      // Prefer least-represented category first from top candidates of this store
+      let bestIdx = 0;
+      let minCatCount = Infinity;
+      const scanWindow = Math.min(bucket.length, 6);
+      for (let i = 0; i < scanWindow; i++) {
+        const count = categoryUsage.get(bucket[i].categoryId) ?? 0;
+        if (count < minCatCount) {
+          minCatCount = count;
+          bestIdx = i;
+        }
+      }
+      const chosen = bucket.splice(bestIdx, 1)[0];
+      if (!usedIds.has(chosen.id)) {
+        usedIds.add(chosen.id);
+        picked.push(chosen);
+        categoryUsage.set(chosen.categoryId, (categoryUsage.get(chosen.categoryId) ?? 0) + 1);
+        addedInRound = true;
+        if (picked.length >= limit) break;
+      }
+    }
+    if (!addedInRound) break;
+  }
+  return picked;
+};
 
 interface HomeViewProps {
   lang: LanguageCode;
@@ -57,6 +118,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
 }) => {
   const isAr = lang === 'ar';
   const heroScrollRef = useRef<HTMLDivElement | null>(null);
+  const newBestScrollRef = useRef<HTMLDivElement | null>(null);
+  const [newDealStoreTab, setNewDealStoreTab] = useState<string>('all');
+  const [newDealSortMode, setNewDealSortMode] = useState<'cheapest' | 'discount'>('discount');
   const countdown = useFlashCountdown();
 
   const rawQuery = searchQuery.trim();
@@ -64,19 +128,77 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
   const newestFirstCatalog = useMemo(() => [...CATALOG_PRODUCTS].reverse(), []);
 
-  // Always prioritize the latest batch of newly added deals for the Hero Showcase
+  // Multi-branch & multi-category Hero Showcase: blends top-discounted & ultra-low-price new arrivals across ALL branches
   const flashDeals = useMemo(() => {
-    const latestWindow = newestFirstCatalog.slice(0, 125);
-    const discountedLatest = latestWindow
-      .filter((p) => p.discountPercent >= 10 || p.isFlashDeal)
-      .sort((a, b) => b.discountPercent - a.discountPercent);
-    if (discountedLatest.length >= 14) {
-      return discountedLatest.slice(0, 16);
-    }
-    const seen = new Set(discountedLatest.map((p) => p.id));
-    const fill = latestWindow.filter((p) => !seen.has(p.id));
-    return [...discountedLatest, ...fill].slice(0, 16);
+    const scoredPool = newestFirstCatalog
+      .map((p, idx) => {
+        const recencyBoost = idx < 180 ? (180 - idx) * 0.25 : 0;
+        const usd = approxUsdPrice(p);
+        const lowPriceBoost = usd > 0 && usd <= 25 ? (26 - usd) * 1.1 : 0;
+        const discountScore = p.discountPercent * 2.2 + (p.isFlashDeal ? 18 : 0);
+        return { p, score: discountScore + lowPriceBoost + recencyBoost };
+      })
+      .sort((a, b) => b.score - a.score)
+      .map((entry) => entry.p);
+
+    return diversifyAcrossBranchesAndCategories(scoredPool, 18);
   }, [newestFirstCatalog]);
+
+  // Active store branches for the Best & Cheapest New Products switcher
+  const activeBranchTabs = useMemo(() => {
+    const countByStore = new Map<string, number>();
+    for (const p of CATALOG_PRODUCTS) {
+      countByStore.set(p.storeId, (countByStore.get(p.storeId) ?? 0) + 1);
+    }
+    const tabs: Array<{ id: string; labelEn: string; labelAr: string; flag: string; count: number }> = [];
+    for (const group of STORE_GROUPS) {
+      for (const b of group.branches) {
+        const c = countByStore.get(b.id) ?? 0;
+        if (c > 0) {
+          tabs.push({
+            id: b.id,
+            labelEn: b.nameEn.split(' (')[0],
+            labelAr: b.nameAr.split(' (')[0],
+            flag: b.flag,
+            count: c,
+          });
+        }
+      }
+    }
+    return tabs;
+  }, []);
+
+  // Curated Best & Cheapest New Products across ALL store branches & categories
+  const bestAndCheapestNewDeals = useMemo(() => {
+    const pool =
+      newDealStoreTab === 'all'
+        ? newestFirstCatalog
+        : newestFirstCatalog.filter((p) => p.storeId === newDealStoreTab);
+
+    if (newDealSortMode === 'cheapest') {
+      // Balance recency + low USD-equivalent price, then diversify across branches & categories when "All" selected
+      const cheapestScored = pool
+        .map((p, idx) => {
+          const usd = approxUsdPrice(p);
+          const recencyPenalty = idx * 0.08;
+          const discountBonus = p.discountPercent * 0.35;
+          return { p, costRank: usd - discountBonus + recencyPenalty };
+        })
+        .sort((a, b) => a.costRank - b.costRank)
+        .map((x) => x.p);
+      return newDealStoreTab === 'all'
+        ? diversifyAcrossBranchesAndCategories(cheapestScored, 24)
+        : cheapestScored.slice(0, 24);
+    }
+
+    const bestDiscounted = [...pool].sort((a, b) => {
+      if (b.discountPercent !== a.discountPercent) return b.discountPercent - a.discountPercent;
+      return approxUsdPrice(a) - approxUsdPrice(b);
+    });
+    return newDealStoreTab === 'all'
+      ? diversifyAcrossBranchesAndCategories(bestDiscounted, 24)
+      : bestDiscounted.slice(0, 24);
+  }, [newestFirstCatalog, newDealStoreTab, newDealSortMode]);
 
   // Search + Category + Store Filter results (newest added products first by default)
   const filteredResults = useMemo(() => {
@@ -138,6 +260,14 @@ export const HomeView: React.FC<HomeViewProps> = ({
   const scrollHero = (dir: 'left' | 'right') => {
     if (!heroScrollRef.current) return;
     heroScrollRef.current.scrollBy({
+      left: dir === 'left' ? -360 : 360,
+      behavior: 'smooth',
+    });
+  };
+
+  const scrollNewBest = (dir: 'left' | 'right') => {
+    if (!newBestScrollRef.current) return;
+    newBestScrollRef.current.scrollBy({
       left: dir === 'left' ? -360 : 360,
       behavior: 'smooth',
     });
@@ -340,10 +470,129 @@ export const HomeView: React.FC<HomeViewProps> = ({
             )}
           </section>
         ) : (
-          /* Full Amazon-Style Category Shelf Rows (Newest Products First) */
+          /* Best & Cheapest New Products Across All Branches & Categories + Category Shelf Rows */
           <section id="hot-deals" className="space-y-5">
+            {/* Highlighted Multi-Branch Best & Cheapest New Arrivals */}
+            <div className="bg-white border-2 border-[#00453E]/20 rounded-xl p-4 sm:p-5 shadow-xs">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 mb-3.5">
+                <div>
+                  <div className="inline-flex items-center gap-1.5 bg-emerald-50 text-[#00453E] border border-emerald-200 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold">
+                    <Sparkles className="w-3.5 h-3.5 text-[#FF5E00]" />
+                    <span>
+                      {isAr
+                        ? 'محدّث يومياً · كل الفروع والأقسام'
+                        : 'Updated Daily · All Branches & Departments'}
+                    </span>
+                  </div>
+                  <h2 className="mt-1 font-display text-lg sm:text-xl font-extrabold text-zinc-950">
+                    {isAr
+                      ? 'أفضل وأرخص المنتجات الجديدة من كل الفروع والأقسام'
+                      : 'Best & Cheapest New Arrivals Across All Stores & Categories'}
+                  </h2>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <div className="inline-flex items-center rounded-full bg-zinc-100 p-0.5 border border-zinc-200">
+                    <button
+                      type="button"
+                      onClick={() => setNewDealSortMode('discount')}
+                      className={`px-3 py-1 rounded-full text-xs font-extrabold cursor-pointer transition-colors ${
+                        newDealSortMode === 'discount'
+                          ? 'bg-[#00453E] text-white'
+                          : 'text-zinc-700 hover:text-zinc-950'
+                      }`}
+                    >
+                      {isAr ? 'أقوى الخصومات' : 'Top Discounts'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setNewDealSortMode('cheapest')}
+                      className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-extrabold cursor-pointer transition-colors ${
+                        newDealSortMode === 'cheapest'
+                          ? 'bg-[#00453E] text-white'
+                          : 'text-zinc-700 hover:text-zinc-950'
+                      }`}
+                    >
+                      <ArrowDownWideNarrow className="w-3.5 h-3.5" />
+                      {isAr ? 'الأرخص سعراً' : 'Cheapest First'}
+                    </button>
+                  </div>
+
+                  <div className="hidden sm:flex items-center gap-1">
+                    <button
+                      type="button"
+                      onClick={() => scrollNewBest('left')}
+                      aria-label="Scroll best new deals left"
+                      className="w-7 h-7 rounded-full border border-zinc-300 bg-white hover:bg-zinc-100 flex items-center justify-center cursor-pointer"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => scrollNewBest('right')}
+                      aria-label="Scroll best new deals right"
+                      className="w-7 h-7 rounded-full border border-zinc-300 bg-white hover:bg-zinc-100 flex items-center justify-center cursor-pointer"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Branch Filter Strip */}
+              <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-3 mb-3 border-b border-zinc-100">
+                <button
+                  type="button"
+                  onClick={() => setNewDealStoreTab('all')}
+                  className={`px-3 py-1 rounded-full text-xs font-bold border whitespace-nowrap shrink-0 cursor-pointer transition-colors ${
+                    newDealStoreTab === 'all'
+                      ? 'bg-zinc-950 text-[#FFD814] border-zinc-950'
+                      : 'bg-zinc-50 text-zinc-700 border-zinc-300 hover:bg-zinc-100'
+                  }`}
+                >
+                  {isAr ? `كل الفروع (${CATALOG_PRODUCTS.length})` : `All Branches (${CATALOG_PRODUCTS.length})`}
+                </button>
+                {activeBranchTabs.map((b) => (
+                  <button
+                    key={b.id}
+                    type="button"
+                    onClick={() => setNewDealStoreTab(b.id)}
+                    className={`px-3 py-1 rounded-full text-xs font-bold border whitespace-nowrap shrink-0 cursor-pointer transition-colors ${
+                      newDealStoreTab === b.id
+                        ? 'bg-[#00453E] text-white border-[#00453E]'
+                        : 'bg-white text-zinc-700 border-zinc-300 hover:bg-zinc-50'
+                    }`}
+                  >
+                    {b.flag} {isAr ? b.labelAr : b.labelEn} ({b.count})
+                  </button>
+                ))}
+              </div>
+
+              <div
+                ref={newBestScrollRef}
+                className="flex gap-3.5 overflow-x-auto pb-1 scroll-smooth no-scrollbar"
+              >
+                {bestAndCheapestNewDeals.map((product) => (
+                  <HomeProductCard
+                    key={`best-${product.id}`}
+                    product={product}
+                    isAr={isAr}
+                    buyNowLabel={t.buyNow}
+                    onOpenProduct={onOpenProduct}
+                    compactWidth="w-[228px] sm:w-[248px] shrink-0"
+                  />
+                ))}
+              </div>
+            </div>
+
             {shelfCategories.map((cat) => {
-              const items = newestFirstCatalog.filter((p) => p.categoryId === cat.id);
+              const catPool = newestFirstCatalog.filter((p) => p.categoryId === cat.id);
+              const prioritized = [...catPool].sort((a, b) => {
+                const aScore = a.discountPercent * 2 + (approxUsdPrice(a) <= 25 ? 20 : 0);
+                const bScore = b.discountPercent * 2 + (approxUsdPrice(b) <= 25 ? 20 : 0);
+                return bScore - aScore;
+              });
+              const items = diversifyAcrossBranchesAndCategories(prioritized, catPool.length);
               const heading = isAr ? cat.homeRowTitleAr : cat.homeRowTitleEn;
               return (
                 <CategoryShelfRow
