@@ -33,6 +33,7 @@ const approxUsdPrice = (p: CatalogProduct): number => {
     return p.numericPrice / 3.67;
   }
   if (p.storeId === 'amazon-jp') return p.numericPrice / 150;
+  if (p.storeId === 'amazon-pl') return p.numericPrice / 4.0;
   if (p.storeId === 'lenovo-india') return p.numericPrice / 84;
   return p.numericPrice;
 };

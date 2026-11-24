@@ -67,6 +67,14 @@ export const StoreLogo: React.FC<StoreLogoProps> = ({ storeId, name, size = 'md'
             </span>
           </div>
         );
+      case 'amazon-pl':
+        return (
+          <div className={`${dimensions} rounded-xl bg-[#131921] text-white flex flex-col items-center justify-center shrink-0 border border-[#FF9900]/60`}>
+            <span className="font-display font-black leading-none text-[11px] tracking-tight text-white">
+              a<span className="text-[#FF9900]">.pl</span>
+            </span>
+          </div>
+        );
       case 'aliexpress':
         return (
           <div className={`${dimensions} rounded-xl bg-[#E62E04] text-white flex items-center justify-center shrink-0 font-display font-bold tracking-tight`}>

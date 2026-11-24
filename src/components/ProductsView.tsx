@@ -268,6 +268,13 @@ export const ProductsView: React.FC<ProductsViewProps> = ({
                 </button>
                 <button
                   type="button"
+                  onClick={() => onSelectStore('amazon-pl')}
+                  className="px-3 py-1 text-xs font-bold bg-[#131921] hover:bg-zinc-800 text-[#FF9900] border border-[#FF9900]/50 rounded-full cursor-pointer whitespace-nowrap"
+                >
+                  Amazon Poland
+                </button>
+                <button
+                  type="button"
                   onClick={() => onSelectStore('aliexpress')}
                   className="px-3 py-1 text-xs font-bold bg-zinc-100 hover:bg-zinc-200 text-zinc-900 border border-zinc-300 rounded-full cursor-pointer whitespace-nowrap"
                 >

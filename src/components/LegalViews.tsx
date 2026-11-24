@@ -73,7 +73,7 @@ export const LegalView: React.FC<LegalViewProps> = ({
               How Dodx Curates Verified Coupons &amp; Deals
             </h2>
             <p>
-              Dodx connects shoppers directly with verified offers, clip coupons, bank card promo codes, and seasonal price drops across Amazon US, Amazon UAE, Amazon Egypt, Amazon Japan, AliExpress WW, Alibaba WW, HONOR UAE, Huawei AE, Canon UAE, Lenovo India, Parallels WW, AdGuard, and Admitad Shop.
+              Dodx connects shoppers directly with verified offers, clip coupons, bank card promo codes, and seasonal price drops across Amazon US, Amazon UAE, Amazon Egypt, Amazon Japan, Amazon Poland, AliExpress WW, Alibaba WW, HONOR UAE, Huawei AE, Canon UAE, Lenovo India, Parallels WW, AdGuard, and Admitad Shop.
             </p>
 
             <h2 className="font-display text-lg font-semibold text-zinc-950 pt-2">

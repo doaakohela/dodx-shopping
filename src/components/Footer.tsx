@@ -108,7 +108,7 @@ export const Footer: React.FC<FooterProps> = ({
           <div>
             <h3 className="font-display font-bold text-white text-sm">{t.partnerNetworks}</h3>
             <ul className="mt-3 space-y-2 text-xs text-zinc-300">
-              <li>Amazon (US · EG · UAE · JP)</li>
+              <li>Amazon (US · EG · UAE · JP · PL)</li>
               <li>AliExpress · Alibaba</li>
               <li>eBay · Noon ({currentLang === 'ar' ? 'قريباً' : 'Soon'})</li>
               <li>HONOR · Huawei · Lenovo · Canon</li>

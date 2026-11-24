@@ -152,6 +152,23 @@ const OFFLINE_DIRECTORY_FALLBACK = {
       offers: []
     },
     {
+      id: 'amazon-pl',
+      groupId: 'amazon',
+      groupName: 'Amazon',
+      groupNameAr: 'أمازون',
+      name: 'Amazon Poland (zł)',
+      nameAr: 'أمازون بولندا (زلوطي)',
+      flag: '🇵🇱',
+      currencySymbol: 'zł',
+      currencyCode: 'PLN',
+      domain: 'amazon.pl',
+      matchDomains: ['amazon.pl', 'www.amazon.pl'],
+      badgeColor: '#FF9900',
+      dodxPageUrl: 'https://www.dodx.shop/deals?store=amazon-pl',
+      affiliateUrl: 'https://link.amazon/B0itJTCyS',
+      offers: []
+    },
+    {
       id: 'ebay',
       groupId: 'ebay',
       groupName: 'eBay',
