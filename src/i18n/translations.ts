@@ -314,7 +314,7 @@ const EN: TranslationDict = {
   allPricesLabel: 'All Prices',
   bfBannerBadge: 'BLACK FRIDAY SPOTLIGHT',
   bfBannerTitle: "Today's Big Deals — Amazon US Black Friday",
-  bfBannerSub: 'Curated Black Friday markdowns matched to our live spotlight showcase — direct product links & instant savings.',
+  bfBannerSub: 'Amazon US top-selling discounts on smartphones, laptops, TVs, audio, smart home, kitchen appliances & watches — direct links & instant savings.',
   bfBannerCta: 'Shop Amazon US Deals',
   bfGifCaption: "Today's Big Deals · Amazon US",
 };
@@ -465,7 +465,7 @@ const AR: TranslationDict = {
   allPricesLabel: 'كل الأسعار',
   bfBannerBadge: 'عروض الجمعة السوداء الحصرية',
   bfBannerTitle: 'أقوى عروض اليوم — الجمعة السوداء على أمازون أمريكا',
-  bfBannerSub: 'باقة مختارة من أقوى خصومات الجمعة السوداء متناسقة مع العرض الترويجي المباشر — روابط شراء مباشرة وأقل الأسعار.',
+  bfBannerSub: 'أقوى خصومات أمازون أمريكا على أهم المنتجات الأكثر طلباً: الهواتف، اللابتوب، الشاشات، الصوتيات، أجهزة المنزل والمطبخ والساعات.',
   bfBannerCta: 'تسوق عروض أمازون أمريكا',
   bfGifCaption: 'عروض اليوم الكبرى · أمازون أمريكا',
 };

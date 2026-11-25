@@ -88,6 +88,140 @@ const diversifyAcrossBranchesAndCategories = (
   return picked;
 };
 
+const HIGH_DEMAND_TIER1_BRANDS = new Set([
+  'apple',
+  'samsung',
+  'google',
+  'amazon',
+  'beats',
+  'roborock',
+  'tineco',
+  'ninja',
+  'breville',
+  'anker',
+  'hp',
+  'asus',
+  'acer',
+  'lenovo',
+  'canon',
+  'hisense',
+  'roku',
+  'roku tv',
+  'insignia',
+  'motorola',
+  'nothing',
+  'tp-link tapo',
+  'bulova',
+  'stanley',
+  'ugg',
+  'belkin',
+  'oxo',
+  'joseph joseph',
+  "l'oreal paris",
+]);
+
+const HIGH_DEMAND_TIER2_BRANDS = new Set([
+  'bella',
+  'chefman',
+  'fullstar',
+  'songmics',
+  'flexispot',
+  'popsockets',
+  'anne klein',
+  'cocokind',
+  'casabrews',
+  'magcubic',
+  'tagry',
+  'sapphero',
+  'cozy bliss',
+  'bedsure',
+  'steamclean',
+  'airpure',
+  'portable display',
+]);
+
+const EXCLUDED_HERO_KEYWORDS =
+  /\b(shirt|t-shirt|jeans|boots|booties|jacket|coat|chino|trouser|sweater|hoodie|fleece|legging|slippers|safety glasses|l\.o\.l\. surprise)\b/i;
+
+/**
+ * Pick top-discounted, high-demand Amazon US products (excluding clothing/apparel)
+ * round-robin across distinct categories & brands so the top "Biggest Discounts" hero
+ * showcases popular best-sellers with massive savings and rich product variety.
+ */
+const selectDiverseTopUsDiscounts = (
+  newestFirstPool: CatalogProduct[],
+  limit: number
+): CatalogProduct[] => {
+  const byCategory = new Map<CatalogCategoryId, Array<{ p: CatalogProduct; score: number }>>();
+
+  newestFirstPool.forEach((p, idx) => {
+    if (p.storeId !== 'amazon' || p.discountPercent <= 0) return;
+    if (p.categoryId === 'men-fashion' || p.categoryId === 'women-fashion') return;
+    if (EXCLUDED_HERO_KEYWORDS.test(p.titleEn)) return;
+
+    const brandKey = p.brand.trim().toLowerCase();
+    const isTier1 = HIGH_DEMAND_TIER1_BRANDS.has(brandKey);
+    const isTier2 = HIGH_DEMAND_TIER2_BRANDS.has(brandKey);
+    // Skip very cheap obscure items (< $8) or low-discount unknown brands
+    if (p.numericPrice < 8 && !isTier1) return;
+    if (!isTier1 && !isTier2 && p.discountPercent < 35) return;
+
+    const demandBoost = isTier1 ? 105 : isTier2 ? 45 : 0;
+    const exactPriceBonus = p.price.startsWith('~') ? 0 : 8;
+    const recencyTieBreaker = Math.max(0, 120 - idx) * 0.05;
+    const score = p.discountPercent * 1.9 + demandBoost + exactPriceBonus + recencyTieBreaker;
+
+    const bucket = byCategory.get(p.categoryId) ?? [];
+    bucket.push({ p, score });
+    byCategory.set(p.categoryId, bucket);
+  });
+
+  for (const [, bucket] of byCategory.entries()) {
+    bucket.sort((a, b) => b.score - a.score);
+  }
+
+  // Order category queues so flagship categories & strongest combined scores lead immediately
+  const categoryQueues = Array.from(byCategory.entries())
+    .sort(([, a], [, b]) => (b[0]?.score ?? 0) - (a[0]?.score ?? 0))
+    .map(([, bucket]) => bucket.map((entry) => entry.p));
+
+  const picked: CatalogProduct[] = [];
+  const usedIds = new Set<string>();
+  const globalBrandCounts = new Map<string, number>();
+
+  while (picked.length < limit) {
+    let addedInRound = false;
+    for (const bucket of categoryQueues) {
+      if (bucket.length === 0) continue;
+
+      // Prefer a brand not yet seen in the strip (or used at most once across the strip)
+      let pickIdx = bucket.findIndex(
+        (item) => !usedIds.has(item.id) && (globalBrandCounts.get(item.brand.trim().toLowerCase()) ?? 0) === 0
+      );
+      if (pickIdx === -1) {
+        pickIdx = bucket.findIndex(
+          (item) => !usedIds.has(item.id) && (globalBrandCounts.get(item.brand.trim().toLowerCase()) ?? 0) < 2
+        );
+      }
+      if (pickIdx === -1) {
+        pickIdx = bucket.findIndex((item) => !usedIds.has(item.id));
+      }
+      if (pickIdx === -1) continue;
+
+      const [chosen] = bucket.splice(pickIdx, 1);
+      usedIds.add(chosen.id);
+      const bKey = chosen.brand.trim().toLowerCase();
+      globalBrandCounts.set(bKey, (globalBrandCounts.get(bKey) ?? 0) + 1);
+      picked.push(chosen);
+      addedInRound = true;
+      if (picked.length >= limit) break;
+    }
+    if (!addedInRound) break;
+  }
+
+  return picked;
+};
+
 interface HomeViewProps {
   lang: LanguageCode;
   searchQuery: string;
@@ -129,21 +263,11 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
   const newestFirstCatalog = useMemo(() => [...CATALOG_PRODUCTS].reverse(), []);
 
-  // Multi-branch & multi-category Hero Showcase: blends top-discounted & ultra-low-price new arrivals across ALL branches
-  const flashDeals = useMemo(() => {
-    const scoredPool = newestFirstCatalog
-      .map((p, idx) => {
-        const recencyBoost = idx < 180 ? (180 - idx) * 0.25 : 0;
-        const usd = approxUsdPrice(p);
-        const lowPriceBoost = usd > 0 && usd <= 25 ? (26 - usd) * 1.1 : 0;
-        const discountScore = p.discountPercent * 2.2 + (p.isFlashDeal ? 18 : 0);
-        return { p, score: discountScore + lowPriceBoost + recencyBoost };
-      })
-      .sort((a, b) => b.score - a.score)
-      .map((entry) => entry.p);
-
-    return diversifyAcrossBranchesAndCategories(scoredPool, 18);
-  }, [newestFirstCatalog]);
+  // Top Hero Showcase: Amazon US biggest verified discounts diversified across all product categories
+  const flashDeals = useMemo(
+    () => selectDiverseTopUsDiscounts(newestFirstCatalog, 22),
+    [newestFirstCatalog]
+  );
 
   // Active store branches for the Best & Cheapest New Products switcher
   const activeBranchTabs = useMemo(() => {
