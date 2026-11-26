@@ -11,10 +11,12 @@ import {
   Search,
   Sparkles,
   Tag,
+  Zap,
 } from 'lucide-react';
-import vehiclesSedanImg from '../assets/images/vehicles_hero_sedan_1795721137766.jpg';
-import vehiclesSuvImg from '../assets/images/vehicles_hero_suv_1795721138700.jpg';
-import vehiclesCoupeImg from '../assets/images/vehicles_hero_coupe_1795721139254.jpg';
+import generalEvSedanImg from '../assets/images/side_new_ev_sedan_1795724505623.jpg';
+import generalEvCrossoverImg from '../assets/images/side_new_ev_crossover_1795724506500.jpg';
+import generalHybridSuvImg from '../assets/images/side_new_hybrid_suv_1795724507453.jpg';
+import generalEvCoupeImg from '../assets/images/side_new_ev_coupe_1795724507612.jpg';
 import {
   CATALOG_CATEGORIES,
   CatalogCategoryId,
@@ -267,27 +269,35 @@ export const HomeView: React.FC<HomeViewProps> = ({
   const vehicleSlides = useMemo(
     () => [
       {
-        image: vehiclesSedanImg,
+        image: generalEvSedanImg,
         ...(t.vehiclesShowcase[0] ?? {
           label: 'Electric Sedan',
-          title: '2026 Flagship Electric Luxury Sedan',
-          spec: 'Dual-Motor AWD · Glass Panoramic Canopy',
+          title: 'Modern All-Electric Sedan',
+          spec: '100% Electric · Long-Range Battery · Fast Charging',
         }),
       },
       {
-        image: vehiclesSuvImg,
+        image: generalEvCrossoverImg,
         ...(t.vehiclesShowcase[1] ?? {
-          label: 'Performance SUV',
-          title: '2026 Obsidian Luxury Flagship SUV',
-          spec: 'All-Terrain Air Suspension · Alloy Wheels',
+          label: 'Electric Crossover',
+          title: 'All-Electric Crossover SUV',
+          spec: 'All-Electric SUV · 800V Ultra-Fast Charging · Smart Safety',
         }),
       },
       {
-        image: vehiclesCoupeImg,
+        image: generalHybridSuvImg,
         ...(t.vehiclesShowcase[2] ?? {
-          label: 'Grand Tourer',
-          title: '2026 Pearl Grand Tourer Coupe',
-          spec: 'Aerodynamic Sculpted Chassis · Sport Dynamics',
+          label: 'Hybrid Family SUV',
+          title: 'Modern Hybrid & Family SUV',
+          spec: 'Plug-In Hybrid / AWD · Spacious 3-Row Interior · Panoramic Roof',
+        }),
+      },
+      {
+        image: generalEvCoupeImg,
+        ...(t.vehiclesShowcase[3] ?? {
+          label: 'Electric Sport Coupé',
+          title: 'Executive Electric Gran Coupé',
+          spec: '100% Electric · Dual-Motor AWD · Executive Comfort',
         }),
       },
     ],
@@ -446,14 +456,15 @@ export const HomeView: React.FC<HomeViewProps> = ({
         {/* First Section: Upcoming Latest Vehicles Showroom Banner */}
         <section
           aria-labelledby="vehicles-upcoming-heading"
-          className="rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950 text-white shadow-sm"
+          className="rounded-xl overflow-hidden border border-[#24344D] bg-gradient-to-br from-[#0B1220] via-[#111B2E] to-[#18263E] text-white shadow-sm"
         >
           <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch">
-            {/* Editorial Copy & Vehicle Type Selector */}
-            <div className="lg:col-span-5 p-5 sm:p-7 flex flex-col justify-between gap-6 border-b lg:border-b-0 lg:border-e border-zinc-800/80">
+            {/* Editorial Copy & Electric Vehicle Selector */}
+            <div className="lg:col-span-5 p-5 sm:p-7 flex flex-col justify-between gap-6 border-b lg:border-b-0 lg:border-e border-white/10">
               <div>
-                <p className="text-xs font-semibold tracking-wide text-amber-400">
-                  {t.vehiclesBannerKicker}
+                <p className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide text-[#FDE68A]">
+                  <Zap className="w-3.5 h-3.5 text-[#FFD814] shrink-0" />
+                  <span>{t.vehiclesBannerKicker}</span>
                 </p>
                 <h1
                   id="vehicles-upcoming-heading"
@@ -462,11 +473,11 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 >
                   {t.vehiclesBannerTitle}
                 </h1>
-                <p className="mt-3 text-sm text-zinc-300 leading-relaxed max-w-xl">
+                <p className="mt-3 text-sm text-slate-200 leading-relaxed max-w-xl">
                   {t.vehiclesBannerSub}
                 </p>
 
-                {/* Interactive Vehicle Type Switcher */}
+                {/* Interactive Electric Vehicle Type Switcher */}
                 <div
                   role="tablist"
                   aria-label={t.vehiclesBannerTitle}
@@ -483,8 +494,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
                         onClick={() => setActiveVehicleIdx(idx)}
                         className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap shrink-0 cursor-pointer transition-colors border ${
                           isActive
-                            ? 'bg-white text-zinc-950 border-white'
-                            : 'bg-zinc-900 text-zinc-300 border-zinc-800 hover:bg-zinc-800 hover:text-white'
+                            ? 'bg-[#FFD814] text-zinc-950 border-[#FFD814]'
+                            : 'bg-white/10 text-slate-200 border-white/15 hover:bg-white/20 hover:text-white'
                         }`}
                       >
                         {vehicle.label}
@@ -494,7 +505,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 </div>
               </div>
 
-              <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-zinc-800/80">
+              <div className="pt-3 flex flex-wrap items-center justify-between gap-3 border-t border-white/15">
                 <button
                   type="button"
                   onClick={() => onSelectCategory('cars')}
@@ -509,7 +520,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     type="button"
                     onClick={() => handleStepVehicle(-1)}
                     aria-label="Previous vehicle"
-                    className="w-9 h-9 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-200 flex items-center justify-center cursor-pointer transition-colors"
+                    className="w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 text-white flex items-center justify-center cursor-pointer transition-colors"
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </button>
@@ -517,7 +528,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     type="button"
                     onClick={() => handleStepVehicle(1)}
                     aria-label="Next vehicle"
-                    className="w-9 h-9 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-200 flex items-center justify-center cursor-pointer transition-colors"
+                    className="w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 text-white flex items-center justify-center cursor-pointer transition-colors"
                   >
                     <ChevronRight className="w-4 h-4" />
                   </button>
@@ -525,9 +536,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
               </div>
             </div>
 
-            {/* Real Vehicle Photography Showcase + 3-Car Gallery Strip */}
-            <div className="lg:col-span-7 p-4 sm:p-5 flex flex-col justify-between gap-3 bg-zinc-900/50">
-              <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden bg-zinc-900 border border-zinc-800">
+            {/* Scenic Commercial Vehicle Photography Showcase + 4-Car Gallery Strip */}
+            <div className="lg:col-span-7 p-4 sm:p-5 flex flex-col justify-between gap-3 bg-[#090E18]/65">
+              <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden bg-[#0D1524] border border-white/15">
                 {!failedVehicleImgs[activeVehicleIdx] ? (
                   <img
                     src={activeVehicle.image}
@@ -540,23 +551,23 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     className="w-full h-full object-cover transition-transform duration-500"
                   />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-950 flex flex-col items-center justify-center p-6 text-center">
-                    <Car className="w-12 h-12 text-amber-400 mb-2" />
+                  <div className="w-full h-full bg-gradient-to-br from-[#0B1220] via-[#111B2E] to-[#18263E] flex flex-col items-center justify-center p-6 text-center">
+                    <Car className="w-12 h-12 text-[#FFD814] mb-2" />
                     <p className="font-display text-base font-bold text-white">{activeVehicle.title}</p>
                   </div>
                 )}
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/45 to-transparent p-4 sm:p-5">
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/35 to-transparent p-4 sm:p-5">
                   <p className="font-display text-base sm:text-xl font-extrabold text-white tracking-tight">
                     {activeVehicle.title}
                   </p>
-                  <p className="mt-1 text-xs sm:text-sm text-zinc-200">
+                  <p className="mt-1 text-xs sm:text-sm text-slate-200">
                     {activeVehicle.spec}
                   </p>
                 </div>
               </div>
 
-              {/* 3 Real Vehicles Strip */}
-              <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
+              {/* 4 Scenic Vehicles Gallery Strip */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
                 {vehicleSlides.map((vehicle, idx) => {
                   const isActive = idx === activeVehicleIdx;
                   return (
@@ -566,11 +577,11 @@ export const HomeView: React.FC<HomeViewProps> = ({
                       onClick={() => setActiveVehicleIdx(idx)}
                       className={`group relative rounded-lg overflow-hidden border text-start cursor-pointer transition-all ${
                         isActive
-                          ? 'border-[#FFD814] ring-1 ring-[#FFD814]/60'
-                          : 'border-zinc-800 opacity-80 hover:opacity-100 hover:border-zinc-600'
+                          ? 'border-[#FFD814] ring-1 ring-[#FFD814]/70'
+                          : 'border-white/15 opacity-85 hover:opacity-100 hover:border-white/45'
                       }`}
                     >
-                      <div className="aspect-[16/9] w-full bg-zinc-900 overflow-hidden">
+                      <div className="aspect-[16/9] w-full bg-[#0D1524] overflow-hidden">
                         {!failedVehicleImgs[idx] ? (
                           <img
                             src={vehicle.image}
@@ -583,13 +594,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-zinc-900">
-                            <Car className="w-5 h-5 text-amber-400" />
+                          <div className="w-full h-full flex items-center justify-center bg-[#0D1524]">
+                            <Car className="w-5 h-5 text-[#FFD814]" />
                           </div>
                         )}
                       </div>
-                      <div className="bg-zinc-950/95 px-2.5 py-1.5 border-t border-zinc-800">
-                        <p className="text-[11px] sm:text-xs font-bold text-zinc-100 truncate">
+                      <div className="bg-[#0B1220]/95 px-2.5 py-1.5 border-t border-white/10">
+                        <p className="text-[11px] font-bold text-white truncate">
                           {vehicle.label}
                         </p>
                       </div>
