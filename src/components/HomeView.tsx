@@ -1,6 +1,7 @@
 import React, { useMemo, useRef, useState } from 'react';
 import {
   ArrowDownWideNarrow,
+  Car,
   ChevronLeft,
   ChevronRight,
   Chrome,
@@ -11,6 +12,9 @@ import {
   Sparkles,
   Tag,
 } from 'lucide-react';
+import vehiclesSedanImg from '../assets/images/vehicles_hero_sedan_1795721137766.jpg';
+import vehiclesSuvImg from '../assets/images/vehicles_hero_suv_1795721138700.jpg';
+import vehiclesCoupeImg from '../assets/images/vehicles_hero_coupe_1795721139254.jpg';
 import {
   CATALOG_CATEGORIES,
   CatalogCategoryId,
@@ -256,7 +260,45 @@ export const HomeView: React.FC<HomeViewProps> = ({
   const newBestScrollRef = useRef<HTMLDivElement | null>(null);
   const [newDealStoreTab, setNewDealStoreTab] = useState<string>('all');
   const [newDealSortMode, setNewDealSortMode] = useState<'cheapest' | 'discount'>('discount');
+  const [activeVehicleIdx, setActiveVehicleIdx] = useState<number>(0);
+  const [failedVehicleImgs, setFailedVehicleImgs] = useState<Record<number, boolean>>({});
   const countdown = useFlashCountdown();
+
+  const vehicleSlides = useMemo(
+    () => [
+      {
+        image: vehiclesSedanImg,
+        ...(t.vehiclesShowcase[0] ?? {
+          label: 'Electric Sedan',
+          title: '2026 Flagship Electric Luxury Sedan',
+          spec: 'Dual-Motor AWD · Glass Panoramic Canopy',
+        }),
+      },
+      {
+        image: vehiclesSuvImg,
+        ...(t.vehiclesShowcase[1] ?? {
+          label: 'Performance SUV',
+          title: '2026 Obsidian Luxury Flagship SUV',
+          spec: 'All-Terrain Air Suspension · Alloy Wheels',
+        }),
+      },
+      {
+        image: vehiclesCoupeImg,
+        ...(t.vehiclesShowcase[2] ?? {
+          label: 'Grand Tourer',
+          title: '2026 Pearl Grand Tourer Coupe',
+          spec: 'Aerodynamic Sculpted Chassis · Sport Dynamics',
+        }),
+      },
+    ],
+    [t.vehiclesShowcase]
+  );
+
+  const activeVehicle = vehicleSlides[activeVehicleIdx] ?? vehicleSlides[0];
+
+  const handleStepVehicle = (delta: number) => {
+    setActiveVehicleIdx((prev) => (prev + delta + vehicleSlides.length) % vehicleSlides.length);
+  };
 
   const rawQuery = searchQuery.trim();
   const isFilteredView = rawQuery.length > 0 || activeCategory !== 'all' || searchStoreFilter !== 'all';
@@ -401,7 +443,165 @@ export const HomeView: React.FC<HomeViewProps> = ({
   return (
     <div className="bg-[#EAEDED] min-h-screen pb-10">
       <div className="max-w-[1440px] mx-auto px-3 sm:px-5 pt-4 space-y-6">
-        {/* Top Hero: Black Friday Animated GIF + Daily Updated Flash Deals Harmonized in GIF Orange */}
+        {/* First Section: Upcoming Latest Vehicles Showroom Banner */}
+        <section
+          aria-labelledby="vehicles-upcoming-heading"
+          className="rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950 text-white shadow-sm"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch">
+            {/* Editorial Copy & Vehicle Type Selector */}
+            <div className="lg:col-span-5 p-5 sm:p-7 flex flex-col justify-between gap-6 border-b lg:border-b-0 lg:border-e border-zinc-800/80">
+              <div>
+                <p className="text-xs font-semibold tracking-wide text-amber-400">
+                  {t.vehiclesBannerKicker}
+                </p>
+                <h1
+                  id="vehicles-upcoming-heading"
+                  className="mt-2 font-display font-extrabold tracking-tight text-white leading-[1.15]"
+                  style={{ fontSize: 'clamp(1.75rem, 3vw, 2.6rem)', textWrap: 'balance' }}
+                >
+                  {t.vehiclesBannerTitle}
+                </h1>
+                <p className="mt-3 text-sm text-zinc-300 leading-relaxed max-w-xl">
+                  {t.vehiclesBannerSub}
+                </p>
+
+                {/* Interactive Vehicle Type Switcher */}
+                <div
+                  role="tablist"
+                  aria-label={t.vehiclesBannerTitle}
+                  className="mt-5 flex flex-wrap items-center gap-1.5"
+                >
+                  {vehicleSlides.map((vehicle, idx) => {
+                    const isActive = idx === activeVehicleIdx;
+                    return (
+                      <button
+                        key={vehicle.label}
+                        type="button"
+                        role="tab"
+                        aria-selected={isActive}
+                        onClick={() => setActiveVehicleIdx(idx)}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap shrink-0 cursor-pointer transition-colors border ${
+                          isActive
+                            ? 'bg-white text-zinc-950 border-white'
+                            : 'bg-zinc-900 text-zinc-300 border-zinc-800 hover:bg-zinc-800 hover:text-white'
+                        }`}
+                      >
+                        {vehicle.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-zinc-800/80">
+                <button
+                  type="button"
+                  onClick={() => onSelectCategory('cars')}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#FFD814] hover:bg-[#F7CA00] text-zinc-950 text-xs sm:text-sm font-extrabold rounded-lg cursor-pointer transition-colors whitespace-nowrap shrink-0"
+                >
+                  <Car className="w-4 h-4 shrink-0" />
+                  <span>{t.vehiclesBannerCta}</span>
+                </button>
+
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => handleStepVehicle(-1)}
+                    aria-label="Previous vehicle"
+                    className="w-9 h-9 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-200 flex items-center justify-center cursor-pointer transition-colors"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleStepVehicle(1)}
+                    aria-label="Next vehicle"
+                    className="w-9 h-9 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-200 flex items-center justify-center cursor-pointer transition-colors"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Real Vehicle Photography Showcase + 3-Car Gallery Strip */}
+            <div className="lg:col-span-7 p-4 sm:p-5 flex flex-col justify-between gap-3 bg-zinc-900/50">
+              <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden bg-zinc-900 border border-zinc-800">
+                {!failedVehicleImgs[activeVehicleIdx] ? (
+                  <img
+                    src={activeVehicle.image}
+                    alt={activeVehicle.title}
+                    loading="eager"
+                    referrerPolicy="no-referrer"
+                    onError={() =>
+                      setFailedVehicleImgs((prev) => ({ ...prev, [activeVehicleIdx]: true }))
+                    }
+                    className="w-full h-full object-cover transition-transform duration-500"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-950 flex flex-col items-center justify-center p-6 text-center">
+                    <Car className="w-12 h-12 text-amber-400 mb-2" />
+                    <p className="font-display text-base font-bold text-white">{activeVehicle.title}</p>
+                  </div>
+                )}
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/45 to-transparent p-4 sm:p-5">
+                  <p className="font-display text-base sm:text-xl font-extrabold text-white tracking-tight">
+                    {activeVehicle.title}
+                  </p>
+                  <p className="mt-1 text-xs sm:text-sm text-zinc-200">
+                    {activeVehicle.spec}
+                  </p>
+                </div>
+              </div>
+
+              {/* 3 Real Vehicles Strip */}
+              <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
+                {vehicleSlides.map((vehicle, idx) => {
+                  const isActive = idx === activeVehicleIdx;
+                  return (
+                    <button
+                      key={`thumb-${vehicle.label}`}
+                      type="button"
+                      onClick={() => setActiveVehicleIdx(idx)}
+                      className={`group relative rounded-lg overflow-hidden border text-start cursor-pointer transition-all ${
+                        isActive
+                          ? 'border-[#FFD814] ring-1 ring-[#FFD814]/60'
+                          : 'border-zinc-800 opacity-80 hover:opacity-100 hover:border-zinc-600'
+                      }`}
+                    >
+                      <div className="aspect-[16/9] w-full bg-zinc-900 overflow-hidden">
+                        {!failedVehicleImgs[idx] ? (
+                          <img
+                            src={vehicle.image}
+                            alt={vehicle.title}
+                            loading="eager"
+                            referrerPolicy="no-referrer"
+                            onError={() =>
+                              setFailedVehicleImgs((prev) => ({ ...prev, [idx]: true }))
+                            }
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-zinc-900">
+                            <Car className="w-5 h-5 text-amber-400" />
+                          </div>
+                        )}
+                      </div>
+                      <div className="bg-zinc-950/95 px-2.5 py-1.5 border-t border-zinc-800">
+                        <p className="text-[11px] sm:text-xs font-bold text-zinc-100 truncate">
+                          {vehicle.label}
+                        </p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Black Friday Animated GIF + Daily Updated Flash Deals Harmonized in GIF Orange */}
         <section
           aria-labelledby="flash-hero-heading"
           className="rounded-xl overflow-hidden shadow-sm border border-[#FF7E2E] bg-gradient-to-br from-[#FF5E00] via-[#FE6404] to-[#B83800] text-white"
@@ -412,12 +612,12 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <Flame className="w-3.5 h-3.5 text-[#FE6404]" />
                 <span>{t.bfBannerBadge}</span>
               </div>
-              <h1
+              <h2
                 id="flash-hero-heading"
                 className="mt-1.5 font-display text-xl sm:text-3xl font-extrabold tracking-tight text-white"
               >
                 {t.flashHeroTitle}
-              </h1>
+              </h2>
               <p className="mt-0.5 text-xs sm:text-sm text-orange-50">
                 {t.bfBannerSub}
               </p>

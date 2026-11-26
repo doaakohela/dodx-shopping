@@ -166,6 +166,11 @@ export interface TranslationDict {
   bfBannerSub: string;
   bfBannerCta: string;
   bfGifCaption: string;
+  vehiclesBannerKicker: string;
+  vehiclesBannerTitle: string;
+  vehiclesBannerSub: string;
+  vehiclesBannerCta: string;
+  vehiclesShowcase: Array<{ label: string; title: string; spec: string }>;
 }
 
 const EN: TranslationDict = {
@@ -317,6 +322,28 @@ const EN: TranslationDict = {
   bfBannerSub: 'Amazon US top-selling discounts on smartphones, laptops, TVs, audio, smart home, kitchen appliances & watches — direct links & instant savings.',
   bfBannerCta: 'Shop Amazon US Deals',
   bfGifCaption: "Today's Big Deals · Amazon US",
+  vehiclesBannerKicker: 'Dodx Automotive Showcase · Launching Soon',
+  vehiclesBannerTitle: 'Coming Soon: Latest Vehicles',
+  vehiclesBannerSub:
+    'Flagship electric luxury sedans, commanding performance SUVs, and sculpted grand tourer coupes — explore verified automotive arrivals launching soon.',
+  vehiclesBannerCta: 'Explore Cars & Automotive',
+  vehiclesShowcase: [
+    {
+      label: 'Electric Sedan',
+      title: '2026 Flagship Electric Luxury Sedan',
+      spec: 'Dual-Motor AWD · Glass Panoramic Canopy · Next-Gen Fast Charging',
+    },
+    {
+      label: 'Performance SUV',
+      title: '2026 Obsidian Luxury Flagship SUV',
+      spec: 'All-Terrain Air Suspension · Signature Alloy Wheels · Executive Cabin',
+    },
+    {
+      label: 'Grand Tourer',
+      title: '2026 Pearl Grand Tourer Coupe',
+      spec: 'Aerodynamic Sculpted Chassis · Adaptive Sport Dynamics · Handcrafted Trim',
+    },
+  ],
 };
 
 const AR: TranslationDict = {
@@ -468,6 +495,28 @@ const AR: TranslationDict = {
   bfBannerSub: 'أقوى خصومات أمازون أمريكا على أهم المنتجات الأكثر طلباً: الهواتف، اللابتوب، الشاشات، الصوتيات، أجهزة المنزل والمطبخ والساعات.',
   bfBannerCta: 'تسوق عروض أمازون أمريكا',
   bfGifCaption: 'عروض اليوم الكبرى · أمازون أمريكا',
+  vehiclesBannerKicker: 'صالة عرض Dodx للسيارات · إطلاق قريب',
+  vehiclesBannerTitle: 'قريباً أحدث المركبات',
+  vehiclesBannerSub:
+    'أفخم سيارات السيدان الكهربائية، وسيارات الدفع الرباعي الفارهة، وكوبيه الجران تورر الرياضية — عروض وموديلات حديثة تصل قريباً.',
+  vehiclesBannerCta: 'تصفح قسم السيارات الآن',
+  vehiclesShowcase: [
+    {
+      label: 'سيدان كهربائية',
+      title: 'سيدان كهربائية فاخرة إصدار 2026',
+      spec: 'دفع كلي بمحركين · سقف بانورامي زجاجي · شحن فائق السرعة',
+    },
+    {
+      label: 'دفع رباعي SUV',
+      title: 'سيارة دفع رباعي فاخرة سوداء إصدار 2026',
+      spec: 'تعليق هوائي متكيف · جنوط رياضية مصقولة · مقصورة تنفيذية رحبة',
+    },
+    {
+      label: 'كوبيه رياضية',
+      title: 'كوبيه جران تورر رياضية لؤلؤية 2026',
+      spec: 'تصميم ديناميكي انسيابي · أداء رياضي متطور · تجهيزات داخلية فاخرة',
+    },
+  ],
 };
 
 const ES: TranslationDict = {
@@ -529,6 +578,28 @@ const ES: TranslationDict = {
   bfBannerSub: 'Descuentos directos seleccionados del Black Friday con enlaces directos a cada producto.',
   bfBannerCta: 'Comprar en Amazon US',
   bfGifCaption: 'Grandes Ofertas · Amazon US',
+  vehiclesBannerKicker: 'Exhibición Automotriz Dodx · Próximo Lanzamiento',
+  vehiclesBannerTitle: 'Próximamente: Los Últimos Vehículos',
+  vehiclesBannerSub:
+    'Sedanes eléctricos de lujo, SUVs de alto rendimiento y coupés deportivos — descubre los próximos lanzamientos automotrices.',
+  vehiclesBannerCta: 'Explorar Autos y Accesorios',
+  vehiclesShowcase: [
+    {
+      label: 'Sedán Eléctrico',
+      title: 'Sedán Eléctrico de Lujo 2026',
+      spec: 'Tracción Integral Dual · Techo Panorámico · Carga Ultrarrápida',
+    },
+    {
+      label: 'SUV Premium',
+      title: 'SUV Insignia de Alto Rendimiento 2026',
+      spec: 'Suspensión Neumática · Rines Deportivos · Cabina Ejecutiva',
+    },
+    {
+      label: 'Coupé GT',
+      title: 'Coupé Grand Tourer Blanco Perla 2026',
+      spec: 'Aerodinámica Esculpida · Dinámica Deportiva · Acabados Artesanales',
+    },
+  ],
 };
 
 const FR: TranslationDict = {
@@ -590,6 +661,28 @@ const FR: TranslationDict = {
   bfBannerSub: 'Sélection de remises directes Black Friday avec liens produits vérifiés et économies immédiates.',
   bfBannerCta: 'Voir Amazon US',
   bfGifCaption: 'Offres du Jour · Amazon US',
+  vehiclesBannerKicker: 'Vitrine Automobile Dodx · Lancement Imminent',
+  vehiclesBannerTitle: 'Bientôt Disponible : Les Derniers Véhicules',
+  vehiclesBannerSub:
+    'Berlines électriques de prestige, SUV haute performance et coupés Grand Tourisme — découvrez nos prochaines arrivées.',
+  vehiclesBannerCta: 'Explorer Auto & Mobilité',
+  vehiclesShowcase: [
+    {
+      label: 'Berline Électrique',
+      title: 'Berline Électrique de Prestige 2026',
+      spec: 'Transmission Intégrale · Toit Panoramique · Recharge Ultra-Rapide',
+    },
+    {
+      label: 'SUV Prestige',
+      title: 'SUV Statutaire Noir Obsidienne 2026',
+      spec: 'Suspension Pneumatique · Jantes Alliage · Habitacle Exécutif',
+    },
+    {
+      label: 'Coupé GT',
+      title: 'Coupé Grand Tourisme Blanc Nacré 2026',
+      spec: 'Ligne Aérodynamique · Châssis Sport Adaptatif · Finition Sur Mesure',
+    },
+  ],
 };
 
 const DE: TranslationDict = {
@@ -651,6 +744,28 @@ const DE: TranslationDict = {
   bfBannerSub: 'Ausgewählte Black-Friday-Rabatte mit direkten Produktlinks und sofortiger Ersparnis.',
   bfBannerCta: 'Amazon US Deals ansehen',
   bfGifCaption: 'Top-Deals · Amazon US',
+  vehiclesBannerKicker: 'Dodx Automobil-Showroom · Demnächst Verfügbar',
+  vehiclesBannerTitle: 'Demnächst: Die Neuesten Fahrzeuge',
+  vehiclesBannerSub:
+    'Elektrische Luxuslimousinen, souveräne Performance-SUVs und sportliche Grand-Tourer-Coupés — bald bei uns verfügbar.',
+  vehiclesBannerCta: 'Bereich Autos entdecken',
+  vehiclesShowcase: [
+    {
+      label: 'E-Limousine',
+      title: 'Elektrische Flaggschiff-Limousine 2026',
+      spec: 'Dual-Motor Allrad · Panorama-Glasdach · Schnellladetechnologie',
+    },
+    {
+      label: 'Performance-SUV',
+      title: 'Luxus-SUV in Obsidianschwarz 2026',
+      spec: 'Adaptives Luftfahrwerk · Leichtmetallräder · Executive-Interieur',
+    },
+    {
+      label: 'Grand Tourer',
+      title: 'Perlweißes Grand-Tourer-Coupé 2026',
+      spec: 'Aerodynamische Karosserie · Sportfahrwerk · Exklusive Ausstattung',
+    },
+  ],
 };
 
 const PT: TranslationDict = {
@@ -682,6 +797,28 @@ const PT: TranslationDict = {
   bfBannerSub: 'Descontos diretos selecionados da Black Friday com links diretos e economia imediata.',
   bfBannerCta: 'Ver Amazon US',
   bfGifCaption: 'Grandes Ofertas · Amazon US',
+  vehiclesBannerKicker: 'Vitrine Automotiva Dodx · Em Breve',
+  vehiclesBannerTitle: 'Em Breve: Os Veículos Mais Recentes',
+  vehiclesBannerSub:
+    'Sedãs elétricos de luxo, SUVs de alta performance e coupés grand tourer — novidades automotivas chegando em breve.',
+  vehiclesBannerCta: 'Explorar Carros e Automotivo',
+  vehiclesShowcase: [
+    {
+      label: 'Sedã Elétrico',
+      title: 'Sedã Elétrico de Luxo 2026',
+      spec: 'Tração Integral · Teto Panorâmico · Recarga Ultrarrápida',
+    },
+    {
+      label: 'SUV Premium',
+      title: 'SUV Flagship Preto Obsidiana 2026',
+      spec: 'Suspensão a Ar · Rodas de Liga Leve · Cabine Executiva',
+    },
+    {
+      label: 'Grand Tourer',
+      title: 'Coupé Grand Tourer Branco Pérola 2026',
+      spec: 'Design Aerodinâmico · Dinâmica Esportiva · Acabamento Premium',
+    },
+  ],
 };
 
 const ZH: TranslationDict = {
@@ -743,6 +880,28 @@ const ZH: TranslationDict = {
   bfBannerSub: '精选黑五直降爆款商品，点击直达官方购买页面立享折扣。',
   bfBannerCta: '选购 Amazon 美国黑五',
   bfGifCaption: '今日超值特惠 · Amazon 美国',
+  vehiclesBannerKicker: 'Dodx 汽车展厅 · 即将上线',
+  vehiclesBannerTitle: '即将推出：最新车型精选',
+  vehiclesBannerSub:
+    '旗舰级纯电豪华轿车、高性能豪华 SUV 及优雅双门 GT 跑车 — 更多汽车新品与专属优惠即将发布。',
+  vehiclesBannerCta: '探索汽车专区',
+  vehiclesShowcase: [
+    {
+      label: '纯电轿车',
+      title: '2026 旗舰纯电豪华轿车',
+      spec: '双电机四驱 · 全景天幕 · 超快充平台',
+    },
+    {
+      label: '豪华 SUV',
+      title: '2026 曜石黑高性能豪华 SUV',
+      spec: '空气悬架系统 · 精工轮毂 · 行政级座舱',
+    },
+    {
+      label: 'GT 跑车',
+      title: '2026 珍珠白双门 GT 跑车',
+      spec: '流线空气动力学 · 自适应运动底盘 · 匠心内饰',
+    },
+  ],
 };
 
 const JA: TranslationDict = {
@@ -774,6 +933,28 @@ const JA: TranslationDict = {
   bfBannerSub: '厳選されたブラックフライデー直結セールの特別価格を今すぐチェック。',
   bfBannerCta: 'Amazon US セールを見る',
   bfGifCaption: '本日のビッグセール · Amazon US',
+  vehiclesBannerKicker: 'Dodx オートモーティブ · まもなく登場',
+  vehiclesBannerTitle: '近日公開：最新モデル車両',
+  vehiclesBannerSub:
+    '高級電動セダン、パフォーマンス SUV、洗練されたグランドツアラークーペなど最新ラインナップがまもなく登場。',
+  vehiclesBannerCta: '自動車コーナーを見る',
+  vehiclesShowcase: [
+    {
+      label: '電動セダン',
+      title: '2026 フラッグシップ電動セダン',
+      spec: 'デュアルモーター AWD · パノラマルーフ · 超急速充電',
+    },
+    {
+      label: '大型 SUV',
+      title: '2026 ブラック ラグジュアリー SUV',
+      spec: 'エアサスペンション · アルミホイール · エグゼクティブ空間',
+    },
+    {
+      label: 'GT クーペ',
+      title: '2026 パールホワイト GT クーペ',
+      spec: '空力ボディデザイン · スポーツダイナミクス · 上質な内装',
+    },
+  ],
 };
 
 const KO: TranslationDict = {
@@ -805,6 +986,28 @@ const KO: TranslationDict = {
   bfBannerSub: '엄선된 블랙 프라이데이 직접 할인 상품과 즉시 할인을 만나보세요.',
   bfBannerCta: 'Amazon US 특가 보기',
   bfGifCaption: '오늘의 빅 세일 · Amazon US',
+  vehiclesBannerKicker: 'Dodx 오토모티브 쇼케이스 · 출시 예정',
+  vehiclesBannerTitle: '출시 예정: 최신 차량 라인업',
+  vehiclesBannerSub:
+    '프리미엄 전기 세단, 퍼포먼스 SUV, 세련된 그랜드 투어러 쿠페까지 곧 공개될 최신 차량을 만나보세요.',
+  vehiclesBannerCta: '자동차 카테고리 보기',
+  vehiclesShowcase: [
+    {
+      label: '전기 세단',
+      title: '2026 플래그십 전기 럭셔리 세단',
+      spec: '듀얼 모터 AWD · 파노라마 글래스 루프 · 초고속 충전',
+    },
+    {
+      label: '플래그십 SUV',
+      title: '2026 옵시디언 퍼포먼스 SUV',
+      spec: '에어 서스펜션 · 알로이 휠 · 프리미엄 실내',
+    },
+    {
+      label: 'GT 쿠페',
+      title: '2026 펄 화이트 그랜드 투어러 쿠페',
+      spec: '에어로다이내믹 바디 · 어댑티브 스포츠 주행 · 수공예 트림',
+    },
+  ],
 };
 
 const HI: TranslationDict = {
@@ -836,6 +1039,28 @@ const HI: TranslationDict = {
   bfBannerSub: 'डायरेक्ट उत्पाद लिंक और तुरंत बचत के साथ चुनिंदा ब्लैक फ़्राइडे छूट।',
   bfBannerCta: 'Amazon US डील्स देखें',
   bfGifCaption: 'आज की बड़ी डील्स · Amazon US',
+  vehiclesBannerKicker: 'Dodx ऑटोमोटिव शोकेस · जल्द आ रहा है',
+  vehiclesBannerTitle: 'जल्द आ रही हैं: नवीनतम गाड़ियाँ',
+  vehiclesBannerSub:
+    'लग्ज़री इलेक्ट्रिक सेडान, दमदार परफॉर्मेंस SUV और स्पोर्ट्स ग्रैंड टूरर कूपे — नए मॉडल जल्द उपलब्ध होंगे।',
+  vehiclesBannerCta: 'ऑटोमोटिव सेक्शन देखें',
+  vehiclesShowcase: [
+    {
+      label: 'इलेक्ट्रिक सेडान',
+      title: '2026 फ्लैगशिप इलेक्ट्रिक सेडान',
+      spec: 'डुअल-मोटर AWD · पैनोरमिक रूफ · फास्ट चार्जिंग',
+    },
+    {
+      label: 'लग्ज़री SUV',
+      title: '2026 परफॉर्मेंस ब्लैक SUV',
+      spec: 'एयर सस्पेंशन · अलॉय व्हील्स · प्रीमियम केबिन',
+    },
+    {
+      label: 'स्पोर्ट्स कूपे',
+      title: '2026 पर्ल व्हाइट ग्रैंड टूरर कूपे',
+      spec: 'एयरोडायनामिक डिज़ाइन · स्पोर्ट डायनामिक्स · लग्ज़री इंटीरियर',
+    },
+  ],
 };
 
 const TR: TranslationDict = {
@@ -867,6 +1092,28 @@ const TR: TranslationDict = {
   bfBannerSub: 'Doğrudan ürün bağlantılarıyla seçilmiş Kara Cuma indirimleri ve anında tasarruf.',
   bfBannerCta: 'Amazon US Fırsatlarını Gör',
   bfGifCaption: 'Günün Büyük Fırsatları · Amazon US',
+  vehiclesBannerKicker: 'Dodx Otomotiv Vitrini · Çok Yakında',
+  vehiclesBannerTitle: 'Çok Yakında: En Yeni Araçlar',
+  vehiclesBannerSub:
+    'Lüks elektrikli sedanlar, yüksek performanslı SUV modeller ve zarif grand tourer coupeler çok yakında sizlerle.',
+  vehiclesBannerCta: 'Otomotiv Bölümünü Keşfet',
+  vehiclesShowcase: [
+    {
+      label: 'Elektrikli Sedan',
+      title: '2026 Amiral Gemisi Elektrikli Sedan',
+      spec: 'Çift Motor AWD · Panoramik Cam Tavan · Hızlı Şarj',
+    },
+    {
+      label: 'Lüks SUV',
+      title: '2026 Obsidyen Siyah Performans SUV',
+      spec: 'Havalı Süspansiyon · Alaşım Jantlar · Geniş İç Hacim',
+    },
+    {
+      label: 'Grand Tourer',
+      title: '2026 İnci Beyazı Grand Tourer Coupe',
+      spec: 'Aerodinamik Tasarım · Sportif Sürüş · Özel İç Mekan',
+    },
+  ],
 };
 
 const RU: TranslationDict = {
@@ -898,6 +1145,28 @@ const RU: TranslationDict = {
   bfBannerSub: 'Отобранные скидки Чёрной пятницы с прямыми ссылками на товары.',
   bfBannerCta: 'Смотреть скидки Amazon US',
   bfGifCaption: 'Главные скидки · Amazon US',
+  vehiclesBannerKicker: 'Автосалон Dodx · Скоро в продаже',
+  vehiclesBannerTitle: 'Скоро: Новейшие Автомобили',
+  vehiclesBannerSub:
+    'Флагманские электроседаны, мощные премиальные внедорожники и спортивные купе Grand Tourer — новинки уже скоро.',
+  vehiclesBannerCta: 'Перейти в раздел Авто',
+  vehiclesShowcase: [
+    {
+      label: 'Электроседан',
+      title: 'Флагманский Электроседан 2026',
+      spec: 'Полный привод · Панорамная крыша · Быстрая зарядка',
+    },
+    {
+      label: 'Премиум SUV',
+      title: 'Флагманский Внедорожник SUV 2026',
+      spec: 'Пневмоподвеска · Литые диски · Премиальный салон',
+    },
+    {
+      label: 'Купе GT',
+      title: 'Спортивное Купе Grand Tourer 2026',
+      spec: 'Аэродинамичный кузов · Адаптивное шасси · Отделка люкс',
+    },
+  ],
 };
 
 const IT: TranslationDict = {
@@ -929,6 +1198,28 @@ const IT: TranslationDict = {
   bfBannerSub: 'Sconti diretti selezionati per il Black Friday con link diretti ai prodotti.',
   bfBannerCta: 'Vai su Amazon US',
   bfGifCaption: 'Grandi Offerte · Amazon US',
+  vehiclesBannerKicker: 'Vetrina Automotive Dodx · In Arrivo',
+  vehiclesBannerTitle: 'In Arrivo: I Veicoli Più Recenti',
+  vehiclesBannerSub:
+    'Berline elettriche di lusso, SUV ad alte prestazioni e coupé Grand Tourer — scopri le novità automotive in arrivo.',
+  vehiclesBannerCta: 'Esplora Auto e Motori',
+  vehiclesShowcase: [
+    {
+      label: 'Berlina Elettrica',
+      title: 'Berlina Elettrica di Lusso 2026',
+      spec: 'Trazione Integrale · Tetto Panoramico · Ricarica Rapida',
+    },
+    {
+      label: 'SUV Prestige',
+      title: 'SUV Flagship Nero Ossidiana 2026',
+      spec: 'Sospensioni Pneumatiche · Cerchi in Lega · Abitacolo Executive',
+    },
+    {
+      label: 'Coupé GT',
+      title: 'Coupé Grand Tourer Bianco Perla 2026',
+      spec: 'Linee Aerodinamiche · Dinamica Sportiva · Interni Artigianali',
+    },
+  ],
 };
 
 const ID: TranslationDict = {
@@ -960,6 +1251,28 @@ const ID: TranslationDict = {
   bfBannerSub: 'Diskon langsung Black Friday pilihan dengan tautan produk resmi.',
   bfBannerCta: 'Lihat Promo Amazon US',
   bfGifCaption: 'Promo Besar · Amazon US',
+  vehiclesBannerKicker: 'Galeri Otomotif Dodx · Segera Hadir',
+  vehiclesBannerTitle: 'Segera Hadir: Kendaraan Terbaru',
+  vehiclesBannerSub:
+    'Sedan listrik mewah, SUV bertenaga tinggi, dan coupe grand tourer modern — nantikan kehadiran koleksi otomotif terbaru.',
+  vehiclesBannerCta: 'Jelajahi Kategori Mobil',
+  vehiclesShowcase: [
+    {
+      label: 'Sedan Listrik',
+      title: 'Sedan Listrik Mewah 2026',
+      spec: 'Penggerak AWD · Atap Panoramik · Pengisian Daya Cepat',
+    },
+    {
+      label: 'SUV Premium',
+      title: 'SUV Flagship Hitam Obsidian 2026',
+      spec: 'Suspensi Udara · Velg Alloy · Kabin Eksekutif',
+    },
+    {
+      label: 'Coupe GT',
+      title: 'Coupe Grand Tourer Putih Mutiara 2026',
+      spec: 'Desain Aerodinamis · Performa Sport · Interior Mewah',
+    },
+  ],
 };
 
 const NL: TranslationDict = {
@@ -991,6 +1304,28 @@ const NL: TranslationDict = {
   bfBannerSub: 'Geselecteerde Black Friday-kortingen met directe productlinks en direct voordeel.',
   bfBannerCta: 'Bekijk Amazon US Deals',
   bfGifCaption: 'Topdeals · Amazon US',
+  vehiclesBannerKicker: 'Dodx Automotive Showcase · Binnenkort Verwacht',
+  vehiclesBannerTitle: 'Binnenkort: De Nieuwste Voertuigen',
+  vehiclesBannerSub:
+    'Luxe elektrische sedans, krachtige performance-SUV’s en stijlvolle grand tourer coupés — binnenkort beschikbaar.',
+  vehiclesBannerCta: 'Bekijk Auto & Automotive',
+  vehiclesShowcase: [
+    {
+      label: 'Elektrische Sedan',
+      title: 'Luxe Elektrische Sedan 2026',
+      spec: 'Dual-Motor AWD · Panoramadak · Ultrasnel Laden',
+    },
+    {
+      label: 'Performance SUV',
+      title: 'Obsidiaanzwarte Flagship SUV 2026',
+      spec: 'Luchtvering · Lichtmetalen Velgen · Ruim Interieur',
+    },
+    {
+      label: 'Grand Tourer',
+      title: 'Parelwitte Grand Tourer Coupé 2026',
+      spec: 'Aerodynamisch Ontwerp · Sportonderstel · Luxe Afwerking',
+    },
+  ],
 };
 
 const PL: TranslationDict = {
@@ -1022,6 +1357,28 @@ const PL: TranslationDict = {
   bfBannerSub: 'Wybrane promocje Black Friday z bezpośrednimi linkami do produktów.',
   bfBannerCta: 'Zobacz okazje Amazon US',
   bfGifCaption: 'Wielkie Okazje · Amazon US',
+  vehiclesBannerKicker: 'Salon Motoryzacyjny Dodx · Wkrótce Dostępne',
+  vehiclesBannerTitle: 'Wkrótce: Najnowsze Pojazdy',
+  vehiclesBannerSub:
+    'Luksusowe sedany elektryczne, wydajne SUV-y i sportowe coupé Grand Tourer — najnowsze premiery już wkrótce.',
+  vehiclesBannerCta: 'Przeglądaj Dział Samochody',
+  vehiclesShowcase: [
+    {
+      label: 'Sedan Elektryczny',
+      title: 'Flagowy Sedan Elektryczny 2026',
+      spec: 'Napęd AWD · Dach Panoramiczny · Szybkie Ładowanie',
+    },
+    {
+      label: 'Luksusowy SUV',
+      title: 'Czarny SUV Flagship Performance 2026',
+      spec: 'Zawieszenie Pneumatyczne · Alufelgi · Przestronna Kabina',
+    },
+    {
+      label: 'Grand Tourer',
+      title: 'Perłowe Coupé Grand Tourer 2026',
+      spec: 'Aerodynamiczna Sylwetka · Sportowa Dynamika · Luksusowe Wnętrze',
+    },
+  ],
 };
 
 const DICTIONARIES: Record<LanguageCode, TranslationDict> = {
