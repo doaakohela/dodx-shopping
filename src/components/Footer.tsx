@@ -12,6 +12,7 @@ interface FooterProps {
   onNavigateHome: (sectionId?: string) => void;
   onNavigateProducts: (deptId?: string) => void;
   onNavigateCoupons: () => void;
+  onNavigateCars: (carId?: string) => void;
   onNavigateLegal: (route: 'disclosure' | 'privacy') => void;
   onOpenInstallModal: () => void;
 }
@@ -23,6 +24,7 @@ export const Footer: React.FC<FooterProps> = ({
   onNavigateHome,
   onNavigateProducts,
   onNavigateCoupons,
+  onNavigateCars,
   onNavigateLegal,
   onOpenInstallModal,
 }) => {
@@ -57,6 +59,15 @@ export const Footer: React.FC<FooterProps> = ({
                   className="hover:underline cursor-pointer text-start"
                 >
                   {t.productsNav}
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => onNavigateCars()}
+                  className="hover:underline cursor-pointer text-start text-[#99F6E4] font-semibold"
+                >
+                  {t.carsNav}
                 </button>
               </li>
               <li>

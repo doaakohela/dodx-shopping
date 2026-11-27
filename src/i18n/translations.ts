@@ -57,6 +57,7 @@ export interface TranslationDict {
   navAll: string;
   todaysDeals: string;
   productsNav: string;
+  carsNav: string;
   productsPageTitle: string;
   productsPageSubtitle: string;
   searchBrandsPlaceholder: string;
@@ -296,6 +297,7 @@ const EN: TranslationDict = {
   bfPrimaryCta: 'Shop Amazon Deals',
   bfSecondaryCta: 'Browse All Store Deals',
   productsNav: 'Products',
+  carsNav: 'Electric Cars',
   productsPageTitle: 'Product Departments & Global Brands',
   productsPageSubtitle:
     'Browse shopping departments, visual categories, and top global brands.',
@@ -322,11 +324,11 @@ const EN: TranslationDict = {
   bfBannerSub: 'Amazon US top-selling discounts on smartphones, laptops, TVs, audio, smart home, kitchen appliances & watches — direct links & instant savings.',
   bfBannerCta: 'Shop Amazon US Deals',
   bfGifCaption: "Today's Big Deals · Amazon US",
-  vehiclesBannerKicker: 'Coming Soon on Our Website · Global Car Brands',
-  vehiclesBannerTitle: 'Coming Soon: Latest Vehicles',
+  vehiclesBannerKicker: 'Modern Electric Vehicles · Smart Range & Everyday Savings',
+  vehiclesBannerTitle: 'Drive Your New Electric Car Today — Smart Value & Proven Range',
   vehiclesBannerSub:
-    'We will soon showcase the newest electric, hybrid, and family vehicles from the world’s most popular automotive brands right here on our site.',
-  vehiclesBannerCta: 'Explore Automotive Section',
+    'Discover stylish city EVs and 5-seat electric SUVs with up to 305 km range, 30-minute fast charging, and smart safety features — starting from just $7,250.',
+  vehiclesBannerCta: 'Explore All Cars & Prices',
   vehiclesShowcase: [
     {
       label: 'Electric Sedan',
@@ -474,6 +476,7 @@ const AR: TranslationDict = {
   bfPrimaryCta: 'تسوق عروض أمازون الآن',
   bfSecondaryCta: 'تصفح كل العروض والكوبونات',
   productsNav: 'المنتجات',
+  carsNav: 'السيارات الكهربائية',
   productsPageTitle: 'أقسام المنتجات والماركات العالمية',
   productsPageSubtitle:
     'تصفح أقسام المنتجات والفئات الفرعية وأشهر الشركات العالمية عبر بطاقات مرئية منظمة.',
@@ -500,11 +503,11 @@ const AR: TranslationDict = {
   bfBannerSub: 'أقوى خصومات أمازون أمريكا على أهم المنتجات الأكثر طلباً: الهواتف، اللابتوب، الشاشات، الصوتيات، أجهزة المنزل والمطبخ والساعات.',
   bfBannerCta: 'تسوق عروض أمازون أمريكا',
   bfGifCaption: 'عروض اليوم الكبرى · أمازون أمريكا',
-  vehiclesBannerKicker: 'قريباً على موقعنا · أشهر الماركات العالمية',
-  vehiclesBannerTitle: 'قريباً أحدث المركبات',
+  vehiclesBannerKicker: 'سيارات كهربائية حديثة · أناقة وتوفير يومي بأفضل الأسعار',
+  vehiclesBannerTitle: 'امتلك سيارتك الكهربائية الجديدة اليوم — جودة عالية وسعر لا يُنافس',
   vehiclesBannerSub:
-    'سنعرض على موقعنا قريباً أحدث السيارات الكهربائية والهجينة والعائلية من أشهر الماركات العالمية الأكثر طلباً وإقبالاً.',
-  vehiclesBannerCta: 'تصفح قسم السيارات الآن',
+    'اختر سيارتك المثالية للتنقل اليومي أو العائلي بمدى يصل حتى 305 كم، وشحن سريع خلال 30 دقيقة، وأنظمة أمان وتقنيات قيادة حديثة بأسعار تبدأ من 7,250 دولار فقط.',
+  vehiclesBannerCta: 'استكشف جميع السيارات والأسعار',
   vehiclesShowcase: [
     {
       label: 'سيدان كهربائية',
@@ -588,11 +591,6 @@ const ES: TranslationDict = {
   bfBannerSub: 'Descuentos directos seleccionados del Black Friday con enlaces directos a cada producto.',
   bfBannerCta: 'Comprar en Amazon US',
   bfGifCaption: 'Grandes Ofertas · Amazon US',
-  vehiclesBannerKicker: 'Próximamente en Nuestro Sitio · Marcas Líderes',
-  vehiclesBannerTitle: 'Próximamente: Los Últimos Vehículos',
-  vehiclesBannerSub:
-    'Muy pronto presentaremos en nuestro sitio los vehículos eléctricos, híbridos y familiares más recientes de las marcas mundiales más solicitadas.',
-  vehiclesBannerCta: 'Explorar Sección de Autos',
   vehiclesShowcase: [
     {
       label: 'Sedán Eléctrico',
@@ -676,11 +674,6 @@ const FR: TranslationDict = {
   bfBannerSub: 'Sélection de remises directes Black Friday avec liens produits vérifiés et économies immédiates.',
   bfBannerCta: 'Voir Amazon US',
   bfGifCaption: 'Offres du Jour · Amazon US',
-  vehiclesBannerKicker: 'Bientôt sur Notre Site · Grandes Marques Mondiales',
-  vehiclesBannerTitle: 'Bientôt Disponible : Les Derniers Véhicules',
-  vehiclesBannerSub:
-    'Nous présenterons bientôt sur notre site les derniers véhicules électriques, hybrides et familiaux des marques automobiles les plus populaires.',
-  vehiclesBannerCta: 'Explorer la Section Auto',
   vehiclesShowcase: [
     {
       label: 'Berline Électrique',
@@ -764,11 +757,6 @@ const DE: TranslationDict = {
   bfBannerSub: 'Ausgewählte Black-Friday-Rabatte mit direkten Produktlinks und sofortiger Ersparnis.',
   bfBannerCta: 'Amazon US Deals ansehen',
   bfGifCaption: 'Top-Deals · Amazon US',
-  vehiclesBannerKicker: 'Bald auf Unserer Website · Top-Automarken',
-  vehiclesBannerTitle: 'Demnächst: Die Neuesten Fahrzeuge',
-  vehiclesBannerSub:
-    'Wir präsentieren in Kürze die neuesten Elektro-, Hybrid- und Familienfahrzeuge der beliebtesten internationalen Automarken direkt auf unserer Website.',
-  vehiclesBannerCta: 'Bereich Autos entdecken',
   vehiclesShowcase: [
     {
       label: 'Elektro-Limousine',
@@ -822,11 +810,6 @@ const PT: TranslationDict = {
   bfBannerSub: 'Descontos diretos selecionados da Black Friday com links diretos e economia imediata.',
   bfBannerCta: 'Ver Amazon US',
   bfGifCaption: 'Grandes Ofertas · Amazon US',
-  vehiclesBannerKicker: 'Em Breve em Nosso Site · Principais Marcas Globais',
-  vehiclesBannerTitle: 'Em Breve: Os Veículos Mais Recentes',
-  vehiclesBannerSub:
-    'Em breve apresentaremos em nosso site os carros elétricos, híbridos e SUVs mais recentes das marcas automotivas mais procuradas pelo público.',
-  vehiclesBannerCta: 'Explorar Seção Automotiva',
   vehiclesShowcase: [
     {
       label: 'Sedã Elétrico',
@@ -910,11 +893,6 @@ const ZH: TranslationDict = {
   bfBannerSub: '精选黑五直降爆款商品，点击直达官方购买页面立享折扣。',
   bfBannerCta: '选购 Amazon 美国黑五',
   bfGifCaption: '今日超值特惠 · Amazon 美国',
-  vehiclesBannerKicker: '即将上线本站 · 全球热门汽车品牌',
-  vehiclesBannerTitle: '即将推出：最新车型精选',
-  vehiclesBannerSub:
-    '我们即将上线来自全球畅销汽车品牌的最新纯电动、混合动力与家庭 SUV 车型，敬请期待。',
-  vehiclesBannerCta: '探索汽车专区',
   vehiclesShowcase: [
     {
       label: '纯电轿车',
@@ -968,11 +946,6 @@ const JA: TranslationDict = {
   bfBannerSub: '厳選されたブラックフライデー直結セールの特別価格を今すぐチェック。',
   bfBannerCta: 'Amazon US セールを見る',
   bfGifCaption: '本日のビッグセール · Amazon US',
-  vehiclesBannerKicker: '近日公開 · 人気のグローバル自動車ブランド',
-  vehiclesBannerTitle: '近日公開：最新モデル車両',
-  vehiclesBannerSub:
-    '世界中で人気の自動車ブランドから、最新の電気自動車・ハイブリッド車・ファミリーSUVを当サイトにてまもなく公開します。',
-  vehiclesBannerCta: '自動車コーナーを見る',
   vehiclesShowcase: [
     {
       label: '電気セダン',
@@ -1026,11 +999,6 @@ const KO: TranslationDict = {
   bfBannerSub: '엄선된 블랙 프라이데이 직접 할인 상품과 즉시 할인을 만나보세요.',
   bfBannerCta: 'Amazon US 특가 보기',
   bfGifCaption: '오늘의 빅 세일 · Amazon US',
-  vehiclesBannerKicker: '곧 사이트 공개 · 글로벌 인기 자동차 브랜드',
-  vehiclesBannerTitle: '출시 예정: 최신 차량 라인업',
-  vehiclesBannerSub:
-    '전 세계 고객들이 가장 선호하는 글로벌 자동차 브랜드의 최신 전기차, 하이브리드 및 패밀리 SUV를 곧 만나보실 수 있습니다.',
-  vehiclesBannerCta: '자동차 카테고리 보기',
   vehiclesShowcase: [
     {
       label: '전기 세단',
@@ -1084,11 +1052,6 @@ const HI: TranslationDict = {
   bfBannerSub: 'डायरेक्ट उत्पाद लिंक और तुरंत बचत के साथ चुनिंदा ब्लैक फ़्राइडे छूट।',
   bfBannerCta: 'Amazon US डील्स देखें',
   bfGifCaption: 'आज की बड़ी डील्स · Amazon US',
-  vehiclesBannerKicker: 'हमारी वेबसाइट पर जल्द उपलब्ध · शीर्ष वैश्विक ब्रांड्स',
-  vehiclesBannerTitle: 'जल्द आ रही हैं: नवीनतम गाड़ियाँ',
-  vehiclesBannerSub:
-    'हम जल्द ही अपनी वेबसाइट पर दुनिया के सबसे लोकप्रिय और पसंदीदा कार ब्रांड्स की नवीनतम इलेक्ट्रिक, हाइब्रिड और फैमिली गाड़ियाँ प्रदर्शित करेंगे।',
-  vehiclesBannerCta: 'ऑटोमोटिव सेक्शन देखें',
   vehiclesShowcase: [
     {
       label: 'इलेक्ट्रिक सेडान',
@@ -1142,11 +1105,6 @@ const TR: TranslationDict = {
   bfBannerSub: 'Doğrudan ürün bağlantılarıyla seçilmiş Kara Cuma indirimleri ve anında tasarruf.',
   bfBannerCta: 'Amazon US Fırsatlarını Gör',
   bfGifCaption: 'Günün Büyük Fırsatları · Amazon US',
-  vehiclesBannerKicker: 'Çok Yakında Sitemizde · Dünyaca Ünlü Otomobil Markaları',
-  vehiclesBannerTitle: 'Çok Yakında: En Yeni Araçlar',
-  vehiclesBannerSub:
-    'Çok yakında sitemizde dünyanın en çok tercih edilen otomobil markalarının en yeni elektrikli, hibrit ve aile araçlarını sunacağız.',
-  vehiclesBannerCta: 'Otomotiv Bölümünü Keşfet',
   vehiclesShowcase: [
     {
       label: 'Elektrikli Sedan',
@@ -1200,11 +1158,6 @@ const RU: TranslationDict = {
   bfBannerSub: 'Отобранные скидки Чёрной пятницы с прямыми ссылками на товары.',
   bfBannerCta: 'Смотреть скидки Amazon US',
   bfGifCaption: 'Главные скидки · Amazon US',
-  vehiclesBannerKicker: 'Скоро на Нашем Сайте · Популярные Мировые Бренды',
-  vehiclesBannerTitle: 'Скоро: Новейшие Автомобили',
-  vehiclesBannerSub:
-    'Совсем скоро на нашем сайте появятся новейшие электрические, гибридные и семейные автомобили от самых популярных мировых автопроизводителей.',
-  vehiclesBannerCta: 'Перейти в раздел Авто',
   vehiclesShowcase: [
     {
       label: 'Электроседан',
@@ -1258,11 +1211,6 @@ const IT: TranslationDict = {
   bfBannerSub: 'Sconti diretti selezionati per il Black Friday con link diretti ai prodotti.',
   bfBannerCta: 'Vai su Amazon US',
   bfGifCaption: 'Grandi Offerte · Amazon US',
-  vehiclesBannerKicker: 'Presto sul Nostro Sito · Grandi Marchi Globali',
-  vehiclesBannerTitle: 'In Arrivo: I Veicoli Più Recenti',
-  vehiclesBannerSub:
-    'Presto presenteremo sul nostro sito le più recenti auto elettriche, ibride e SUV familiari dei marchi automobilistici più amati dal pubblico.',
-  vehiclesBannerCta: 'Esplora Auto e Motori',
   vehiclesShowcase: [
     {
       label: 'Berlina Elettrica',
@@ -1316,11 +1264,6 @@ const ID: TranslationDict = {
   bfBannerSub: 'Diskon langsung Black Friday pilihan dengan tautan produk resmi.',
   bfBannerCta: 'Lihat Promo Amazon US',
   bfGifCaption: 'Promo Besar · Amazon US',
-  vehiclesBannerKicker: 'Segera di Situs Kami · Merek Otomotif Global Populer',
-  vehiclesBannerTitle: 'Segera Hadir: Kendaraan Terbaru',
-  vehiclesBannerSub:
-    'Kami akan segera menampilkan mobil listrik, hybrid, dan SUV keluarga terbaru dari merek otomotif dunia yang paling diminati pembeli.',
-  vehiclesBannerCta: 'Jelajahi Kategori Mobil',
   vehiclesShowcase: [
     {
       label: 'Sedan Listrik',
@@ -1374,11 +1317,6 @@ const NL: TranslationDict = {
   bfBannerSub: 'Geselecteerde Black Friday-kortingen met directe productlinks en direct voordeel.',
   bfBannerCta: 'Bekijk Amazon US Deals',
   bfGifCaption: 'Topdeals · Amazon US',
-  vehiclesBannerKicker: 'Binnenkort op Onze Website · Populaire Topmerken',
-  vehiclesBannerTitle: 'Binnenkort: De Nieuwste Voertuigen',
-  vehiclesBannerSub:
-    'Binnenkort presenteren wij op onze website de nieuwste elektrische, hybride en gezinsauto’s van de meest geliefde internationale automerken.',
-  vehiclesBannerCta: 'Bekijk Auto & Automotive',
   vehiclesShowcase: [
     {
       label: 'Elektrische Sedan',
@@ -1432,11 +1370,6 @@ const PL: TranslationDict = {
   bfBannerSub: 'Wybrane promocje Black Friday z bezpośrednimi linkami do produktów.',
   bfBannerCta: 'Zobacz okazje Amazon US',
   bfGifCaption: 'Wielkie Okazje · Amazon US',
-  vehiclesBannerKicker: 'Wkrótce na Naszej Stronie · Najpopularniejsze Marki Świata',
-  vehiclesBannerTitle: 'Wkrótce: Najnowsze Pojazdy',
-  vehiclesBannerSub:
-    'Już wkrótce zaprezentujemy na naszej stronie najnowsze samochody elektryczne, hybrydowe i rodzinne SUV-y najbardziej cenionych światowych marek.',
-  vehiclesBannerCta: 'Przeglądaj Dział Samochody',
   vehiclesShowcase: [
     {
       label: 'Sedan Elektryczny',

@@ -13,6 +13,7 @@ import { HomeView } from './components/HomeView';
 import { DealsView } from './components/DealsView';
 import { CouponsView } from './components/CouponsView';
 import { ProductsView } from './components/ProductsView';
+import { CarsView } from './components/CarsView';
 import { ProductDetailView } from './components/ProductDetailView';
 import { LegalView } from './components/LegalViews';
 import { Footer } from './components/Footer';
@@ -36,6 +37,9 @@ function parseLocation(): { route: AppRoute; storeParam: string | null } {
   }
   if (path === '/coupons') {
     return { route: 'coupons', storeParam: null };
+  }
+  if (path === '/cars' || path.startsWith('/cars/')) {
+    return { route: 'cars', storeParam: params.get('model') };
   }
   if (store || path === '/deals' || path.startsWith('/deals/')) {
     return { route: 'deals', storeParam: store || 'amazon' };
@@ -170,6 +174,16 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
+  const navigateCars = useCallback((carId?: string) => {
+    const nextUrl = carId
+      ? `/cars?model=${encodeURIComponent(carId)}`
+      : '/cars';
+    window.history.pushState({}, '', nextUrl);
+    setRoute('cars');
+    setStoreParam(carId || null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   const navigateLegal = useCallback((legalRoute: 'disclosure' | 'privacy') => {
     const nextUrl = legalRoute === 'disclosure' ? '/disclosure' : '/privacy';
     window.history.pushState({}, '', nextUrl);
@@ -241,6 +255,7 @@ export default function App() {
         onNavigateHome={navigateHome}
         onNavigateProducts={navigateProducts}
         onNavigateCoupons={navigateCoupons}
+        onNavigateCars={navigateCars}
         onSelectStore={navigateStore}
         onNavigateLegal={navigateLegal}
         onOpenInstallModal={() => setInstallModalOpen(true)}
@@ -258,6 +273,7 @@ export default function App() {
           onSelectCatalogCategory={handleSelectCatalogCategory}
           onNavigateProducts={navigateProducts}
           onNavigateCoupons={navigateCoupons}
+          onNavigateCars={navigateCars}
           onSelectStore={navigateStore}
           onNavigateLegal={navigateLegal}
           onOpenInstallModal={() => setInstallModalOpen(true)}
@@ -284,6 +300,14 @@ export default function App() {
               isAr={lang === 'ar'}
               onBackHome={() => navigateHome()}
               onSelectStore={navigateStore}
+            />
+          ) : route === 'cars' ? (
+            <CarsView
+              lang={lang}
+              t={t}
+              initialCarId={storeParam}
+              onSelectCar={navigateCars}
+              onBackHome={() => navigateHome()}
             />
           ) : route === 'products' ? (
             <ProductsView
@@ -321,6 +345,7 @@ export default function App() {
               onSelectStore={navigateStore}
               onNavigateCoupons={navigateCoupons}
               onNavigateProducts={navigateProducts}
+              onNavigateCars={navigateCars}
               onOpenProduct={navigateProduct}
               onOpenInstallModal={() => setInstallModalOpen(true)}
               onClearSearch={handleClearSearch}
@@ -336,6 +361,7 @@ export default function App() {
         onNavigateHome={navigateHome}
         onNavigateProducts={navigateProducts}
         onNavigateCoupons={navigateCoupons}
+        onNavigateCars={navigateCars}
         onNavigateLegal={navigateLegal}
         onOpenInstallModal={() => setInstallModalOpen(true)}
       />

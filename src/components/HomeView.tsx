@@ -1,6 +1,7 @@
 import React, { useMemo, useRef, useState } from 'react';
 import {
   ArrowDownWideNarrow,
+  BatteryCharging,
   Car,
   ChevronLeft,
   ChevronRight,
@@ -8,15 +9,14 @@ import {
   Clock,
   ExternalLink,
   Flame,
+  Gauge,
   Search,
   Sparkles,
   Tag,
+  Users,
   Zap,
 } from 'lucide-react';
-import generalEvSedanImg from '../assets/images/luxury_side_sedan_1795758358855.jpg';
-import generalEvCrossoverImg from '../assets/images/luxury_side_crossover_1795758360145.jpg';
-import generalHybridSuvImg from '../assets/images/luxury_side_suv_1795758360879.jpg';
-import generalEvCoupeImg from '../assets/images/luxury_side_coupe_1795758360302.jpg';
+import { EV_VEHICLES } from '../data/evVehiclesCatalog';
 import {
   CATALOG_CATEGORIES,
   CatalogCategoryId,
@@ -238,6 +238,7 @@ interface HomeViewProps {
   onSelectStore: (storeId: string) => void;
   onNavigateCoupons: () => void;
   onNavigateProducts: (deptId?: string) => void;
+  onNavigateCars: (carId?: string) => void;
   onOpenProduct: (productId: string) => void;
   onOpenInstallModal: () => void;
   onClearSearch: () => void;
@@ -253,6 +254,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
   onSelectStore,
   onNavigateCoupons,
   onNavigateProducts,
+  onNavigateCars,
   onOpenProduct,
   onOpenInstallModal,
   onClearSearch,
@@ -263,51 +265,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
   const vehiclesScrollRef = useRef<HTMLDivElement | null>(null);
   const [newDealStoreTab, setNewDealStoreTab] = useState<string>('all');
   const [newDealSortMode, setNewDealSortMode] = useState<'cheapest' | 'discount'>('discount');
-  const [failedVehicleImgs, setFailedVehicleImgs] = useState<Record<number, boolean>>({});
+  const [failedVehicleImgs, setFailedVehicleImgs] = useState<Record<string, boolean>>({});
   const countdown = useFlashCountdown();
-
-  const vehicleSlides = useMemo(
-    () => [
-      {
-        image: generalEvSedanImg,
-        ...(t.vehiclesShowcase[0] ?? {
-          label: 'Electric Sedan',
-          title: 'Modern All-Electric Sedan',
-          spec: '100% Electric · Long-Range Battery · Fast Charging',
-        }),
-      },
-      {
-        image: generalEvCrossoverImg,
-        ...(t.vehiclesShowcase[1] ?? {
-          label: 'Electric Crossover',
-          title: 'All-Electric Crossover SUV',
-          spec: 'All-Electric SUV · 800V Ultra-Fast Charging · Smart Safety',
-        }),
-      },
-      {
-        image: generalHybridSuvImg,
-        ...(t.vehiclesShowcase[2] ?? {
-          label: 'Hybrid Family SUV',
-          title: 'Modern Hybrid & Family SUV',
-          spec: 'Plug-In Hybrid / AWD · Spacious 3-Row Interior · Panoramic Roof',
-        }),
-      },
-      {
-        image: generalEvCoupeImg,
-        ...(t.vehiclesShowcase[3] ?? {
-          label: 'Electric Sport Coupé',
-          title: 'Executive Electric Gran Coupé',
-          spec: '100% Electric · Dual-Motor AWD · Executive Comfort',
-        }),
-      },
-    ],
-    [t.vehiclesShowcase]
-  );
 
   const scrollVehicles = (dir: 'left' | 'right') => {
     if (!vehiclesScrollRef.current) return;
     vehiclesScrollRef.current.scrollBy({
-      left: dir === 'left' ? -300 : 300,
+      left: dir === 'left' ? -320 : 320,
       behavior: 'smooth',
     });
   };
@@ -455,9 +419,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
   return (
     <div className="bg-[#EAEDED] min-h-screen pb-10">
       <div className="max-w-[1440px] mx-auto px-3 sm:px-5 pt-4 space-y-6">
-        {/* First Section: Upcoming Latest Vehicles Turquoise Gradient Showcase */}
+        {/* First Section: Real Available Chinese Electric Vehicles Export Showcase (FOB China) */}
         <section
-          aria-labelledby="vehicles-upcoming-heading"
+          aria-labelledby="vehicles-export-heading"
           className="rounded-xl overflow-hidden border border-[#149492]/55 bg-gradient-to-br from-[#00453E] via-[#007E7B] to-[#0A8B8E] text-white shadow-sm"
         >
           {/* Top Header Row */}
@@ -468,9 +432,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 <span>{t.vehiclesBannerKicker}</span>
               </p>
               <h1
-                id="vehicles-upcoming-heading"
+                id="vehicles-export-heading"
                 className="mt-1.5 font-display font-extrabold tracking-tight text-white leading-[1.15]"
-                style={{ fontSize: 'clamp(1.5rem, 2.6vw, 2.25rem)', textWrap: 'balance' }}
+                style={{ fontSize: 'clamp(1.45rem, 2.5vw, 2.15rem)', textWrap: 'balance' }}
               >
                 {t.vehiclesBannerTitle}
               </h1>
@@ -482,7 +446,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             <div className="flex items-center gap-2 shrink-0">
               <button
                 type="button"
-                onClick={() => onSelectCategory('cars')}
+                onClick={() => onNavigateCars()}
                 className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#FFD814] hover:bg-[#F7CA00] text-zinc-950 text-xs sm:text-sm font-extrabold rounded-lg cursor-pointer transition-colors whitespace-nowrap shrink-0"
               >
                 <Car className="w-4 h-4 shrink-0" />
@@ -510,48 +474,136 @@ export const HomeView: React.FC<HomeViewProps> = ({
             </div>
           </div>
 
-          {/* All 4 Vehicles Visible Across Mobile (Swipe), Tablet (2x2), and Desktop (4-Column Grid) */}
+          {/* All 6 Available EV Models Responsive Grid / Mobile Horizontal Strip */}
           <div
             ref={vehiclesScrollRef}
-            className="p-4 sm:p-5 flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="p-4 sm:p-5 flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
-            {vehicleSlides.map((vehicle, idx) => (
-              <button
-                key={vehicle.label}
-                type="button"
-                onClick={() => onSelectCategory('cars')}
-                className="group w-[82vw] max-w-[320px] sm:w-auto sm:max-w-none shrink-0 snap-start rounded-lg overflow-hidden bg-[#002D2B]/80 border border-white/15 hover:border-[#FFD814]/80 text-start cursor-pointer transition-all flex flex-col"
-              >
-                <div className="relative aspect-[16/9] w-full bg-[#002321] overflow-hidden">
-                  {!failedVehicleImgs[idx] ? (
-                    <img
-                      src={vehicle.image}
-                      alt={vehicle.title}
-                      loading="eager"
-                      referrerPolicy="no-referrer"
-                      onError={() =>
-                        setFailedVehicleImgs((prev) => ({ ...prev, [idx]: true }))
-                      }
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-[#00453E] via-[#007A78] to-[#005960] flex flex-col items-center justify-center p-4 text-center">
-                      <Car className="w-9 h-9 text-[#FFD814] mb-1.5" />
-                      <p className="font-display text-sm font-bold text-white">{vehicle.title}</p>
-                    </div>
-                  )}
-                </div>
+            {EV_VEHICLES.map((vehicle) => {
+              const primaryImage = vehicle.images[0];
+              const isImgBroken = !primaryImage || Boolean(failedVehicleImgs[vehicle.id]);
 
-                <div className="px-3.5 py-3 flex-1 flex flex-col justify-between gap-1 border-t border-white/10">
-                  <p className="font-display text-sm font-bold text-white group-hover:text-[#FFD814] transition-colors line-clamp-1">
-                    {vehicle.title}
-                  </p>
-                  <p className="text-[11px] sm:text-xs text-teal-100/85 line-clamp-1">
-                    {vehicle.spec}
-                  </p>
-                </div>
-              </button>
-            ))}
+              return (
+                <article
+                  key={vehicle.id}
+                  className="group w-[84vw] max-w-[340px] sm:w-auto sm:max-w-none shrink-0 snap-start rounded-xl overflow-hidden bg-[#002D2B]/90 border border-white/15 hover:border-[#FFD814]/85 text-start transition-all flex flex-col justify-between"
+                >
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => onNavigateCars(vehicle.id)}
+                      className="w-full text-start cursor-pointer block"
+                    >
+                      <div className="relative aspect-[16/10] w-full bg-[#002321] overflow-hidden">
+                        {!vehicle.isPhotoMissing && !isImgBroken ? (
+                          <img
+                            src={primaryImage.src}
+                            alt={isAr ? vehicle.modelAr : vehicle.modelEn}
+                            loading="eager"
+                            referrerPolicy="no-referrer"
+                            onError={() =>
+                              setFailedVehicleImgs((prev) => ({
+                                ...prev,
+                                [vehicle.id]: true,
+                              }))
+                            }
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gradient-to-br from-[#00453E] via-[#007A78] to-[#005960] flex flex-col items-center justify-center p-4 text-center">
+                            <Car className="w-9 h-9 text-[#FFD814] mb-1.5" />
+                            <p className="font-display text-sm font-bold text-white">
+                              {isAr ? vehicle.modelAr : vehicle.modelEn}
+                            </p>
+                            <p className="mt-1 text-[11px] text-teal-100/90">
+                              {isAr
+                                ? 'الصور التفصيلية متوفرة عند الطلب'
+                                : 'Photos available upon request'}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </button>
+
+                    <div className="p-3.5 space-y-2.5 border-t border-white/10">
+                      <div>
+                        <p className="text-[11px] font-bold text-[#99F6E4] line-clamp-1">
+                          {isAr ? vehicle.trimAr : vehicle.trimEn}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => onNavigateCars(vehicle.id)}
+                          className="mt-0.5 font-display text-sm sm:text-base font-extrabold text-white group-hover:text-[#FFD814] transition-colors text-start cursor-pointer line-clamp-1"
+                        >
+                          {isAr ? vehicle.modelAr : vehicle.modelEn}
+                        </button>
+                        <p className="mt-1 text-xs text-teal-50/85 line-clamp-2 leading-relaxed">
+                          {isAr ? vehicle.overviewAr : vehicle.overviewEn}
+                        </p>
+                      </div>
+
+                      {/* Key Buyer Specs Snapshot */}
+                      <div className="grid grid-cols-2 gap-1.5 text-[11px] text-teal-50/95">
+                        <div className="flex items-center gap-1.5 bg-white/10 rounded px-2 py-1">
+                          <Gauge className="w-3.5 h-3.5 text-[#FFD814] shrink-0" />
+                          <span className="truncate">
+                            {isAr ? vehicle.highlightRangeAr : vehicle.highlightRangeEn}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1.5 bg-white/10 rounded px-2 py-1">
+                          <BatteryCharging className="w-3.5 h-3.5 text-[#FFD814] shrink-0" />
+                          <span className="truncate">
+                            {isAr ? vehicle.highlightBatteryAr : vehicle.highlightBatteryEn}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1.5 bg-white/10 rounded px-2 py-1">
+                          <Users className="w-3.5 h-3.5 text-[#FFD814] shrink-0" />
+                          <span className="truncate">
+                            {isAr ? vehicle.highlightSeatsAr : vehicle.highlightSeatsEn}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1.5 bg-white/10 rounded px-2 py-1">
+                          <Zap className="w-3.5 h-3.5 text-[#FFD814] shrink-0" />
+                          <span className="truncate">
+                            {isAr ? vehicle.highlightPowerAr : vehicle.highlightPowerEn}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Clean Marketing Price + CTA without homepage shipping disclaimers */}
+                  <div className="px-3.5 pb-3.5 pt-2.5 border-t border-white/10 bg-[#002321]/75">
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
+                      <div>
+                        {vehicle.trims.length > 1 ? (
+                          <div className="space-y-0.5" dir="ltr">
+                            <p className="text-xs font-extrabold text-[#FFD814] tabular-nums">
+                              205 km: $8,500 · 305 km: $9,050
+                            </p>
+                          </div>
+                        ) : (
+                          <p
+                            className="font-display text-lg font-extrabold text-[#FFD814] tabular-nums"
+                            dir="ltr"
+                          >
+                            ${vehicle.startingPriceUsd.toLocaleString()}
+                          </p>
+                        )}
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => onNavigateCars(vehicle.id)}
+                        className="px-3 py-1.5 rounded-lg bg-[#FFD814] hover:bg-[#F7CA00] text-zinc-950 text-xs font-extrabold cursor-pointer transition-colors whitespace-nowrap"
+                      >
+                        {isAr ? 'تفاصيل السيارة' : 'View Car'}
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </section>
 

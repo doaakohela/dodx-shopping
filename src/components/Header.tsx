@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
   ArrowLeft,
+  Car,
   ChevronDown,
   Chrome,
   LayoutGrid,
@@ -32,6 +33,7 @@ interface HeaderProps {
   onNavigateHome: (sectionId?: string) => void;
   onNavigateProducts: (deptId?: string) => void;
   onNavigateCoupons: () => void;
+  onNavigateCars: (carId?: string) => void;
   onSelectStore: (storeId: string) => void;
   onNavigateLegal: (route: 'disclosure' | 'privacy') => void;
   onOpenInstallModal: () => void;
@@ -55,6 +57,7 @@ export const Header: React.FC<HeaderProps> = ({
   onNavigateHome,
   onNavigateProducts,
   onNavigateCoupons,
+  onNavigateCars,
   onSelectStore,
   onNavigateLegal,
   onOpenInstallModal,
@@ -367,6 +370,19 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <LayoutGrid className="w-3.5 h-3.5" />
             <span>{t.productsNav}</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => onNavigateCars()}
+            className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm border text-[13px] font-bold whitespace-nowrap shrink-0 cursor-pointer transition-colors ${
+              activeRoute === 'cars'
+                ? 'bg-[#FFD814] border-[#FCD200] text-zinc-950'
+                : 'border-transparent hover:border-white text-[#99F6E4]'
+            }`}
+          >
+            <Car className="w-3.5 h-3.5" />
+            <span>{t.carsNav}</span>
           </button>
 
           <span className="h-4 w-px bg-white/25 mx-1 shrink-0" aria-hidden="true" />

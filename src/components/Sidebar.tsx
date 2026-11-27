@@ -47,6 +47,7 @@ interface SidebarProps {
   onSelectCatalogCategory: (categoryId: CatalogCategoryId) => void;
   onNavigateProducts: (deptId?: string) => void;
   onNavigateCoupons: () => void;
+  onNavigateCars: (carId?: string) => void;
   onSelectStore: (storeId: string) => void;
   onNavigateLegal: (route: 'disclosure' | 'privacy') => void;
   onOpenInstallModal: () => void;
@@ -85,6 +86,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onSelectCatalogCategory,
   onNavigateProducts,
   onNavigateCoupons,
+  onNavigateCars,
   onSelectStore,
   onNavigateLegal,
   onOpenInstallModal,
@@ -300,6 +302,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <span className="truncate">{t.productsNav}</span>
             </span>
             <ChevronRight className="w-3.5 h-3.5 opacity-70 shrink-0 rtl:rotate-180" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              onNavigateCars();
+              if (isDrawer) onCloseDrawer();
+            }}
+            className={`w-full flex items-center justify-between gap-2 px-2.5 py-2 rounded-md text-[13px] font-bold transition-colors cursor-pointer ${
+              activeRoute === 'cars'
+                ? 'bg-[#00453E] text-white'
+                : 'bg-teal-50 text-[#00453E] hover:bg-teal-100 border border-teal-200'
+            }`}
+          >
+            <span className="flex items-center gap-2 truncate">
+              <Car className="w-4 h-4 shrink-0" />
+              <span className="truncate">{t.carsNav}</span>
+            </span>
+            <ChevronRight className="w-3.5 h-3.5 opacity-75 shrink-0 rtl:rotate-180" />
           </button>
         </div>
 
