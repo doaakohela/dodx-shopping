@@ -13,10 +13,10 @@ import {
   Tag,
   Zap,
 } from 'lucide-react';
-import generalEvSedanImg from '../assets/images/side_new_ev_sedan_1795724505623.jpg';
-import generalEvCrossoverImg from '../assets/images/side_new_ev_crossover_1795724506500.jpg';
-import generalHybridSuvImg from '../assets/images/side_new_hybrid_suv_1795724507453.jpg';
-import generalEvCoupeImg from '../assets/images/side_new_ev_coupe_1795724507612.jpg';
+import generalEvSedanImg from '../assets/images/luxury_side_sedan_1795758358855.jpg';
+import generalEvCrossoverImg from '../assets/images/luxury_side_crossover_1795758360145.jpg';
+import generalHybridSuvImg from '../assets/images/luxury_side_suv_1795758360879.jpg';
+import generalEvCoupeImg from '../assets/images/luxury_side_coupe_1795758360302.jpg';
 import {
   CATALOG_CATEGORIES,
   CatalogCategoryId,
@@ -260,9 +260,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
   const isAr = lang === 'ar';
   const heroScrollRef = useRef<HTMLDivElement | null>(null);
   const newBestScrollRef = useRef<HTMLDivElement | null>(null);
+  const vehiclesScrollRef = useRef<HTMLDivElement | null>(null);
   const [newDealStoreTab, setNewDealStoreTab] = useState<string>('all');
   const [newDealSortMode, setNewDealSortMode] = useState<'cheapest' | 'discount'>('discount');
-  const [activeVehicleIdx, setActiveVehicleIdx] = useState<number>(0);
   const [failedVehicleImgs, setFailedVehicleImgs] = useState<Record<number, boolean>>({});
   const countdown = useFlashCountdown();
 
@@ -304,10 +304,12 @@ export const HomeView: React.FC<HomeViewProps> = ({
     [t.vehiclesShowcase]
   );
 
-  const activeVehicle = vehicleSlides[activeVehicleIdx] ?? vehicleSlides[0];
-
-  const handleStepVehicle = (delta: number) => {
-    setActiveVehicleIdx((prev) => (prev + delta + vehicleSlides.length) % vehicleSlides.length);
+  const scrollVehicles = (dir: 'left' | 'right') => {
+    if (!vehiclesScrollRef.current) return;
+    vehiclesScrollRef.current.scrollBy({
+      left: dir === 'left' ? -300 : 300,
+      behavior: 'smooth',
+    });
   };
 
   const rawQuery = searchQuery.trim();
@@ -453,162 +455,103 @@ export const HomeView: React.FC<HomeViewProps> = ({
   return (
     <div className="bg-[#EAEDED] min-h-screen pb-10">
       <div className="max-w-[1440px] mx-auto px-3 sm:px-5 pt-4 space-y-6">
-        {/* First Section: Upcoming Latest Vehicles Showroom Banner */}
+        {/* First Section: Upcoming Latest Vehicles Turquoise Gradient Showcase */}
         <section
           aria-labelledby="vehicles-upcoming-heading"
-          className="rounded-xl overflow-hidden border border-[#24344D] bg-gradient-to-br from-[#0B1220] via-[#111B2E] to-[#18263E] text-white shadow-sm"
+          className="rounded-xl overflow-hidden border border-[#149492]/55 bg-gradient-to-br from-[#00453E] via-[#007E7B] to-[#0A8B8E] text-white shadow-sm"
         >
-          <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch">
-            {/* Editorial Copy & Electric Vehicle Selector */}
-            <div className="lg:col-span-5 p-5 sm:p-7 flex flex-col justify-between gap-6 border-b lg:border-b-0 lg:border-e border-white/10">
-              <div>
-                <p className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide text-[#FDE68A]">
-                  <Zap className="w-3.5 h-3.5 text-[#FFD814] shrink-0" />
-                  <span>{t.vehiclesBannerKicker}</span>
-                </p>
-                <h1
-                  id="vehicles-upcoming-heading"
-                  className="mt-2 font-display font-extrabold tracking-tight text-white leading-[1.15]"
-                  style={{ fontSize: 'clamp(1.75rem, 3vw, 2.6rem)', textWrap: 'balance' }}
-                >
-                  {t.vehiclesBannerTitle}
-                </h1>
-                <p className="mt-3 text-sm text-slate-200 leading-relaxed max-w-xl">
-                  {t.vehiclesBannerSub}
-                </p>
+          {/* Top Header Row */}
+          <div className="px-4 sm:px-6 pt-5 pb-4 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/15">
+            <div className="max-w-3xl">
+              <p className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide text-[#99F6E4]">
+                <Zap className="w-3.5 h-3.5 text-[#FFD814] shrink-0" />
+                <span>{t.vehiclesBannerKicker}</span>
+              </p>
+              <h1
+                id="vehicles-upcoming-heading"
+                className="mt-1.5 font-display font-extrabold tracking-tight text-white leading-[1.15]"
+                style={{ fontSize: 'clamp(1.5rem, 2.6vw, 2.25rem)', textWrap: 'balance' }}
+              >
+                {t.vehiclesBannerTitle}
+              </h1>
+              <p className="mt-2 text-xs sm:text-sm text-teal-50/90 leading-relaxed">
+                {t.vehiclesBannerSub}
+              </p>
+            </div>
 
-                {/* Interactive Electric Vehicle Type Switcher */}
-                <div
-                  role="tablist"
-                  aria-label={t.vehiclesBannerTitle}
-                  className="mt-5 flex flex-wrap items-center gap-1.5"
-                >
-                  {vehicleSlides.map((vehicle, idx) => {
-                    const isActive = idx === activeVehicleIdx;
-                    return (
-                      <button
-                        key={vehicle.label}
-                        type="button"
-                        role="tab"
-                        aria-selected={isActive}
-                        onClick={() => setActiveVehicleIdx(idx)}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap shrink-0 cursor-pointer transition-colors border ${
-                          isActive
-                            ? 'bg-[#FFD814] text-zinc-950 border-[#FFD814]'
-                            : 'bg-white/10 text-slate-200 border-white/15 hover:bg-white/20 hover:text-white'
-                        }`}
-                      >
-                        {vehicle.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                onClick={() => onSelectCategory('cars')}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#FFD814] hover:bg-[#F7CA00] text-zinc-950 text-xs sm:text-sm font-extrabold rounded-lg cursor-pointer transition-colors whitespace-nowrap shrink-0"
+              >
+                <Car className="w-4 h-4 shrink-0" />
+                <span>{t.vehiclesBannerCta}</span>
+              </button>
 
-              <div className="pt-3 flex flex-wrap items-center justify-between gap-3 border-t border-white/15">
+              <div className="flex sm:hidden items-center gap-1.5">
                 <button
                   type="button"
-                  onClick={() => onSelectCategory('cars')}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#FFD814] hover:bg-[#F7CA00] text-zinc-950 text-xs sm:text-sm font-extrabold rounded-lg cursor-pointer transition-colors whitespace-nowrap shrink-0"
+                  onClick={() => scrollVehicles('left')}
+                  aria-label="Scroll left"
+                  className="w-9 h-9 rounded-lg bg-white/15 hover:bg-white/25 border border-white/25 text-white flex items-center justify-center cursor-pointer transition-colors"
                 >
-                  <Car className="w-4 h-4 shrink-0" />
-                  <span>{t.vehiclesBannerCta}</span>
+                  <ChevronLeft className="w-4 h-4" />
                 </button>
-
-                <div className="flex items-center gap-1.5">
-                  <button
-                    type="button"
-                    onClick={() => handleStepVehicle(-1)}
-                    aria-label="Previous vehicle"
-                    className="w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 text-white flex items-center justify-center cursor-pointer transition-colors"
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleStepVehicle(1)}
-                    aria-label="Next vehicle"
-                    className="w-9 h-9 rounded-lg bg-white/10 hover:bg-white/20 border border-white/20 text-white flex items-center justify-center cursor-pointer transition-colors"
-                  >
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => scrollVehicles('right')}
+                  aria-label="Scroll right"
+                  className="w-9 h-9 rounded-lg bg-white/15 hover:bg-white/25 border border-white/25 text-white flex items-center justify-center cursor-pointer transition-colors"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
               </div>
             </div>
+          </div>
 
-            {/* Scenic Commercial Vehicle Photography Showcase + 4-Car Gallery Strip */}
-            <div className="lg:col-span-7 p-4 sm:p-5 flex flex-col justify-between gap-3 bg-[#090E18]/65">
-              <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden bg-[#0D1524] border border-white/15">
-                {!failedVehicleImgs[activeVehicleIdx] ? (
-                  <img
-                    src={activeVehicle.image}
-                    alt={activeVehicle.title}
-                    loading="eager"
-                    referrerPolicy="no-referrer"
-                    onError={() =>
-                      setFailedVehicleImgs((prev) => ({ ...prev, [activeVehicleIdx]: true }))
-                    }
-                    className="w-full h-full object-cover transition-transform duration-500"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-[#0B1220] via-[#111B2E] to-[#18263E] flex flex-col items-center justify-center p-6 text-center">
-                    <Car className="w-12 h-12 text-[#FFD814] mb-2" />
-                    <p className="font-display text-base font-bold text-white">{activeVehicle.title}</p>
-                  </div>
-                )}
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/35 to-transparent p-4 sm:p-5">
-                  <p className="font-display text-base sm:text-xl font-extrabold text-white tracking-tight">
-                    {activeVehicle.title}
+          {/* All 4 Vehicles Visible Across Mobile (Swipe), Tablet (2x2), and Desktop (4-Column Grid) */}
+          <div
+            ref={vehiclesScrollRef}
+            className="p-4 sm:p-5 flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {vehicleSlides.map((vehicle, idx) => (
+              <button
+                key={vehicle.label}
+                type="button"
+                onClick={() => onSelectCategory('cars')}
+                className="group w-[82vw] max-w-[320px] sm:w-auto sm:max-w-none shrink-0 snap-start rounded-lg overflow-hidden bg-[#002D2B]/80 border border-white/15 hover:border-[#FFD814]/80 text-start cursor-pointer transition-all flex flex-col"
+              >
+                <div className="relative aspect-[16/9] w-full bg-[#002321] overflow-hidden">
+                  {!failedVehicleImgs[idx] ? (
+                    <img
+                      src={vehicle.image}
+                      alt={vehicle.title}
+                      loading="eager"
+                      referrerPolicy="no-referrer"
+                      onError={() =>
+                        setFailedVehicleImgs((prev) => ({ ...prev, [idx]: true }))
+                      }
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-[#00453E] via-[#007A78] to-[#005960] flex flex-col items-center justify-center p-4 text-center">
+                      <Car className="w-9 h-9 text-[#FFD814] mb-1.5" />
+                      <p className="font-display text-sm font-bold text-white">{vehicle.title}</p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="px-3.5 py-3 flex-1 flex flex-col justify-between gap-1 border-t border-white/10">
+                  <p className="font-display text-sm font-bold text-white group-hover:text-[#FFD814] transition-colors line-clamp-1">
+                    {vehicle.title}
                   </p>
-                  <p className="mt-1 text-xs sm:text-sm text-slate-200">
-                    {activeVehicle.spec}
+                  <p className="text-[11px] sm:text-xs text-teal-100/85 line-clamp-1">
+                    {vehicle.spec}
                   </p>
                 </div>
-              </div>
-
-              {/* 4 Scenic Vehicles Gallery Strip */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
-                {vehicleSlides.map((vehicle, idx) => {
-                  const isActive = idx === activeVehicleIdx;
-                  return (
-                    <button
-                      key={`thumb-${vehicle.label}`}
-                      type="button"
-                      onClick={() => setActiveVehicleIdx(idx)}
-                      className={`group relative rounded-lg overflow-hidden border text-start cursor-pointer transition-all ${
-                        isActive
-                          ? 'border-[#FFD814] ring-1 ring-[#FFD814]/70'
-                          : 'border-white/15 opacity-85 hover:opacity-100 hover:border-white/45'
-                      }`}
-                    >
-                      <div className="aspect-[16/9] w-full bg-[#0D1524] overflow-hidden">
-                        {!failedVehicleImgs[idx] ? (
-                          <img
-                            src={vehicle.image}
-                            alt={vehicle.title}
-                            loading="eager"
-                            referrerPolicy="no-referrer"
-                            onError={() =>
-                              setFailedVehicleImgs((prev) => ({ ...prev, [idx]: true }))
-                            }
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-[#0D1524]">
-                            <Car className="w-5 h-5 text-[#FFD814]" />
-                          </div>
-                        )}
-                      </div>
-                      <div className="bg-[#0B1220]/95 px-2.5 py-1.5 border-t border-white/10">
-                        <p className="text-[11px] font-bold text-white truncate">
-                          {vehicle.label}
-                        </p>
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+              </button>
+            ))}
           </div>
         </section>
 
