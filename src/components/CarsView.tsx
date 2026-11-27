@@ -88,6 +88,46 @@ export const CarsView: React.FC<CarsViewProps> = ({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [initialCarId]);
 
+  useEffect(() => {
+    const setMeta = (attr: 'property' | 'name', key: string, content: string) => {
+      let el = document.querySelector(`meta[${attr}="${key}"]`) as HTMLMetaElement | null;
+      if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute(attr, key);
+        document.head.appendChild(el);
+      }
+      el.setAttribute('content', content);
+    };
+
+    const origin = window.location.origin;
+    if (!selectedVehicle) {
+      document.title = isAr
+        ? 'السيارات الكهربائية — مواصفات وأسعار شاملة | Dodx'
+        : 'Electric Vehicles — Full Specs & Prices | Dodx';
+      return;
+    }
+
+    const activeTrimId = selectedTrims[selectedVehicle.id] || selectedVehicle.trims[0]?.id;
+    const activeTrim =
+      selectedVehicle.trims.find((tr) => tr.id === activeTrimId) || selectedVehicle.trims[0];
+    const modelName = isAr ? selectedVehicle.modelAr : selectedVehicle.modelEn;
+    const priceLabel = `$${activeTrim.fobPriceUsd.toLocaleString()}`;
+    const specsLine = isAr
+      ? `${selectedVehicle.highlightRangeAr} · ${selectedVehicle.highlightBatteryAr} · ${selectedVehicle.highlightSeatsAr} · ${selectedVehicle.highlightPowerAr}`
+      : `${selectedVehicle.highlightRangeEn} · ${selectedVehicle.highlightBatteryEn} · ${selectedVehicle.highlightSeatsEn} · ${selectedVehicle.highlightPowerEn}`;
+    const ogImgRaw = selectedVehicle.images[0]?.src || '/assets/aistudio/image_9cb04596.png';
+    const absImage = ogImgRaw.startsWith('http') ? ogImgRaw : `${origin}${ogImgRaw}`;
+
+    document.title = `${modelName} — ${priceLabel} | Dodx`;
+    setMeta('property', 'og:title', `${modelName} — ${priceLabel}`);
+    setMeta('property', 'og:description', `${priceLabel} · ${specsLine}`);
+    setMeta('property', 'og:image', absImage);
+    setMeta('property', 'og:url', `${origin}/p/${encodeURIComponent(selectedVehicle.id)}`);
+    setMeta('name', 'twitter:title', `${modelName} — ${priceLabel}`);
+    setMeta('name', 'twitter:description', `${priceLabel} · ${specsLine}`);
+    setMeta('name', 'twitter:image', absImage);
+  }, [selectedVehicle, selectedTrims, isAr]);
+
   const filteredVehicles = useMemo(() => {
     if (filter === 'all') return EV_VEHICLES;
     return EV_VEHICLES.filter((v) => v.categoryTag === filter);
@@ -357,8 +397,14 @@ export const CarsView: React.FC<CarsViewProps> = ({
                   <div className="flex flex-wrap items-center gap-2 shrink-0 self-start">
                     <ShareButton
                       url={`/cars?model=${selectedVehicle.id}`}
+                      shareId={selectedVehicle.id}
                       title={isAr ? selectedVehicle.modelAr : selectedVehicle.modelEn}
                       price={`$${activeTrim.fobPriceUsd.toLocaleString()}`}
+                      specsText={
+                        isAr
+                          ? `${selectedVehicle.highlightRangeAr} · ${selectedVehicle.highlightBatteryAr} · ${selectedVehicle.highlightSeatsAr} · ${selectedVehicle.highlightPowerAr}`
+                          : `${selectedVehicle.highlightRangeEn} · ${selectedVehicle.highlightBatteryEn} · ${selectedVehicle.highlightSeatsEn} · ${selectedVehicle.highlightPowerEn}`
+                      }
                       isAr={isAr}
                       dropDirection="down"
                       entityType="car"
@@ -803,8 +849,14 @@ export const CarsView: React.FC<CarsViewProps> = ({
                       </button>
                       <ShareButton
                         url={`/cars?model=${vehicle.id}`}
+                        shareId={vehicle.id}
                         title={isAr ? vehicle.modelAr : vehicle.modelEn}
                         price={`$${activeTrim.fobPriceUsd.toLocaleString()}`}
+                        specsText={
+                          isAr
+                            ? `${vehicle.highlightRangeAr} · ${vehicle.highlightBatteryAr} · ${vehicle.highlightSeatsAr} · ${vehicle.highlightPowerAr}`
+                            : `${vehicle.highlightRangeEn} · ${vehicle.highlightBatteryEn} · ${vehicle.highlightSeatsEn} · ${vehicle.highlightPowerEn}`
+                        }
                         isAr={isAr}
                         dropDirection="up"
                         entityType="car"

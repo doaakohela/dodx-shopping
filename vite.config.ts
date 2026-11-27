@@ -6,6 +6,8 @@ import {defineConfig} from 'vite';
 
 interface ShareCatalogEntry {
   id: string;
+  isVehicle?: boolean;
+  storeId?: string;
   title: string;
   titleAr?: string;
   description: string;
@@ -15,6 +17,8 @@ interface ShareCatalogEntry {
   discount?: string;
   code?: string;
   image: string;
+  imageWidth?: number;
+  imageHeight?: number;
 }
 
 function escapeAttr(value: string): string {
@@ -82,6 +86,7 @@ function buildStaticProductHtml(
   item: ShareCatalogEntry,
   siteOrigin: string
 ): string {
+  const isVehicle = Boolean(item.isVehicle || item.storeId === 'cars');
   const titleParts = [
     item.title,
     item.price ? item.price : '',
@@ -90,20 +95,28 @@ function buildStaticProductHtml(
   const fullTitle = `${titleParts.join(' — ')} | Dodx`;
   const ogTitle = `${item.title}${item.price ? ` — ${item.price}` : ''}${item.discount ? ` (${item.discount})` : ''}`;
 
-  const descParts = [
-    item.price ? `Price After Discount: ${item.price}` : '',
-    item.oldPrice ? `Was: ${item.oldPrice}` : '',
-    item.discount ? `Discount: ${item.discount}` : '',
-    item.code ? `Code: ${item.code}` : '',
-    item.description,
-  ].filter(Boolean);
+  const descParts = isVehicle
+    ? [
+        item.price ? `Price: ${item.price}` : '',
+        item.description,
+      ].filter(Boolean)
+    : [
+        item.price ? `Price After Discount: ${item.price}` : '',
+        item.oldPrice ? `Was: ${item.oldPrice}` : '',
+        item.discount ? `Discount: ${item.discount}` : '',
+        item.code ? `Code: ${item.code}` : '',
+        item.description,
+      ].filter(Boolean);
   const fullDesc = descParts.join(' · ');
 
   const absImage = item.image.startsWith('http')
     ? item.image
     : `${siteOrigin}${item.image.startsWith('/') ? '' : '/'}${item.image}`;
   const imgType = absImage.toLowerCase().endsWith('.png') ? 'image/png' : 'image/jpeg';
-  const dims = getLocalImageDimensions(item.image);
+  const dims =
+    item.imageWidth && item.imageHeight
+      ? {width: item.imageWidth, height: item.imageHeight}
+      : getLocalImageDimensions(item.image);
   const shareUrl = `${siteOrigin}/p/${encodeURIComponent(item.id)}`;
   const {amount, currency} = parsePriceAmount(item.price);
   const {amount: oldAmount} = parsePriceAmount(item.oldPrice);
@@ -171,7 +184,7 @@ export default defineConfig(() => {
           const templateHtml = fs.readFileSync(distIndexPath, 'utf8');
 
           // 1. Pre-render clean SPA entry files for top-level routes so static CDNs never 404
-          const spaRoutes = ['products', 'deals', 'coupons'];
+          const spaRoutes = ['products', 'deals', 'coupons', 'cars'];
           for (const routeName of spaRoutes) {
             const routeDir = path.resolve(distDir, routeName);
             fs.mkdirSync(routeDir, {recursive: true});

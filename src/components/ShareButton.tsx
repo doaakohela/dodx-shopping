@@ -15,6 +15,7 @@ interface ShareButtonProps {
   align?: 'start' | 'end';
   tone?: 'light' | 'dark';
   entityType?: 'product' | 'car';
+  specsText?: string;
 }
 
 interface MenuPosition {
@@ -36,6 +37,7 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
   align = 'end',
   tone = 'light',
   entityType = 'product',
+  specsText,
 }) => {
   const [open, setOpen] = useState(false);
   const [copiedMode, setCopiedMode] = useState<'link' | 'ig' | null>(null);
@@ -170,6 +172,7 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
       : '',
     oldPrice ? (isAr ? `بدلاً من ${oldPrice}` : `Was ${oldPrice}`) : '',
     discount ? (isAr ? `الخصم: ${discount}` : `Discount: ${discount}`) : '',
+    specsText || '',
   ]
     .filter(Boolean)
     .join(' · ');

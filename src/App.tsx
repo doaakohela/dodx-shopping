@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppRoute, CouponsPayload, Store } from './types/coupons';
 import { CatalogCategoryId } from './data/unifiedCatalog';
+import { EV_VEHICLES } from './data/evVehiclesCatalog';
 import {
   detectInitialLanguage,
   getLanguageMeta,
@@ -29,7 +30,11 @@ function parseLocation(): { route: AppRoute; storeParam: string | null } {
   if (path.startsWith('/p/')) {
     const slug = rawPath.slice(3).replace(/\/+$/, '');
     if (slug) {
-      return { route: 'product', storeParam: decodeURIComponent(slug) };
+      const decoded = decodeURIComponent(slug);
+      if (EV_VEHICLES.some((v) => v.id === decoded)) {
+        return { route: 'cars', storeParam: decoded };
+      }
+      return { route: 'product', storeParam: decoded };
     }
   }
   if (productQuery) {

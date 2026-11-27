@@ -3,6 +3,7 @@ import path from 'node:path';
 
 interface ShareCatalogItem {
   id: string;
+  isVehicle?: boolean;
   title: string;
   titleAr?: string;
   description: string;
@@ -12,6 +13,8 @@ interface ShareCatalogItem {
   discount?: string;
   code?: string;
   image: string;
+  imageWidth?: number;
+  imageHeight?: number;
   storeId: string;
   storeName: string;
   affiliateUrl: string;
@@ -130,9 +133,10 @@ function loadDistIndexHtml(): string | null {
 }
 
 export default function handler(req: MinimalReq, res: MinimalRes): void {
-  const rawId = req.query?.id;
+  const rawId = req.query?.id ?? req.query?.model;
   const id = Array.isArray(rawId) ? rawId[0] : rawId;
   const decodedId = id ? decodeURIComponent(id.replace(/\/+$/, '').trim()) : '';
+  const isCarsOverview = !decodedId && (req.query?.cars === '1' || req.query?.cars === 'true');
 
   const protoRaw = req.headers?.['x-forwarded-proto'];
   const proto = Array.isArray(protoRaw) ? protoRaw[0] : protoRaw?.split(',')[0]?.trim() || 'https';
@@ -142,36 +146,63 @@ export default function handler(req: MinimalReq, res: MinimalRes): void {
 
   const catalog = loadCatalog();
   const item = decodedId ? catalog[decodedId] : undefined;
+  const isVehicle = Boolean(item && (item.isVehicle || item.storeId === 'cars'));
 
   const title = item
     ? `${item.title}${item.price ? ` — ${item.price}` : ''}${item.discount ? ` (${item.discount})` : ''} | Dodx`
-    : 'Dodx — Verified Coupons & Smart Shopping Deals | dodx.shop';
+    : isCarsOverview
+      ? 'Electric Vehicles — Wuling, Changan Lumin, BYD Seagull & Geely | Dodx'
+      : 'Dodx — Verified Coupons & Smart Shopping Deals | dodx.shop';
 
   const ogTitle = item
     ? `${item.title}${item.price ? ` — ${item.price}` : ''}${item.discount ? ` (${item.discount})` : ''}`
-    : 'Dodx — Verified Coupons & Smart Shopping Deals';
+    : isCarsOverview
+      ? 'Drive Your New Electric Car Today — Smart Value & Proven Range'
+      : 'Dodx — Verified Coupons & Smart Shopping Deals';
 
   const description = item
-    ? [
-        item.price ? `Price After Discount: ${item.price}` : '',
-        item.oldPrice ? `Was: ${item.oldPrice}` : '',
-        item.discount ? `Discount: ${item.discount}` : '',
-        item.code ? `Code: ${item.code}` : '',
-        item.description,
-      ]
-        .filter(Boolean)
-        .join(' · ')
-    : 'Save money automatically with verified coupons, promo codes, and smart shopping deals on dodx.shop.';
+    ? isVehicle
+      ? [
+          item.price ? `Price: ${item.price}` : '',
+          item.description,
+        ]
+          .filter(Boolean)
+          .join(' · ')
+      : [
+          item.price ? `Price After Discount: ${item.price}` : '',
+          item.oldPrice ? `Was: ${item.oldPrice}` : '',
+          item.discount ? `Discount: ${item.discount}` : '',
+          item.code ? `Code: ${item.code}` : '',
+          item.description,
+        ]
+          .filter(Boolean)
+          .join(' · ')
+    : isCarsOverview
+      ? 'Discover 6 electric vehicle models with up to 305 km range, 30-minute fast charging, and smart safety features starting from $7,250.'
+      : 'Save money automatically with verified coupons, promo codes, and smart shopping deals on dodx.shop.';
 
   const image = item?.image
     ? item.image.startsWith('http')
       ? item.image
       : `${origin}${item.image.startsWith('/') ? '' : '/'}${item.image}`
-    : `${origin}/assets/images/hero_smart_shopping_1794810594006.jpg`;
+    : isCarsOverview
+      ? `${origin}/assets/aistudio/image_9cb04596.png`
+      : `${origin}/assets/images/hero_smart_shopping_1794810594006.jpg`;
   const imgType = image.toLowerCase().endsWith('.png') ? 'image/png' : 'image/jpeg';
-  const dims = item?.image ? getLocalImageDimensions(item.image) : null;
+  const dims =
+    item?.imageWidth && item?.imageHeight
+      ? { width: item.imageWidth, height: item.imageHeight }
+      : item?.image
+        ? getLocalImageDimensions(item.image)
+        : isCarsOverview
+          ? { width: 708, height: 478 }
+          : null;
 
-  const shareUrl = item ? `${origin}/p/${encodeURIComponent(item.id)}` : origin;
+  const shareUrl = item
+    ? `${origin}/p/${encodeURIComponent(item.id)}`
+    : isCarsOverview
+      ? `${origin}/cars`
+      : origin;
   const { amount, currency } = parsePriceAmount(item?.price);
   const { amount: oldAmount } = parsePriceAmount(item?.oldPrice);
 

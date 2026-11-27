@@ -602,11 +602,17 @@ export const HomeView: React.FC<HomeViewProps> = ({
                         </button>
                         <ShareButton
                           url={`/cars?model=${vehicle.id}`}
+                          shareId={vehicle.id}
                           title={isAr ? vehicle.modelAr : vehicle.modelEn}
                           price={
                             vehicle.trims.length > 1
                               ? '205 km: $8,500 · 305 km: $9,050'
                               : `$${vehicle.startingPriceUsd.toLocaleString()}`
+                          }
+                          specsText={
+                            isAr
+                              ? `${vehicle.highlightRangeAr} · ${vehicle.highlightBatteryAr} · ${vehicle.highlightSeatsAr} · ${vehicle.highlightPowerAr}`
+                              : `${vehicle.highlightRangeEn} · ${vehicle.highlightBatteryEn} · ${vehicle.highlightSeatsEn} · ${vehicle.highlightPowerEn}`
                           }
                           isAr={isAr}
                           tone="dark"

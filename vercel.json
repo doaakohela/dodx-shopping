@@ -13,6 +13,8 @@
     { "source": "/deals/(.*)", "destination": "/index.html" },
     { "source": "/coupons", "destination": "/index.html" },
     { "source": "/coupons/(.*)", "destination": "/index.html" },
+    { "source": "/cars", "destination": "/api/share?cars=1" },
+    { "source": "/cars/(.*)", "destination": "/index.html" },
     { "source": "/p/:id", "destination": "/api/share?id=:id" },
     { "source": "/privacy", "destination": "/privacy/index.html" },
     { "source": "/privacy/", "destination": "/privacy/index.html" },

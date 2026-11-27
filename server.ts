@@ -9,6 +9,7 @@ const __dirname = path.dirname(__filename);
 
 interface ShareCatalogItem {
   id: string;
+  isVehicle?: boolean;
   title: string;
   titleAr?: string;
   description: string;
@@ -20,6 +21,8 @@ interface ShareCatalogItem {
   savingsEn?: string;
   savingsAr?: string;
   image: string;
+  imageWidth?: number;
+  imageHeight?: number;
   storeId: string;
   storeName: string;
   affiliateUrl: string;
@@ -118,6 +121,7 @@ function injectOpenGraphHtml(
   const item = catalog[productId];
   if (!item) return html;
 
+  const isVehicle = Boolean(item.isVehicle || item.storeId === 'cars');
   const titleParts = [
     item.title,
     item.price ? item.price : '',
@@ -126,20 +130,28 @@ function injectOpenGraphHtml(
   const fullTitle = `${titleParts.join(' — ')} | Dodx`;
   const ogTitle = `${item.title}${item.price ? ` — ${item.price}` : ''}${item.discount ? ` (${item.discount})` : ''}`;
 
-  const descParts = [
-    item.price ? `Price After Discount: ${item.price}` : '',
-    item.oldPrice ? `Was: ${item.oldPrice}` : '',
-    item.discount ? `Discount: ${item.discount}` : '',
-    item.code ? `Code: ${item.code}` : '',
-    item.description,
-  ].filter(Boolean);
+  const descParts = isVehicle
+    ? [
+        item.price ? `Price: ${item.price}` : '',
+        item.description,
+      ].filter(Boolean)
+    : [
+        item.price ? `Price After Discount: ${item.price}` : '',
+        item.oldPrice ? `Was: ${item.oldPrice}` : '',
+        item.discount ? `Discount: ${item.discount}` : '',
+        item.code ? `Code: ${item.code}` : '',
+        item.description,
+      ].filter(Boolean);
   const fullDesc = descParts.join(' · ');
 
   const absImage = item.image.startsWith('http')
     ? item.image
     : `${origin}${item.image.startsWith('/') ? '' : '/'}${item.image}`;
   const imgType = absImage.toLowerCase().endsWith('.png') ? 'image/png' : 'image/jpeg';
-  const dims = getLocalImageDimensions(item.image);
+  const dims =
+    item.imageWidth && item.imageHeight
+      ? { width: item.imageWidth, height: item.imageHeight }
+      : getLocalImageDimensions(item.image);
   const shareUrl = `${origin}/p/${encodeURIComponent(item.id)}`;
   const { amount, currency } = parsePriceAmount(item.price);
   const { amount: oldAmount } = parsePriceAmount(item.oldPrice);
@@ -200,7 +212,7 @@ function extractProductId(req: Request): string | undefined {
       return rawParam.replace(/\/+$/, '').trim();
     }
   }
-  const queryProduct = req.query.product;
+  const queryProduct = req.query.product ?? req.query.model;
   if (typeof queryProduct === 'string' && queryProduct.trim()) {
     return queryProduct.trim();
   }
