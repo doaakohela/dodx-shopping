@@ -20,6 +20,7 @@ import {
   FOB_DISCLAIMER,
 } from '../data/evVehiclesCatalog';
 import { LanguageCode, TranslationDict } from '../i18n/translations';
+import { ShareButton } from './ShareButton';
 
 const WHATSAPP_NUMBER = '201002477274';
 
@@ -353,23 +354,34 @@ export const CarsView: React.FC<CarsViewProps> = ({
                     </h1>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={() => handleCopySpecs(selectedVehicle)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-300 bg-white hover:bg-zinc-50 text-xs font-bold text-zinc-800 cursor-pointer transition-colors shrink-0 self-start"
-                  >
-                    {copiedCarId === selectedVehicle.id ? (
-                      <>
-                        <Check className="w-3.5 h-3.5 text-[#007600]" />
-                        <span>{isAr ? 'تم نسخ المواصفات' : 'Specs Copied'}</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3.5 h-3.5" />
-                        <span>{isAr ? 'نسخ المواصفات' : 'Copy Listing'}</span>
-                      </>
-                    )}
-                  </button>
+                  <div className="flex flex-wrap items-center gap-2 shrink-0 self-start">
+                    <ShareButton
+                      url={`/cars?model=${selectedVehicle.id}`}
+                      title={isAr ? selectedVehicle.modelAr : selectedVehicle.modelEn}
+                      price={`$${activeTrim.fobPriceUsd.toLocaleString()}`}
+                      isAr={isAr}
+                      dropDirection="down"
+                      entityType="car"
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() => handleCopySpecs(selectedVehicle)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-zinc-300 bg-white hover:bg-zinc-50 text-xs font-bold text-zinc-800 cursor-pointer transition-colors shrink-0"
+                    >
+                      {copiedCarId === selectedVehicle.id ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 text-[#007600]" />
+                          <span>{isAr ? 'تم نسخ المواصفات' : 'Specs Copied'}</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3.5 h-3.5" />
+                          <span>{isAr ? 'نسخ المواصفات' : 'Copy Listing'}</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </div>
 
                 <p className="text-xs sm:text-sm text-zinc-700 leading-relaxed">
@@ -781,13 +793,23 @@ export const CarsView: React.FC<CarsViewProps> = ({
                       </span>
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={() => onSelectCar(vehicle.id)}
-                      className="px-3.5 py-2 rounded-lg bg-[#FFD814] hover:bg-[#F7CA00] border border-[#FCD200] text-zinc-950 text-xs font-extrabold cursor-pointer transition-colors"
-                    >
-                      {isAr ? 'المواصفات الكاملة' : 'Full Specs'}
-                    </button>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => onSelectCar(vehicle.id)}
+                        className="px-3.5 py-2 rounded-lg bg-[#FFD814] hover:bg-[#F7CA00] border border-[#FCD200] text-zinc-950 text-xs font-extrabold cursor-pointer transition-colors"
+                      >
+                        {isAr ? 'المواصفات الكاملة' : 'Full Specs'}
+                      </button>
+                      <ShareButton
+                        url={`/cars?model=${vehicle.id}`}
+                        title={isAr ? vehicle.modelAr : vehicle.modelEn}
+                        price={`$${activeTrim.fobPriceUsd.toLocaleString()}`}
+                        isAr={isAr}
+                        dropDirection="up"
+                        entityType="car"
+                      />
+                    </div>
                   </div>
 
                   <div className="pt-1 space-y-1.5">

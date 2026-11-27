@@ -592,13 +592,28 @@ export const HomeView: React.FC<HomeViewProps> = ({
                         )}
                       </div>
 
-                      <button
-                        type="button"
-                        onClick={() => onNavigateCars(vehicle.id)}
-                        className="px-3 py-1.5 rounded-lg bg-[#FFD814] hover:bg-[#F7CA00] text-zinc-950 text-xs font-extrabold cursor-pointer transition-colors whitespace-nowrap"
-                      >
-                        {isAr ? 'تفاصيل السيارة' : 'View Car'}
-                      </button>
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => onNavigateCars(vehicle.id)}
+                          className="px-3 py-1.5 rounded-lg bg-[#FFD814] hover:bg-[#F7CA00] text-zinc-950 text-xs font-extrabold cursor-pointer transition-colors whitespace-nowrap"
+                        >
+                          {isAr ? 'تفاصيل السيارة' : 'View Car'}
+                        </button>
+                        <ShareButton
+                          url={`/cars?model=${vehicle.id}`}
+                          title={isAr ? vehicle.modelAr : vehicle.modelEn}
+                          price={
+                            vehicle.trims.length > 1
+                              ? '205 km: $8,500 · 305 km: $9,050'
+                              : `$${vehicle.startingPriceUsd.toLocaleString()}`
+                          }
+                          isAr={isAr}
+                          tone="dark"
+                          dropDirection="up"
+                          entityType="car"
+                        />
+                      </div>
                     </div>
                   </div>
                 </article>

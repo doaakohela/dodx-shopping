@@ -7,6 +7,7 @@ const OFFERS_API_ENDPOINTS = [
 const SITE_HOME_URL = 'https://www.dodx.shop';
 const SITE_PRODUCTS_URL = 'https://www.dodx.shop/products';
 const SITE_COUPONS_URL = 'https://www.dodx.shop/coupons';
+const SITE_CARS_URL = 'https://www.dodx.shop/cars';
 const CACHE_STORAGE_KEY = 'dodx_offers_cache_v8';
 const REFRESH_ALARM_NAME = 'dodx_refresh_offers';
 const CACHE_TTL_MS = 2 * 60 * 60 * 1000;
@@ -18,6 +19,7 @@ const OFFLINE_DIRECTORY_FALLBACK = {
   siteUrl: SITE_HOME_URL,
   productsUrl: SITE_PRODUCTS_URL,
   couponsUrl: SITE_COUPONS_URL,
+  carsUrl: SITE_CARS_URL,
   disclosure:
     'As an affiliate, dodx.shop may earn a commission from qualifying purchases at no extra cost to you.',
   isOfflineFallback: true,
@@ -387,6 +389,7 @@ function sanitizePayload(rawPayload) {
     siteUrl: sanitizeHttpsUrl(rawPayload.siteUrl, SITE_HOME_URL),
     productsUrl: sanitizeHttpsUrl(rawPayload.productsUrl, SITE_PRODUCTS_URL),
     couponsUrl: sanitizeHttpsUrl(rawPayload.couponsUrl, SITE_COUPONS_URL),
+    carsUrl: sanitizeHttpsUrl(rawPayload.carsUrl, SITE_CARS_URL),
     disclosure:
       typeof rawPayload.disclosure === 'string'
         ? rawPayload.disclosure.slice(0, 220)

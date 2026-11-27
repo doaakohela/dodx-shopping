@@ -1,6 +1,7 @@
 'use strict';
 
 const SITE_HOME_URL = 'https://www.dodx.shop';
+const SITE_CARS_URL = 'https://www.dodx.shop/cars';
 const LANG_STORAGE_KEY = 'dodx_ext_lang';
 const isStandaloneWindow = new URLSearchParams(window.location.search).get('mode') === 'window';
 
@@ -934,8 +935,218 @@ const CAT_I18N = {
   },
 };
 
+const EV_MODELS = [
+  {
+    id: 'wuling-hongguang-miniev',
+    modelEn: 'Wuling Hongguang MINIEV',
+    modelAr: 'وولينج هونغقوانغ ميني EV',
+    rangeEn: '205 / 301 km',
+    rangeAr: '205 / 301 كم',
+    metaEn: '5 Doors · 4 Seats · Fast Charge',
+    metaAr: '5 أبواب · 4 مقاعد · شحن سريع',
+    priceText: '$8,500 · $9,050',
+    image: 'images/ev-wuling.jpg',
+    keywords: 'wuling hongguang miniev city ev car 205 305 وولينج ميني سيارة كهربائية',
+  },
+  {
+    id: 'changan-lumin',
+    modelEn: 'Changan Lumin',
+    modelAr: 'شانجان لومين',
+    rangeEn: '205 km',
+    rangeAr: '205 كم',
+    metaEn: '3 Doors · 4 Seats · Fast Charge',
+    metaAr: '3 أبواب · 4 مقاعد · شحن سريع',
+    priceText: '$7,250',
+    image: 'images/ev-lumin.jpg',
+    keywords: 'changan lumin city ev budget car 205 شانجان لومين سيارة كهربائية',
+  },
+  {
+    id: 'byd-seagull-freedom',
+    modelEn: 'BYD Seagull Freedom',
+    modelAr: 'بي واي دي سيجول فريدوم',
+    rangeEn: '305 km',
+    rangeAr: '305 كم',
+    metaEn: '5 Doors · 4 Seats · Blade LFP',
+    metaAr: '5 أبواب · 4 مقاعد · بطارية بليد',
+    priceText: '$11,900',
+    image: 'images/ev-seagull.jpg',
+    keywords: 'byd seagull freedom hatchback ev car 305 بي واي دي سيجول سيارة كهربائية',
+  },
+  {
+    id: 'geely-geometry-e',
+    modelEn: 'Geely Geometry E',
+    modelAr: 'جيلي جيومتري E',
+    rangeEn: '301 km',
+    rangeAr: '301 كم',
+    metaEn: '5 Doors · 5 Seats · Family SUV',
+    metaAr: '5 أبواب · 5 مقاعد · SUV عائلية',
+    priceText: '$9,200',
+    image: 'images/ev-geometry.jpg',
+    keywords: 'geely geometry e suv crossover family ev car 301 جيلي جيومتري سيارة كهربائية',
+  },
+  {
+    id: 'geely-energetic-panda',
+    modelEn: 'Geely Energetic Panda',
+    modelAr: 'جيلي باندا إنرجيتيك',
+    rangeEn: '210 km',
+    rangeAr: '210 كم',
+    metaEn: '3 Doors · 4 Seats · Fast Charge',
+    metaAr: '3 أبواب · 4 مقاعد · شحن سريع',
+    priceText: '$8,000',
+    image: 'images/ev-energetic-panda.jpg',
+    keywords: 'geely panda energetic yuanqi mini ev car 210 جيلي باندا سيارة كهربائية',
+  },
+  {
+    id: 'geely-warrior-panda',
+    modelEn: 'Geely Warrior Panda',
+    modelAr: 'جيلي واريور باندا',
+    rangeEn: '210 km',
+    rangeAr: '210 كم',
+    metaEn: '3 Doors · 4 Seats · Sport Edition',
+    metaAr: '3 أبواب · 4 مقاعد · إصدار رياضي',
+    priceText: '$8,450',
+    image: 'images/ev-warrior-panda.jpg',
+    keywords: 'geely panda warrior sport mini ev car 210 جيلي واريور باندا سيارة كهربائية',
+  },
+];
+
+const EV_I18N = {
+  en: {
+    carsLink: 'Cars',
+    kicker: 'Modern Electric Vehicles · Smart Range & Everyday Savings',
+    title: 'Drive Your New Electric Car Today — Smart Value & Proven Range',
+    sub: 'City EVs & 5-seat electric SUVs with up to 305 km range and fast charging starting from $7,250.',
+    cta: 'Explore Cars →',
+    viewCar: 'View',
+  },
+  ar: {
+    carsLink: 'السيارات',
+    kicker: 'سيارات كهربائية حديثة · أناقة وتوفير يومي بأفضل الأسعار',
+    title: 'امتلك سيارتك الكهربائية الجديدة اليوم — جودة عالية وسعر لا يُنافس',
+    sub: 'مدى يصل حتى 305 كم، وشحن سريع خلال 30 دقيقة، وأنظمة أمان حديثة تبدأ من 7,250 دولار فقط.',
+    cta: 'استكشف السيارات ←',
+    viewCar: 'التفاصيل',
+  },
+  es: {
+    carsLink: 'Autos',
+    kicker: 'Vehículos Eléctricos Modernos · Autonomía y Ahorro Diario',
+    title: 'Conduce tu Nuevo Auto Eléctrico Hoy — Gran Valor y Alcance',
+    sub: 'Modelos urbanos y SUV de hasta 305 km con carga rápida desde $7,250.',
+    cta: 'Ver Autos →',
+    viewCar: 'Ver',
+  },
+  fr: {
+    carsLink: 'Voitures',
+    kicker: 'Véhicules Électriques Modernes · Autonomie & Économies',
+    title: 'Conduisez Votre Nouvelle Voiture Électrique — Prix Imbattables',
+    sub: 'Citadines et SUV jusqu’à 305 km d’autonomie et charge rapide dès 7 250 $.',
+    cta: 'Voir Voitures →',
+    viewCar: 'Voir',
+  },
+  de: {
+    carsLink: 'Autos',
+    kicker: 'Moderne Elektroautos · Starke Reichweite & Täglich Sparen',
+    title: 'Fahren Sie Heute Ihr Neues Elektroauto — Top-Preis-Leistung',
+    sub: 'Stadt-Stromer & 5-Sitzer SUVs bis 305 km Reichweite und Schnellladen ab 7.250 $.',
+    cta: 'Autos ansehen →',
+    viewCar: 'Details',
+  },
+  pt: {
+    carsLink: 'Carros',
+    kicker: 'Veículos Elétricos Modernos · Autonomia e Economia Diária',
+    title: 'Dirija Seu Novo Carro Elétrico Hoje — Valor Inteligente',
+    sub: 'Elétricos urbanos e SUVs com até 305 km de autonomia e recarga rápida a partir de US$ 7.250.',
+    cta: 'Ver Carros →',
+    viewCar: 'Ver',
+  },
+  zh: {
+    carsLink: '电动汽车',
+    kicker: '现代纯电动汽车 · 超长续航与日常节能',
+    title: '立即拥有您的全新纯电动汽车 — 卓越品质与超值价格',
+    sub: '最高 305 公里续航、30 分钟快充与智能安全配置，起售价仅 $7,250。',
+    cta: '浏览全部车型 →',
+    viewCar: '详情',
+  },
+  ja: {
+    carsLink: 'EV車',
+    kicker: '最新電気自動車 · 高い航続距離と毎日の節約',
+    title: '新しい電気自動車を今日から — 優れた価値と安心性能',
+    sub: '最大305kmの航続距離、急速充電対応、$7,250から揃うシティEV＆SUV。',
+    cta: '車両を見る →',
+    viewCar: '詳細',
+  },
+  ko: {
+    carsLink: '전기차',
+    kicker: '최신 전기차 · 실속 있는 주행거리와 매일의 절약',
+    title: '오늘 새로운 전기차를 만나보세요 — 검증된 가치와 성능',
+    sub: '최대 305km 주행거리, 급속 충전 및 스마트 안전 사양 $7,250부터.',
+    cta: '차량 보기 →',
+    viewCar: '보기',
+  },
+  hi: {
+    carsLink: 'कारें',
+    kicker: 'आधुनिक इलेक्ट्रिक वाहन · शानदार रेंज और रोज़ाना बचत',
+    title: 'आज ही अपनी नई इलेक्ट्रिक कार चुनें — स्मार्ट वैल्यू और रेंज',
+    sub: '305 किमी तक की रेंज और तेज़ चार्जिंग वाली EV और SUVs केवल $7,250 से।',
+    cta: 'कारें देखें →',
+    viewCar: 'देखें',
+  },
+  tr: {
+    carsLink: 'Arabalar',
+    kicker: 'Modern Elektrikli Araçlar · Akıllı Menzil ve Günlük Tasarruf',
+    title: 'Yeni Elektrikli Aracınıza Bugün Sahip Olun — Rakipsiz Değer',
+    sub: '305 km’ye varan menzil, hızlı şarj ve modern güvenlik $7.250’dan başlayan fiyatlarla.',
+    cta: 'Araçları Keşfet →',
+    viewCar: 'İncele',
+  },
+  ru: {
+    carsLink: 'Авто',
+    kicker: 'Современные электромобили · Запас хода и экономия каждый день',
+    title: 'Новый электромобиль уже сегодня — отличная цена и качество',
+    sub: 'Запас хода до 305 км, быстрая зарядка и современные системы безопасности от $7,250.',
+    cta: 'Смотреть авто →',
+    viewCar: 'Открыть',
+  },
+  it: {
+    carsLink: 'Auto',
+    kicker: 'Veicoli Elettrici Moderni · Autonomia e Risparmio Quotidiano',
+    title: 'Guida Oggi la Tua Nuova Auto Elettrica — Valore e Qualità',
+    sub: 'City car elettriche e SUV fino a 305 km di autonomia e ricarica rapida da $7,250.',
+    cta: 'Esplora Auto →',
+    viewCar: 'Vedi',
+  },
+  id: {
+    carsLink: 'Mobil',
+    kicker: 'Mobil Listrik Modern · Jarak Tempuh Nyata & Hemat Setiap Hari',
+    title: 'Miliki Mobil Listrik Baru Anda Hari Ini — Nilai Terbaik',
+    sub: 'EV kota & SUV 5 kursi hingga 305 km jarak tempuh dan fast charging mulai $7,250.',
+    cta: 'Lihat Mobil →',
+    viewCar: 'Detail',
+  },
+  nl: {
+    carsLink: 'Auto’s',
+    kicker: 'Moderne Elektrische Auto’s · Slim Bereik & Dagelijkse Besparing',
+    title: 'Rijd Vandaag Nog Uw Nieuwe Elektrische Auto — Topwaarde',
+    sub: 'Stads-EV’s & 5-zits SUV’s met tot 305 km bereik en snelladen vanaf $7.250.',
+    cta: 'Bekijk Auto’s →',
+    viewCar: 'Bekijk',
+  },
+  pl: {
+    carsLink: 'Auta',
+    kicker: 'Nowoczesne Auta Elektryczne · Realny Zasięg i Oszczędność',
+    title: 'Wybierz Swój Nowy Samochód Elektryczny — Świetna Wartość',
+    sub: 'Miejskie EV i SUV-y o zasięgu do 305 km z szybkim ładowaniem już od $7,250.',
+    cta: 'Zobacz Auta →',
+    viewCar: 'Zobacz',
+  },
+};
+
 function getDict() {
   return I18N[currentLang] || I18N.en;
+}
+
+function getEvDict() {
+  return EV_I18N[currentLang] || EV_I18N.en;
 }
 
 function getLangMeta(code) {
@@ -1176,16 +1387,19 @@ function applyLanguageUI() {
   const popoutBtn = document.getElementById('popout-btn');
   const refreshBtn = document.getElementById('refresh-btn');
   const topTagline = document.getElementById('top-bar-tagline');
+  const topCars = document.getElementById('top-cars-link');
   const couponsBtn = document.getElementById('coupons-mode-btn');
   const topProducts = document.getElementById('top-products-link');
   const searchInput = document.getElementById('offer-search');
   const catSelect = document.getElementById('category-filter');
   const priceSelect = document.getElementById('price-filter');
   const loadingCard = document.getElementById('loading-card');
+  const footerCars = document.getElementById('footer-cars-link');
   const footerCoupons = document.getElementById('footer-coupons-link');
   const footerProducts = document.getElementById('footer-products-link');
   const footerDisclosure = document.getElementById('footer-disclosure-link');
   const disclosureEl = document.getElementById('affiliate-disclosure');
+  const evDict = getEvDict();
 
   if (flashPill) flashPill.title = dict.flashTimerTitle;
   if (popoutBtn) popoutBtn.title = dict.popoutTitle;
@@ -1195,6 +1409,7 @@ function applyLanguageUI() {
     strongEl.textContent = 'dodx.shop';
     topTagline.replaceChildren(strongEl, document.createTextNode(` · ${dict.taglineSuffix}`));
   }
+  if (topCars) topCars.textContent = evDict.carsLink;
   if (couponsBtn) couponsBtn.textContent = dict.couponsBtn;
   if (topProducts) topProducts.textContent = dict.productsLink;
   if (searchInput) {
@@ -1204,6 +1419,7 @@ function applyLanguageUI() {
   if (catSelect) catSelect.setAttribute('aria-label', dict.catAria);
   if (priceSelect) priceSelect.setAttribute('aria-label', dict.priceAria);
   if (loadingCard) loadingCard.textContent = dict.loadingText;
+  if (footerCars) footerCars.textContent = evDict.carsLink;
   if (footerCoupons) footerCoupons.textContent = dict.footerCoupons;
   if (footerProducts) footerProducts.textContent = dict.footerProducts;
   if (footerDisclosure) footerDisclosure.textContent = dict.footerDisclosure;
@@ -1538,6 +1754,109 @@ function createCouponCard(coupon) {
   return card;
 }
 
+function createEvCarsBanner(carsList) {
+  const evDict = getEvDict();
+  const ar = isArLang();
+
+  const banner = document.createElement('section');
+  banner.className = 'ev-cars-banner';
+  banner.setAttribute('aria-label', evDict.title);
+
+  const header = document.createElement('div');
+  header.className = 'ev-banner-header';
+
+  const copyWrap = document.createElement('div');
+  copyWrap.className = 'ev-banner-copy';
+
+  const kicker = document.createElement('div');
+  kicker.className = 'ev-banner-kicker';
+  kicker.textContent = `⚡ ${evDict.kicker}`;
+
+  const title = document.createElement('h2');
+  title.className = 'ev-banner-title';
+  title.textContent = evDict.title;
+
+  const sub = document.createElement('p');
+  sub.className = 'ev-banner-sub';
+  sub.textContent = evDict.sub;
+
+  copyWrap.appendChild(kicker);
+  copyWrap.appendChild(title);
+  copyWrap.appendChild(sub);
+
+  const ctaBtn = document.createElement('button');
+  ctaBtn.type = 'button';
+  ctaBtn.className = 'ev-banner-cta';
+  ctaBtn.textContent = evDict.cta;
+  ctaBtn.addEventListener('click', () => openExternalUrl(SITE_CARS_URL));
+
+  header.appendChild(copyWrap);
+  header.appendChild(ctaBtn);
+  banner.appendChild(header);
+
+  const strip = document.createElement('div');
+  strip.className = 'ev-banner-strip';
+
+  carsList.forEach((car) => {
+    const modelName = ar ? car.modelAr : car.modelEn;
+    const rangeLabel = ar ? car.rangeAr : car.rangeEn;
+    const metaLabel = ar ? car.metaAr : car.metaEn;
+    const carUrl = `${SITE_CARS_URL}?model=${encodeURIComponent(car.id)}`;
+
+    const card = document.createElement('article');
+    card.className = 'ev-banner-card';
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.addEventListener('click', () => openExternalUrl(carUrl));
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openExternalUrl(carUrl);
+      }
+    });
+
+    const media = document.createElement('div');
+    media.className = 'ev-card-media';
+    const imgEl = createSafeImageElement(car.image, 'images/featured-deals.jpg', modelName, 'ev-card-img');
+    const rangeBadge = document.createElement('span');
+    rangeBadge.className = 'ev-card-range';
+    rangeBadge.textContent = rangeLabel;
+    media.appendChild(imgEl);
+    media.appendChild(rangeBadge);
+
+    const body = document.createElement('div');
+    body.className = 'ev-card-body';
+    const nameEl = document.createElement('div');
+    nameEl.className = 'ev-card-title';
+    nameEl.textContent = modelName;
+    const metaEl = document.createElement('div');
+    metaEl.className = 'ev-card-meta';
+    metaEl.textContent = metaLabel;
+    body.appendChild(nameEl);
+    body.appendChild(metaEl);
+
+    const footer = document.createElement('div');
+    footer.className = 'ev-card-footer';
+    const priceEl = document.createElement('span');
+    priceEl.className = 'ev-card-price';
+    priceEl.dir = 'ltr';
+    priceEl.textContent = car.priceText;
+    const viewPill = document.createElement('span');
+    viewPill.className = 'ev-card-btn';
+    viewPill.textContent = evDict.viewCar;
+    footer.appendChild(priceEl);
+    footer.appendChild(viewPill);
+
+    card.appendChild(media);
+    card.appendChild(body);
+    card.appendChild(footer);
+    strip.appendChild(card);
+  });
+
+  banner.appendChild(strip);
+  return banner;
+}
+
 function renderPopupContent() {
   const container = document.getElementById('popup-content');
   const disclosureEl = document.getElementById('affiliate-disclosure');
@@ -1598,6 +1917,21 @@ function renderPopupContent() {
   wfText.textContent = dict.whiteFridayStrip;
   wfStrip.appendChild(wfText);
   container.appendChild(wfStrip);
+
+  const matchingEvModels = EV_MODELS.filter((car) => {
+    if (!query) return true;
+    return normalizeText(`${car.modelEn} ${car.modelAr} ${car.metaEn} ${car.metaAr} ${car.keywords}`).includes(query);
+  });
+
+  const shouldShowEvBanner =
+    selectedGroupId === 'all' &&
+    selectedPriceTier === 'all' &&
+    (selectedCategoryId === 'all' || selectedCategoryId === 'cars') &&
+    (query === '' ? true : matchingEvModels.length > 0);
+
+  if (shouldShowEvBanner) {
+    container.appendChild(createEvCarsBanner(matchingEvModels));
+  }
 
   const groupObj = (currentPayload.storeGroups || []).find((g) => g.id === selectedGroupId);
   if (groupObj && groupObj.comingSoon) {
@@ -1667,6 +2001,10 @@ function renderPopupContent() {
     const hay = normalizeText(`${prod.title} ${prod.titleAr} ${prod.brand} ${prod.storeName} ${prod.storeNameAr || ''} ${prod.keywords}`);
     return hay.includes(query);
   });
+
+  if (filteredProducts.length === 0 && shouldShowEvBanner) {
+    return;
+  }
 
   const prodHeader = document.createElement('div');
   prodHeader.className = 'section-header';

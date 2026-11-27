@@ -331,18 +331,20 @@ html[dir="rtl"] .lang-menu {
 .official-top-bar {
   background: #02332d;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
-  padding: 6px 12px;
+  padding: 5px 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  flex-wrap: wrap;
+  row-gap: 4px;
+  gap: 6px;
 }
 
 .official-site-link {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: 11px;
+  gap: 5px;
+  font-size: 10.5px;
   font-weight: 600;
   color: #ecfdf5;
   text-decoration: none;
@@ -371,17 +373,33 @@ html[dir="rtl"] .lang-menu {
 .top-bar-actions {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   flex-shrink: 0;
 }
 
+.official-top-cars {
+  font-size: 10px;
+  font-weight: 800;
+  color: #ffffff;
+  background: linear-gradient(135deg, #007e7b, #0a8b8e);
+  border: 1px solid rgba(153, 246, 228, 0.45);
+  padding: 2px 7px;
+  border-radius: 999px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.official-top-cars:hover {
+  filter: brightness(1.1);
+}
+
 .top-coupons-btn {
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 800;
   color: #ffffff;
   background: var(--dodx-ruby);
   border: 1px solid rgba(255, 255, 255, 0.25);
-  padding: 2px 8px;
+  padding: 2px 7px;
   border-radius: 999px;
   cursor: pointer;
   white-space: nowrap;
@@ -394,12 +412,12 @@ html[dir="rtl"] .lang-menu {
 }
 
 .official-top-products {
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 800;
   color: var(--dodx-green);
   background: var(--dodx-gold);
   border: 1px solid var(--dodx-gold-border);
-  padding: 2px 8px;
+  padding: 2px 7px;
   border-radius: 999px;
   text-decoration: none;
   white-space: nowrap;
@@ -579,6 +597,214 @@ body.is-standalone .popup-content {
   align-items: center;
   justify-content: space-between;
   gap: 6px;
+}
+
+/* Electric Vehicles (Cars) Showcase Banner */
+.ev-cars-banner {
+  background: linear-gradient(135deg, #00453e 0%, #007e7b 56%, #0a8b8e 100%);
+  border: 1px solid rgba(20, 148, 146, 0.65);
+  border-radius: 10px;
+  padding: 10px;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  box-shadow: 0 4px 12px rgba(0, 69, 62, 0.16);
+}
+
+.ev-banner-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ev-banner-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.ev-banner-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #99f6e4;
+  letter-spacing: 0.01em;
+}
+
+.ev-banner-title {
+  margin-top: 2px;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.25;
+  color: #ffffff;
+}
+
+.ev-banner-sub {
+  margin-top: 3px;
+  font-size: 10px;
+  line-height: 1.38;
+  color: rgba(240, 253, 250, 0.92);
+}
+
+.ev-banner-cta {
+  border: 1px solid var(--dodx-gold-border);
+  background: var(--dodx-gold);
+  color: var(--dodx-text);
+  font-size: 10px;
+  font-weight: 800;
+  padding: 5px 9px;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.ev-banner-cta:hover {
+  background: var(--dodx-gold-hover);
+}
+
+.ev-banner-strip {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
+}
+
+.ev-banner-strip::-webkit-scrollbar {
+  height: 4px;
+}
+
+.ev-banner-strip::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+}
+
+body.is-standalone .ev-banner-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  overflow-x: visible;
+}
+
+.ev-banner-card {
+  width: 148px;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  background: rgba(0, 45, 43, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: border-color 150ms ease, transform 150ms ease;
+}
+
+body.is-standalone .ev-banner-card {
+  width: auto;
+}
+
+.ev-banner-card:hover {
+  border-color: rgba(255, 216, 20, 0.9);
+  transform: translateY(-1px);
+}
+
+.ev-card-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: #002321;
+  overflow: hidden;
+}
+
+.ev-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ev-card-range {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  background: rgba(0, 35, 33, 0.88);
+  border: 1px solid rgba(153, 246, 228, 0.4);
+  color: #99f6e4;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+html[dir="rtl"] .ev-card-range {
+  left: auto;
+  right: 4px;
+}
+
+.ev-card-body {
+  padding: 6px 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ev-card-title {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ev-card-meta {
+  font-size: 9px;
+  font-weight: 600;
+  color: rgba(204, 251, 241, 0.85);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ev-card-footer {
+  padding: 5px 7px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 35, 33, 0.78);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.ev-card-price {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: var(--dodx-gold);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ev-card-btn {
+  background: var(--dodx-gold);
+  color: var(--dodx-text);
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .section-header {

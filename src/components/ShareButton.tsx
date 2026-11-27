@@ -14,6 +14,7 @@ interface ShareButtonProps {
   dropDirection?: 'up' | 'down';
   align?: 'start' | 'end';
   tone?: 'light' | 'dark';
+  entityType?: 'product' | 'car';
 }
 
 interface MenuPosition {
@@ -34,6 +35,7 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
   dropDirection = 'up',
   align = 'end',
   tone = 'light',
+  entityType = 'product',
 }) => {
   const [open, setOpen] = useState(false);
   const [copiedMode, setCopiedMode] = useState<'link' | 'ig' | null>(null);
@@ -157,7 +159,15 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
 
   const summaryParts = [
     title,
-    price ? (isAr ? `السعر بعد الخصم: ${price}` : `Price After Discount: ${price}`) : '',
+    price
+      ? entityType === 'car'
+        ? isAr
+          ? `السعر: ${price}`
+          : `Price: ${price}`
+        : isAr
+          ? `السعر بعد الخصم: ${price}`
+          : `Price After Discount: ${price}`
+      : '',
     oldPrice ? (isAr ? `بدلاً من ${oldPrice}` : `Was ${oldPrice}`) : '',
     discount ? (isAr ? `الخصم: ${discount}` : `Discount: ${discount}`) : '',
   ]
@@ -207,7 +217,13 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
             className="z-[9999] w-56 rounded-lg bg-white border border-zinc-200 shadow-2xl p-1.5 text-zinc-900"
           >
             <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-zinc-500 border-b border-zinc-100 mb-1">
-              {isAr ? 'مشاركة رابط المنتج من موقعي' : 'Share Product Page'}
+              {entityType === 'car'
+                ? isAr
+                  ? 'مشاركة رابط السيارة من موقعي'
+                  : 'Share Vehicle Page'
+                : isAr
+                  ? 'مشاركة رابط المنتج من موقعي'
+                  : 'Share Product Page'}
             </div>
 
             <a
@@ -282,12 +298,20 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
               )}
               <span className={copiedMode === 'link' ? 'text-emerald-700 font-bold' : ''}>
                 {copiedMode === 'link'
-                  ? isAr
-                    ? 'تم نسخ رابط المنتج!'
-                    : 'Product Link Copied!'
-                  : isAr
-                    ? 'نسخ رابط المنتج'
-                    : 'Copy Product Link'}
+                  ? entityType === 'car'
+                    ? isAr
+                      ? 'تم نسخ رابط السيارة!'
+                      : 'Vehicle Link Copied!'
+                    : isAr
+                      ? 'تم نسخ رابط المنتج!'
+                      : 'Product Link Copied!'
+                  : entityType === 'car'
+                    ? isAr
+                      ? 'نسخ رابط السيارة'
+                      : 'Copy Vehicle Link'
+                    : isAr
+                      ? 'نسخ رابط المنتج'
+                      : 'Copy Product Link'}
               </span>
             </button>
           </div>,
@@ -311,7 +335,15 @@ export const ShareButton: React.FC<ShareButtonProps> = ({
         }}
         aria-expanded={open}
         aria-label={isAr ? `مشاركة ${title}` : `Share ${title}`}
-        title={isAr ? 'مشاركة المنتج بالصورة والسعر والخصم' : 'Share product page'}
+        title={
+          entityType === 'car'
+            ? isAr
+              ? 'مشاركة رابط السيارة على مواقع التواصل أو نسخ الرابط'
+              : 'Share vehicle page'
+            : isAr
+              ? 'مشاركة المنتج بالصورة والسعر والخصم'
+              : 'Share product page'
+        }
         className={`inline-flex items-center justify-center gap-1.5 border rounded-full font-bold transition-colors cursor-pointer ${triggerClasses} ${
           compact ? 'h-8 w-8 p-0 text-xs' : 'px-3 py-1.5 text-xs whitespace-nowrap'
         }`}
